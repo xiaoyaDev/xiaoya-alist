@@ -5,7 +5,7 @@ ARG BRANCH
 ENV TZ=Asia/Shanghai \
     CYCLE=86400 \
     BRANCH=${BRANCH} \
-    REPO_URL="https://github.com/Rik-F5/xiaoya_db.git" \
+    REPO_URL="https://github.com/xiaoyaDev/xiaoya_db.git" \
     RESTART_AUTO_UPDATE=false
 
 RUN set -ex && \

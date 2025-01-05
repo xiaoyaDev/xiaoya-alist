@@ -4209,7 +4209,7 @@ function main_xiaoya_emd() {
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     echo -e "${Blue}小雅元数据定时爬虫${Font}\n"
     echo -e "${Sky_Blue}小雅元数据定时爬虫由 https://github.com/Rik-F5 更新维护，在此表示感谢！"
-    echo -e "具体详细配置参数请看项目README：https://github.com/Rik-F5/xiaoya_db${Font}\n"
+    echo -e "具体详细配置参数请看项目README：https://github.com/xiaoyaDev/xiaoya_db${Font}\n"
     echo -e "1、安装"
     echo -e "2、更新"
     echo -e "3、卸载"

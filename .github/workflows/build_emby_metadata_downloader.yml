@@ -85,7 +85,7 @@ jobs:
       - 
         name: Install Dependent Packages
         run: |
-            git clone -b main https://github.com/Rik-F5/xiaoya_db.git xiaoya_db
+            git clone -b main https://github.com/xiaoyaDev/xiaoya_db.git xiaoya_db
             copy xiaoya_db/requirements.txt requirements.txt
             copy xiaoya_db/solid.py solid.py
             python -m pip install --upgrade pip
