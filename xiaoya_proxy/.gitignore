@@ -1,8 +1,0 @@
-# IntelliJ Idea & VSCode
-/.idea
-/*.iml
-/.vscode
-
-# Maven
-/target
-dependency-reduced-pom.xml
