@@ -1870,6 +1870,11 @@ function check_metadata_size() {
             check_result=false
         fi
         ;;
+    config.new.mp4)
+        if [[ "$file_size" -le 3200000 ]]; then
+            check_result=false
+        fi
+        ;;
     esac
 
     if [ "${check_result}" == false ]; then
@@ -1889,7 +1894,7 @@ function __unzip_metadata() {
             exit 1
         fi
         if [[ "${OSNAME}" = "macos" ]]; then
-            if [ "${1}" == "config.mp4" ]; then
+            if [ "${1}" == "config.mp4" ] || [ "${1}" == "config.new.mp4" ]; then
                 if [ ! -d "${MEDIA_DIR}" ]; then
                     mkdir -p "${MEDIA_DIR}"
                     auto_chown "${MEDIA_DIR}"
@@ -1907,7 +1912,7 @@ function __unzip_metadata() {
             INFO "当前解压工作目录：$(pwd)"
             7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}"
         else
-            if [ "${1}" == "config.mp4" ]; then
+            if [ "${1}" == "config.mp4" ] || [ "${1}" == "config.new.mp4" ]; then
                 extra_parameters="--workdir=/media"
             else
                 extra_parameters="--workdir=/media/xiaoya"
@@ -1927,7 +1932,7 @@ function __unzip_metadata() {
         INFO "设置目录权限..."
         INFO "这可能需要一定时间，请耐心等待！"
         chmod -R 777 "${MEDIA_DIR}"
-    elif [ "${1}" == "config.mp4" ]; then
+    elif [ "${1}" == "config.mp4" ] || [ "${1}" == "config.new.mp4" ]; then
         metadata_unziper "${1}"
         INFO "设置目录权限..."
         INFO "这可能需要一定时间，请耐心等待！"
@@ -2270,6 +2275,140 @@ function download_unzip_xiaoya_all_emby() {
 
 }
 
+function download_unzip_xiaoya_emby_new_config() {
+
+    function compare_metadata_size() {
+
+        local REMOTE_METADATA_SIZE LOCAL_METADATA_SIZE
+
+        pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}"
+        REMOTE_METADATA_SIZE=$(cat ${MEDIA_DIR}/headers.log | grep 'Content-Length' | awk '{print $2}')
+        rm -f ${MEDIA_DIR}/headers.log
+
+        if [ -f "${MEDIA_DIR}/temp/${1}" ] && [ ! -f "${MEDIA_DIR}/temp/${1}.aria2" ]; then
+            LOCAL_METADATA_SIZE=$(du -b "${MEDIA_DIR}/temp/${1}" | awk '{print $1}')
+        else
+            LOCAL_METADATA_SIZE=0
+        fi
+
+        INFO "${1} REMOTE_METADATA_SIZE: ${REMOTE_METADATA_SIZE}"
+        INFO "${1} LOCAL_METADATA_SIZE: ${LOCAL_METADATA_SIZE}"
+
+        if
+            [ "${REMOTE_METADATA_SIZE}" != "${LOCAL_METADATA_SIZE}" ] &&
+                [ -n "${REMOTE_METADATA_SIZE}" ] &&
+                awk -v remote="${REMOTE_METADATA_SIZE}" -v threshold="2147483648" 'BEGIN { if (remote > threshold) print "1"; else print "0"; }' | grep -q "1"
+        then
+            return 1
+        else
+            return 0
+        fi
+
+    }
+
+    get_config_dir
+
+    get_media_dir
+
+    if [ -f "${MEDIA_DIR}/config/config/system.xml" ]; then
+        INFO "检测到非第一次安装全家桶..."
+        WARN "警告：本次元数据升级会丢失当前 Emby 所有用户配置信息！"
+        local OPERATE
+        while true; do
+            INFO "是否继续操作 [Y/n]（默认 Y）"
+            read -erp "OPERATE:" OPERATE
+            [[ -z "${OPERATE}" ]] && OPERATE="y"
+            if [[ ${OPERATE} == [YyNn] ]]; then
+                break
+            else
+                ERROR "非法输入，请输入 [Y/n]"
+            fi
+        done
+        if [[ "${OPERATE}" == [Nn] ]]; then
+            exit 0
+        fi
+        local emby_name emby_image_name emby_version
+        emby_name="$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)"
+        emby_image_name="$(docker container inspect -f '{{.Config.Image}}' "${emby_name}")"
+        if [ -z "${emby_image_name}" ]; then
+            ERROR "获取 Emby 镜像标签失败，请确保您已安装 Emby！"
+            exit 1
+        fi
+        if [ -f "${MEDIA_DIR}/EmbyServer.deps.json" ]; then
+            rm -f "${MEDIA_DIR}/EmbyServer.deps.json"
+        fi
+        CURRENT_ULIMIT=$(ulimit -n)
+        ulimit -n 65535
+        docker run --rm --ulimit nofile=65535:65535 --entrypoint cp -v "${MEDIA_DIR}:/data" "${emby_image_name}" /system/EmbyServer.deps.json /data
+        ulimit -n "${CURRENT_ULIMIT}"
+        if [ ! -f "${MEDIA_DIR}/EmbyServer.deps.json" ]; then
+            ERROR "Emby 版本数据文件复制失败！"
+            exit 1
+        fi
+        emby_version=$(grep "EmbyServer" "${MEDIA_DIR}/EmbyServer.deps.json" | head -n 1 | sed -n 's|.*EmbyServer/\(.*\)":.*|\1|p')
+        rm -f "${MEDIA_DIR}/EmbyServer.deps.json"
+        if [ -n "${emby_version}" ]; then
+            INFO "当前 Emby 版本：${emby_version}"
+        else
+            ERROR "当前 Emby 版本获取失败！"
+            exit 1
+        fi
+        if version_lt "${emby_version}" "4.9.0.31"; then
+            INFO "您的 Emby 版本过低，开始进入升级流程，请升级到 4.9.0.31 或更高版本！"
+            oneclick_upgrade_emby
+        fi
+
+        INFO "关闭 Emby 容器中..."
+        if ! docker stop "${emby_name}"; then
+            if ! docker kill "${emby_name}"; then
+                ERROR "关闭 Emby 容器失败！"
+                exit 1
+            fi
+        fi
+    fi
+
+    test_xiaoya_status
+
+    INFO "清理旧配置文件中..."
+    INFO "这可能需要一定时间，请耐心等待！"
+    rm -rf "${MEDIA_DIR}/config"
+
+    mkdir -p "${MEDIA_DIR}/config"
+    auto_chown "${MEDIA_DIR}/config"
+    chmod -R 777 "${MEDIA_DIR}/config"
+
+    if [ -f "${MEDIA_DIR}/temp/config.new.mp4.aria2" ]; then
+        rm -rf "${MEDIA_DIR}/temp/config.new.mp4.aria2"
+        if [ -f "${MEDIA_DIR}/temp/config.new.mp4" ]; then
+            INFO "清理不完整 config.new.mp4 中..."
+            rm -rf "${MEDIA_DIR}/temp/config.new.mp4"
+        fi
+    fi
+    if [ -f "${MEDIA_DIR}/temp/config.new.mp4" ]; then
+        if compare_metadata_size "config.new.mp4"; then
+            INFO "当前 config.new.mp4 已是最新，无需重新下载！"
+        else
+            INFO "清理旧 config.new.mp4 中..."
+            rm -rf "${MEDIA_DIR}/temp/config.new.mp4"
+        fi
+    fi
+
+    show_disk_capacity "${MEDIA_DIR}"
+
+    INFO "开始下载解压..."
+
+    __download_metadata "config.new.mp4"
+
+    __unzip_metadata "config.new.mp4"
+
+    docker start "${emby_name}"
+    sleep 5
+    wait_emby_start
+
+    INFO "操作完成！"
+
+}
+
 function main_download_unzip_xiaoya_emby() {
 
     __data_downloader=$(cat ${DDSREM_CONFIG_DIR}/data_downloader.txt)
@@ -2289,6 +2428,7 @@ function main_download_unzip_xiaoya_emby() {
     echo -e "11、解压 115.mp4"
     echo -e "12、解压 115.mp4 的指定元数据目录【非全部解压】"
     echo -e "13、当前下载器【aria2/wget】                  当前状态：${Green}${__data_downloader}${Font}"
+    echo -e "101、下载并解压 config.new.mp4"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     read -erp "请输入数字（支持输入多个数字，空格分离，按输入顺序执行）[0-13]:" -a nums
@@ -2344,6 +2484,10 @@ function main_download_unzip_xiaoya_emby() {
                 unzip_appoint_xiaoya_emby_jellyfin "115.mp4"
                 ;;
             esac
+            __next_operate=return_menu
+        elif [ $num == 101 ]; then
+            clear
+            download_unzip_xiaoya_emby_new_config
             __next_operate=return_menu
         elif [ $num == 13 ]; then
             if [ "${__data_downloader}" == "wget" ]; then
@@ -3014,7 +3158,7 @@ function oneclick_upgrade_emby() {
                 IMAGE_VERSION=latest
                 break
             else
-                INFO "请选择 Emby 镜像版本 [ 1；4.8.8.0 | 2；4.8.9.0 | 3；latest（${amilys_embyserver_latest_version}）| 4；beta（${amilys_embyserver_beta_version}）（此版本请勿轻易尝试）]（默认 2）"
+                INFO "请选择 Emby 镜像版本 [ 1；4.8.8.0 | 2；4.8.9.0 | 3；4.9.0.31 | 4；latest（${amilys_embyserver_latest_version}）| 5；beta（${amilys_embyserver_beta_version}）（此版本请勿轻易尝试）]（默认 2）"
                 read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
                 [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="2"
                 case ${CHOOSE_IMAGE_VERSION} in
@@ -3027,10 +3171,14 @@ function oneclick_upgrade_emby() {
                     choose_emby_version="${IMAGE_VERSION}"
                     ;;
                 3)
+                    IMAGE_VERSION=4.9.0.31
+                    choose_emby_version="${IMAGE_VERSION}"
+                    ;;
+                4)
                     IMAGE_VERSION=latest
                     choose_emby_version="${amilys_embyserver_latest_version}"
                     ;;
-                4)
+                5)
                     IMAGE_VERSION=beta
                     choose_emby_version="${amilys_embyserver_beta_version}"
                     ;;
@@ -3051,7 +3199,7 @@ function oneclick_upgrade_emby() {
             WARN "lovechen/embyserver 镜像无法更新！"
             exit 0
         elif [ "${old_image_name}" == "emby/embyserver" ] || [ "${old_image_name}" == "emby/embyserver_arm64v8" ]; then
-            INFO "请选择 Emby 镜像版本 [ 1；4.8.8.0 | 2；4.8.9.0 | 3；latest（${emby_embyserver_latest_version}） | 4；beta（${emby_embyserver_beta_version}）（此版本请勿轻易尝试） ]（默认 2）"
+            INFO "请选择 Emby 镜像版本 [ 1；4.8.8.0 | 2；4.8.9.0 | 3；4.9.0.31 | 4；latest（${emby_embyserver_latest_version}） | 5；beta（${emby_embyserver_beta_version}）（此版本请勿轻易尝试） ]（默认 2）"
             read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
             [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="2"
             case ${CHOOSE_IMAGE_VERSION} in
@@ -3064,10 +3212,14 @@ function oneclick_upgrade_emby() {
                 choose_emby_version="${IMAGE_VERSION}"
                 ;;
             3)
+                IMAGE_VERSION=4.9.0.31
+                choose_emby_version="${IMAGE_VERSION}"
+                ;;
+            4)
                 IMAGE_VERSION=latest
                 choose_emby_version="${emby_embyserver_latest_version}"
                 ;;
-            4)
+            5)
                 IMAGE_VERSION=beta
                 choose_emby_version="${emby_embyserver_beta_version}"
                 ;;
