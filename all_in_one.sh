@@ -1954,7 +1954,7 @@ function __download_metadata() {
 
     function metadata_downloader() {
 
-        local __data_downloader
+        local __data_downloader _ua
 
         INFO "开始下载 ${1} ..."
         INFO "下载路径：${MEDIA_DIR}/temp/${1}"
@@ -1965,13 +1965,14 @@ function __download_metadata() {
 
         extra_parameters="--workdir=/media/temp"
 
+        _ua="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
         if [ "${__data_downloader}" == "wget" ]; then
-            if ! pull_run_glue wget -c --show-progress "${xiaoya_addr}/d/元数据/${1}"; then
+            if ! pull_run_glue wget -c --show-progress "${xiaoya_addr}/d/元数据/${1}" -U "${_ua}"; then
                 ERROR "${1} 下载失败！"
                 exit 1
             fi
         else
-            if pull_run_glue aria2c -o "${1}" --allow-overwrite=true --auto-file-renaming=false --enable-color=false -c -x6 "${xiaoya_addr}/d/元数据/${1}"; then
+            if pull_run_glue aria2c -o "${1}" --header="User-Agent: ${_ua}" --allow-overwrite=true --auto-file-renaming=false --enable-color=false -c -x6 "${xiaoya_addr}/d/元数据/${1}"; then
                 if [ -f "${MEDIA_DIR}/temp/${1}.aria2" ]; then
                     ERROR "存在 ${MEDIA_DIR}/temp/${1}.aria2 文件，下载不完整！"
                     exit 1
@@ -2279,9 +2280,10 @@ function download_unzip_xiaoya_emby_new_config() {
 
     function compare_metadata_size() {
 
-        local REMOTE_METADATA_SIZE LOCAL_METADATA_SIZE
+        local REMOTE_METADATA_SIZE LOCAL_METADATA_SIZE _ua
 
-        pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}"
+        _ua="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+        pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "${_ua}"
         REMOTE_METADATA_SIZE=$(cat ${MEDIA_DIR}/headers.log | grep 'Content-Length' | awk '{print $2}')
         rm -f ${MEDIA_DIR}/headers.log
 
