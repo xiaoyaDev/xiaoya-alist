@@ -1,12 +1,12 @@
-![xiaoya-alist](https://socialify.git.ci/DDS-Derek/xiaoya-alist/image?description=1&font=KoHo&forks=1&issues=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2FDDS-Derek%2Fxiaoya-alist%2Fmaster%2Fassets%2Flogo.jpg&name=1&owner=1&pattern=Signal&pulls=1&stargazers=1&theme=Auto)
+![xiaoya-alist](https://socialify.git.ci/xiaoyaDev/xiaoya-alist/image?description=1&font=KoHo&forks=1&issues=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2FxiaoyaDev%2Fxiaoya-alist%2Fmaster%2Fassets%2Flogo.jpg&name=1&owner=1&pattern=Signal&pulls=1&stargazers=1&theme=Auto)
 
-![](https://raw.githubusercontent.com/DDS-Derek/xiaoya-alist/master/assets/image.png)
+![](https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/assets/image.png)
 
-![](https://raw.githubusercontent.com/DDS-Derek/xiaoya-alist/master/assets/image-1.png)
+![](https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/assets/image-1.png)
 
-![](https://raw.githubusercontent.com/DDS-Derek/xiaoya-alist/master/assets/image-2.png)
+![](https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/assets/image-2.png)
 
-![](https://count.getloli.com/get/@DDS-Derek.xiaoya-alist.readme?theme=rule34)
+![](https://count.getloli.com/get/@xiaoyaDev.xiaoya-alist.readme?theme=rule34)
 
 - [main.sh](#mainsh)
   - [使用](#使用)
@@ -39,19 +39,19 @@ bash <(curl --insecure -fsSL https://ddsrem.com/xiaoya/all_in_one.sh)
 ```
 
 ```shell
-bash <(curl --insecure -fsSL https://fastly.jsdelivr.net/gh/DDS-Derek/xiaoya-alist@latest/all_in_one.sh)
+bash <(curl --insecure -fsSL https://fastly.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@latest/all_in_one.sh)
 ```
 
 ```shell
-bash <(curl --insecure -fsSL https://raw.githubusercontent.com/DDS-Derek/xiaoya-alist/master/all_in_one.sh)
+bash <(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/all_in_one.sh)
 ```
 
 ```shell
-bash -c "$(curl --insecure -fsSL https://fastly.jsdelivr.net/gh/DDS-Derek/xiaoya-alist@latest/main.sh)"
+bash -c "$(curl --insecure -fsSL https://fastly.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@latest/main.sh)"
 ```
 
 ```shell
-bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/DDS-Derek/xiaoya-alist/master/main.sh)"
+bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/main.sh)"
 ```
 
 ### 功能列表
@@ -172,7 +172,7 @@ Docker镜像源选择 -> 9 6
 
 ## 相关地址
 
-- [https://github.com/DDS-Derek/xiaoya-alist](https://github.com/DDS-Derek/xiaoya-alist)
+- [https://github.com/xiaoyaDev/xiaoya-alist](https://github.com/xiaoyaDev/xiaoya-alist)
 - [https://hub.docker.com/r/ddsderek/xiaoya-emd](https://hub.docker.com/r/ddsderek/xiaoya-emd)
 - [https://hub.docker.com/r/ddsderek/xiaoya-proxy](https://hub.docker.com/r/ddsderek/xiaoya-proxy)
 - [https://hub.docker.com/r/ddsderek/xiaoya-cron](https://hub.docker.com/r/ddsderek/xiaoya-cron)
@@ -242,12 +242,12 @@ Docker镜像源选择 -> 9 6
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=DDS-Derek/xiaoya-alist&type=Date)](https://star-history.com/#DDS-Derek/xiaoya-alist)
+[![Star History Chart](https://api.star-history.com/svg?repos=xiaoyaDev/xiaoya-alist&type=Date)](https://star-history.com/#xiaoyaDev/xiaoya-alist)
 
 ## 小雅周边工具集合
 
 - [Xiaoya-convert](https://github.com/ypq123456789/xiaoya-convert): 自动批量将阿里云盘分享链接转换为小雅`alishare_list.txt`中的格式
-- [Xiaoyahelper](https://github.com/DDS-Derek/xiaoya-alist/tree/master/xiaoyahelper): 一劳永逸的小雅转存清理工具
+- [Xiaoyahelper](https://github.com/xiaoyaDev/xiaoya-alist/tree/master/xiaoyahelper): 一劳永逸的小雅转存清理工具
 - [Alist-TVBox](https://hub.docker.com/r/haroldli/alist-tvbox): 一个基于`AList`和`xiaoya`的`TVBox`管理工具
 - [`strm`文件生成](https://xiaoyaliu.notion.site/strm-2c8d136ceb37445fb6c0222eafb966ce): 小雅官方提供的一键生成`strm`文件脚本
 - [monlor/docker-xiaoya](https://github.com/monlor/docker-xiaoya): Docker Compose 方式一键部署小雅全家桶
@@ -275,13 +275,13 @@ Docker镜像源选择 -> 9 6
 - [monlor](https://link.monlor.com)
 - [Rik](https://github.com/Rik-F5)
 
-<a href="https://github.com/DDS-Derek/xiaoya-alist/graphs/contributors"><img src="https://contrib.rocks/image?repo=DDS-Derek/xiaoya-alist"></a>
+<a href="https://github.com/xiaoyaDev/xiaoya-alist/graphs/contributors"><img src="https://contrib.rocks/image?repo=xiaoyaDev/xiaoya-alist"></a>
 
 ## 捐赠
 
-- [捐赠项目作者DDSRem](https://raw.githubusercontent.com/DDS-Derek/xiaoya-alist/master/assets/appreciate-ddsrem.png)
-- [捐赠小雅](https://raw.githubusercontent.com/DDS-Derek/xiaoya-alist/master/assets/appreciate-xiaoya.png)
-- [捐赠AI老G](https://raw.githubusercontent.com/DDS-Derek/xiaoya-alist/master/assets/appreciate-ailaog.png)
+- [捐赠项目作者DDSRem](https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/assets/appreciate-ddsrem.png)
+- [捐赠小雅](https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/assets/appreciate-xiaoya.png)
+- [捐赠AI老G](https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/assets/appreciate-ailaog.png)
 
 ## 许可证
 

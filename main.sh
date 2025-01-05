@@ -47,16 +47,16 @@ if [ -f /tmp/xiaoya_install.sh ]; then
     rm -rf /tmp/xiaoya_install.sh
 fi
 if [ -n "${XIAOYA_BRANCH}" ]; then
-    if ! curl -sL "https://fastly.jsdelivr.net/gh/DDS-Derek/xiaoya-alist@${XIAOYA_BRANCH}/all_in_one.sh" -o /tmp/xiaoya_install.sh; then
-        if ! curl -sL "https://raw.githubusercontent.com/DDS-Derek/xiaoya-alist/${XIAOYA_BRANCH}/all_in_one.sh" -o /tmp/xiaoya_install.sh; then
+    if ! curl -sL "https://fastly.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@${XIAOYA_BRANCH}/all_in_one.sh" -o /tmp/xiaoya_install.sh; then
+        if ! curl -sL "https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/${XIAOYA_BRANCH}/all_in_one.sh" -o /tmp/xiaoya_install.sh; then
             ERROR "脚本获取失败！"
             exit 1
         fi
     fi
 else
     if ! curl -sL https://ddsrem.com/xiaoya/all_in_one.sh -o /tmp/xiaoya_install.sh; then
-        if ! curl -sL https://fastly.jsdelivr.net/gh/DDS-Derek/xiaoya-alist@latest/all_in_one.sh -o /tmp/xiaoya_install.sh; then
-            if ! curl -sL https://raw.githubusercontent.com/DDS-Derek/xiaoya-alist/master/all_in_one.sh -o /tmp/xiaoya_install.sh; then
+        if ! curl -sL https://fastly.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@latest/all_in_one.sh -o /tmp/xiaoya_install.sh; then
+            if ! curl -sL https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/all_in_one.sh -o /tmp/xiaoya_install.sh; then
                 ERROR "脚本获取失败！"
                 exit 1
             fi

@@ -2702,8 +2702,8 @@ function install_lovechen_embyserver() {
         rm -rf ${MEDIA_DIR}/config/data/library.db-shm
     fi
     chmod 777 ${MEDIA_DIR}/config/data/library.org.db
-    curl -o ${MEDIA_DIR}/config/data/library.db https://cdn.jsdelivr.net/gh/DDS-Derek/xiaoya-alist@latest/emby_lovechen/library.db
-    curl -o ${MEDIA_DIR}/temp.sql https://cdn.jsdelivr.net/gh/DDS-Derek/xiaoya-alist@latest/emby_lovechen/temp.sql
+    curl -o ${MEDIA_DIR}/config/data/library.db https://cdn.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@latest/emby_lovechen/library.db
+    curl -o ${MEDIA_DIR}/temp.sql https://cdn.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@latest/emby_lovechen/temp.sql
     pull_run_glue sqlite3 /media/config/data/library.db ".read /media/temp.sql"
 
     INFO "数据库转换成功！"
@@ -5971,7 +5971,7 @@ function first_init() {
     if [ ! -d ${DDSREM_CONFIG_DIR} ]; then
         mkdir -p ${DDSREM_CONFIG_DIR}
     fi
-    # Fix https://github.com/DDS-Derek/xiaoya-alist/commit/a246bc582393b618b564e3beca2b9e1d40800a5d 中media目录保存错误
+    # Fix https://github.com/xiaoyaDev/xiaoya-alist/commit/a246bc582393b618b564e3beca2b9e1d40800a5d 中media目录保存错误
     if [ -f /xiaoya_alist_media_dir.txt ]; then
         mv /xiaoya_alist_media_dir.txt ${DDSREM_CONFIG_DIR}
     fi
@@ -6040,20 +6040,24 @@ function first_init() {
         rm -rf /tmp/xiaoya_alist
     fi
     if ! curl -sL https://ddsrem.com/xiaoya/xiaoya_alist -o /tmp/xiaoya_alist; then
-        if ! curl -sL https://fastly.jsdelivr.net/gh/DDS-Derek/xiaoya-alist@latest/xiaoya_alist -o /tmp/xiaoya_alist; then
-            curl -sL https://raw.githubusercontent.com/DDS-Derek/xiaoya-alist/master/xiaoya_alist -o /tmp/xiaoya_alist
+        if ! curl -sL https://fastly.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@latest/xiaoya_alist -o /tmp/xiaoya_alist; then
+            curl -sL https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/xiaoya_alist -o /tmp/xiaoya_alist
             if ! grep -q 'alias xiaoya' /etc/profile; then
-                echo -e "alias xiaoya='bash -c \"\$(curl -sLk https://raw.githubusercontent.com/DDS-Derek/xiaoya-alist/master/xiaoya_alist)\"'" >> /etc/profile
+                echo -e "alias xiaoya='bash -c \"\$(curl -sLk https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/xiaoya_alist)\"'" >> /etc/profile
             fi
         else
             if ! grep -q 'alias xiaoya' /etc/profile; then
-                echo -e "alias xiaoya='bash -c \"\$(curl -sLk https://fastly.jsdelivr.net/gh/DDS-Derek/xiaoya-alist@latest/xiaoya_alist)\"'" >> /etc/profile
+                echo -e "alias xiaoya='bash -c \"\$(curl -sLk https://fastly.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@latest/xiaoya_alist)\"'" >> /etc/profile
             fi
         fi
     else
         if ! grep -q 'alias xiaoya' /etc/profile; then
             echo -e "alias xiaoya='bash -c \"\$(curl -sLk https://ddsrem.com/xiaoya_install.sh)\"'" >> /etc/profile
         fi
+    fi
+    # 兼容仓库迁移
+    if grep -q 'DDS-Derek/xiaoya-alist' /etc/profile; then
+        sedsh 's/DDS-Derek\/xiaoya-alist/xiaoyaDev\/xiaoya-alist/g' /etc/profile
     fi
     INFO "初始化完成！"
     sleep 1
@@ -6105,8 +6109,8 @@ if [ "$(uname -s)" == "Darwin" ]; then
             rm -rf /tmp/run_xiaoya_install_user.txt
         fi
         if ! curl -sL https://ddsrem.com/xiaoya/all_in_one.sh -o /tmp/xiaoya_install.sh; then
-            if ! curl -sL https://fastly.jsdelivr.net/gh/DDS-Derek/xiaoya-alist@latest/all_in_one.sh -o /tmp/xiaoya_install.sh; then
-                if ! curl -sL https://raw.githubusercontent.com/DDS-Derek/xiaoya-alist/master/all_in_one.sh -o /tmp/xiaoya_install.sh; then
+            if ! curl -sL https://fastly.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@latest/all_in_one.sh -o /tmp/xiaoya_install.sh; then
+                if ! curl -sL https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/all_in_one.sh -o /tmp/xiaoya_install.sh; then
                     ERROR "脚本获取失败！"
                     exit 1
                 fi
