@@ -1423,7 +1423,7 @@ function install_xiaoya_alist() {
         echo "http://$localip:5678" > "${CONFIG_DIR}"/docker_address.txt
         auto_chown "${CONFIG_DIR}/docker_address.txt"
     fi
-    docker_command=("docker run" "-itd")
+    docker_command=("docker run" "-itd" "--privileged")
     if [[ ${NET_MODE} == [Yy] ]]; then
         docker_image="xiaoyaliu/alist:hostmode"
         docker_command+=("--network=host")
@@ -1460,6 +1460,9 @@ function update_xiaoya_alist() {
 #!/bin/bash
 if ! grep -q '2347' "/tmp/container_update_$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"; then
     sed -i '2s/^/-p 2347:2347 /' "/tmp/container_update_$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"
+fi
+if ! grep -q 'privileged' "/tmp/container_update_$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"; then
+    sed -i '2s/^/--privileged /' "/tmp/container_update_$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"
 fi
 EOF
     container_update_extra_command="bash /tmp/container_update_xiaoya_alist_run.sh"
