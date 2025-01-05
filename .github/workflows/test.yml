@@ -6,18 +6,6 @@ on:
   pull_request:
 
 jobs:
-  # test:
-  #   runs-on: ubuntu-latest
-  #   name: Test
-  #   steps:
-  #     -
-  #       name: Checkout
-  #       uses: actions/checkout@v4
-
-  #     - name: Test
-  #       run: |
-  #           bash main.sh test
-
   sh-checker:
     runs-on: ubuntu-latest
     name: sh-checker
@@ -34,7 +22,6 @@ jobs:
           SHFMT_OPTS: -d -i 4 -sr
         with:
           sh_checker_comment: true
-          sh_checker_exclude: "^deprecation/* ^xiaoyahelper/*"
 
   ruff:
     runs-on: ubuntu-latest
