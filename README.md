@@ -6,7 +6,7 @@
 
 ![](https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/assets/image-2.png)
 
-![](https://count.getloli.com/get/@xiaoyaDev.xiaoya-alist.readme?theme=rule34)
+![](https://count.getloli.com/get/@DDS-Derek.xiaoya-alist.readme?theme=rule34)
 
 - [main.sh](#mainsh)
   - [使用](#使用)
