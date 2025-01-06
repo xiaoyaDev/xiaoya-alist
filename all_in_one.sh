@@ -1845,37 +1845,60 @@ function set_emby_server_infuse_api_key() {
 
 function check_metadata_size() {
 
-    local file_size check_result
+    local file_size file_size_b remote_metadata_size _ua check_result
+
+    if [ -z "${xiaoya_addr}" ]; then
+        test_xiaoya_status
+    fi
+    _ua="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "User-Agent: ${_ua}"
+    remote_metadata_size=$(grep 'Content-Length' "${MEDIA_DIR}/headers.log" | awk '{print $2}')
+    rm -f ${MEDIA_DIR}/headers.log
 
     file_size=$(du -k "${MEDIA_DIR}/temp/${1}" | cut -f1)
 
-    case "${1}" in
-    config.mp4)
-        if [[ "$file_size" -le 3200000 ]]; then
+    if [ -n "${remote_metadata_size}" ] &&
+            awk -v remote="${remote_metadata_size}" -v threshold="2147483648" 'BEGIN { if (remote > threshold) print "1"; else print "0"; }' | grep -q "1"
+    then
+        INFO "精准校验文件大小模式"
+
+        file_size_b=$(du -b "${MEDIA_DIR}/temp/${1}" | awk '{print $1}')
+
+        INFO "${1} REMOTE_METADATA_SIZE: ${remote_metadata_size}"
+        INFO "${1} LOCAL_METADATA_SIZE: ${file_size_b}"
+
+        if [ "${remote_metadata_size}" != "${file_size_b}" ]; then
             check_result=false
         fi
-        ;;
-    all.mp4)
-        if [[ "$file_size" -le 30000000 ]]; then
-            check_result=false
-        fi
-        ;;
-    pikpak.mp4)
-        if [[ "$file_size" -le 14000000 ]]; then
-            check_result=false
-        fi
-        ;;
-    115.mp4)
-        if [[ "$file_size" -le 16000000 ]]; then
-            check_result=false
-        fi
-        ;;
-    config.new.mp4)
-        if [[ "$file_size" -le 3200000 ]]; then
-            check_result=false
-        fi
-        ;;
-    esac
+    else
+        case "${1}" in
+        config.mp4)
+            if [[ "$file_size" -le 3200000 ]]; then
+                check_result=false
+            fi
+            ;;
+        all.mp4)
+            if [[ "$file_size" -le 30000000 ]]; then
+                check_result=false
+            fi
+            ;;
+        pikpak.mp4)
+            if [[ "$file_size" -le 14000000 ]]; then
+                check_result=false
+            fi
+            ;;
+        115.mp4)
+            if [[ "$file_size" -le 16000000 ]]; then
+                check_result=false
+            fi
+            ;;
+        config.new.mp4)
+            if [[ "$file_size" -le 3200000 ]]; then
+                check_result=false
+            fi
+            ;;
+        esac
+    fi
 
     if [ "${check_result}" == false ]; then
         ERROR "${1} 下载不完整，文件大小(in KB):$file_size 小于预期"
@@ -2283,7 +2306,7 @@ function download_unzip_xiaoya_emby_new_config() {
         local REMOTE_METADATA_SIZE LOCAL_METADATA_SIZE _ua
 
         _ua="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-        pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "${_ua}"
+        pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "User-Agent: ${_ua}"
         REMOTE_METADATA_SIZE=$(cat ${MEDIA_DIR}/headers.log | grep 'Content-Length' | awk '{print $2}')
         rm -f ${MEDIA_DIR}/headers.log
 

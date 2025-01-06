@@ -203,7 +203,7 @@ Docker镜像源选择 -> 9 6
 | xiaoya-glue（DDSRem python） |        ✅         |         ✅         |        ❌        |
 | xiaoya-glue（DDSRem aliyuntvtoken_connector） |        ✅         |         ✅         |        ❌        |
 
-|    系统名称     | all_in_one.sh | emby_config_editor.sh | xiaoya_notify.sh |
+|    系统名称     | all_in_one.sh | emby_config_editor.sh | xiaoya_notify.sh（已弃用） |
 | :-------------: | :-----: | :-------------------: | :-------------: |
 |   CentOS 7.9    |    ✅    |           ✅           | ✅ |
 |   CentOS 8.4    |    ✅    |           ✅           | ✅ |
@@ -225,7 +225,7 @@ Docker镜像源选择 -> 9 6
 |     EulerOS     |    ✅    |           ✅           | ✅ |
 |  Amazon Linux   |    ✅    |           ✅           | ✅ |
 |     Alpine      |    ✅    |           ✅           | ✅ |
-|      MacOS      |    ✅    |           🚧           | 🚧 |
+|      MacOS      |    ✅    |           ✅           | 🚧 |
 |     UnRaid      |    ✅    |           ✅           | ✅ |
 | OpenMediaVault  |    ✅    |           ✅           | ✅ |
 |      QNAP（威联通）      |    ✅    |           ✅           | ✅ |
@@ -236,7 +236,7 @@ Docker镜像源选择 -> 9 6
 |      UGOS（绿联云）      |    ✅    |           ✅           | ✅ |
 |    UGOS Pro（绿联云 Pro）    |    ✅    |           ✅           | ✅ |
 |   LibreELEC     |    ❌    |           ❌           | ❌ |
-|  Windows WSL Docker  |    ❌    |           ❌           | ❌ |
+|  Windows WSL Docker  |    🚧    |           🚧           | ❌ |
 | ZSpace（极空间） | 🚧 | 🚧 | 🚧 |
 | fnOS (飞牛私有云) | ✅ | ✅ | ✅ |
 
