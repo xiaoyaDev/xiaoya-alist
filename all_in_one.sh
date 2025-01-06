@@ -1858,8 +1858,7 @@ function check_metadata_size() {
     file_size=$(du -k "${MEDIA_DIR}/temp/${1}" | cut -f1)
 
     if [ -n "${remote_metadata_size}" ] &&
-            awk -v remote="${remote_metadata_size}" -v threshold="2147483648" 'BEGIN { if (remote > threshold) print "1"; else print "0"; }' | grep -q "1"
-    then
+        awk -v remote="${remote_metadata_size}" -v threshold="2147483648" 'BEGIN { if (remote > threshold) print "1"; else print "0"; }' | grep -q "1"; then
         INFO "精准校验文件大小模式"
 
         file_size_b=$(du -b "${MEDIA_DIR}/temp/${1}" | awk '{print $1}')
