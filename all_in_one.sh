@@ -1915,7 +1915,7 @@ function __unzip_metadata() {
         if ! check_metadata_size "${1}"; then
             exit 1
         fi
-        if [[ "${OSNAME}" = "macos" ]] || command -v 7z > /dev/null 2>&1; then
+        if [[ "${OSNAME}" = "macos" ]]; then
             INFO "使用宿主机 7z 命令解压"
             if [ "${1}" == "config.mp4" ] || [ "${1}" == "config.new.mp4" ]; then
                 if [ ! -d "${MEDIA_DIR}" ]; then
@@ -2111,7 +2111,7 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
         if ! check_metadata_size "${1}"; then
             exit 1
         fi
-        if [[ "${OSNAME}" = "macos" ]] || command -v 7z > /dev/null 2>&1; then
+        if [[ "${OSNAME}" = "macos" ]]; then
             INFO "使用宿主机 7z 命令解压"
             if [ ! -d "${MEDIA_DIR}/xiaoya" ]; then
                 mkdir -p "${MEDIA_DIR}/xiaoya"
