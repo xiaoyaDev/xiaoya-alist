@@ -1915,7 +1915,8 @@ function __unzip_metadata() {
         if ! check_metadata_size "${1}"; then
             exit 1
         fi
-        if [[ "${OSNAME}" = "macos" ]]; then
+        if [[ "${OSNAME}" = "macos" ]] || command -v 7z > /dev/null 2>&1; then
+            INFO "使用宿主机 7z 命令解压"
             if [ "${1}" == "config.mp4" ] || [ "${1}" == "config.new.mp4" ]; then
                 if [ ! -d "${MEDIA_DIR}" ]; then
                     mkdir -p "${MEDIA_DIR}"
@@ -1932,14 +1933,20 @@ function __unzip_metadata() {
                 cd "${MEDIA_DIR}/xiaoya" || return 1
             fi
             INFO "当前解压工作目录：$(pwd)"
-            7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}"
+            if ! 7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}"; then
+                ERROR "解压元数据失败！"
+                exit 1
+            fi
         else
             if [ "${1}" == "config.mp4" ] || [ "${1}" == "config.new.mp4" ]; then
                 extra_parameters="--workdir=/media"
             else
                 extra_parameters="--workdir=/media/xiaoya"
             fi
-            pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}"
+            if ! pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}"; then
+                ERROR "解压元数据失败！"
+                exit 1
+            fi
         fi
 
     }
@@ -2104,7 +2111,8 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
         if ! check_metadata_size "${1}"; then
             exit 1
         fi
-        if [[ "${OSNAME}" = "macos" ]]; then
+        if [[ "${OSNAME}" = "macos" ]]  || command -v 7z > /dev/null 2>&1; then
+            INFO "使用宿主机 7z 命令解压"
             if [ ! -d "${MEDIA_DIR}/xiaoya" ]; then
                 mkdir -p "${MEDIA_DIR}/xiaoya"
                 auto_chown "${MEDIA_DIR}/xiaoya"
@@ -2112,10 +2120,16 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
             fi
             cd "${MEDIA_DIR}/xiaoya" || return 1
             INFO "当前解压工作目录：$(pwd)"
-            7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"
+            if ! 7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
+                ERROR "解压元数据失败！"
+                exit 1
+            fi
         else
             extra_parameters="--workdir=/media/xiaoya"
-            pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}" "${2}/*" -o/media/xiaoya
+            if ! pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
+                ERROR "解压元数据失败！"
+                exit 1
+            fi
         fi
 
     }
@@ -2216,6 +2230,7 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
         metadata_unziper "${1}" "115/${UNZIP_FOLD}"
     else
         ERROR "此文件暂时不支持解压指定元数据！"
+        exit 1
     fi
 
     INFO "设置目录权限..."
