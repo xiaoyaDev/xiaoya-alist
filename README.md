@@ -72,8 +72,8 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 安装 Onelist -> 8 3 1
 安装 Portainer -> 8 1 1
 安装 Emby全家桶（一键） -> 2 1
-安装 Jellyfin全家桶（一键） -> 3 1
-安装 Resilio-Sync（单独） -> 2 5 1
+安装 Jellyfin全家桶（一键） -> 3 1（已弃用）
+安装 Resilio-Sync（单独） -> 2 5 1（已弃用）
 安装 Auto_Symlink -> 8 2 1
 安装 CasaOS -> 8 7 1
 安装 小雅元数据定时爬虫 -> 2 9 1
@@ -95,8 +95,8 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 单独 下载并解压 config.new.mp4 -> 2 2 101
 选择 下载器【aria2/wget】-> 2 2 13
 单独 安装Emby（可选择版本，支持官方，amilys，lovechen）-> 2 3
-立即 同步小雅Emby的config目录 -> 2 6
-单独 创建/删除 同步定时更新任务 -> 2 7
+立即 同步小雅Emby的config目录 -> 2 6（已弃用）
+单独 创建/删除 同步定时更新任务 -> 2 7（已弃用）
 图形化编辑 emby_config.txt -> 2 8
 一键升级Emby容器（可选择镜像版本） -> 2 10
 小雅爬虫 立刻爬取指定目录 -> 2 9 4
@@ -105,7 +105,7 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 小雅爬虫 重置爬虫数据库 -> 2 9 7
 ————————————————————————————Jellyfin手动全家桶配置——————————————————————————————————
 
-注意：目前官方 Jellyfin 安装方案已经长久未维护！
+注意：目前官方 Jellyfin 安装方案已经长久未维护！（已弃用）
 如果您需要安装 小雅Jellyfin 全家桶，请使用 AI老G 的脚本安装，风险自担。
 脚本命令：bash <(curl -sSLf https://xy.ggbond.org/xy/xy_install.sh)
 
@@ -123,7 +123,7 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 ———————————————————————————————————————更新———————————————————————————————————————
 更新 小雅Alist-TVBox -> 5 2
 更新 小雅Alist -> 1 2
-更新 Resilio-Sync（单独） -> 2 5 2
+更新 Resilio-Sync（单独） -> 2 5 2（已弃用）
 更新 115清理助手 -> 6 2
 更新 Onelist -> 8 3 2
 更新 Portainer -> 8 1 2
@@ -134,8 +134,8 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 ———————————————————————————————————————卸载———————————————————————————————————————
 卸载 小雅Alist -> 1 3
 卸载 Emby全家桶 -> 2 11
-卸载 卸载Jellyfin全家桶 -> 3 4
-卸载 Resilio-Sync（单独） -> 2 5 3
+卸载 卸载Jellyfin全家桶 -> 3 4（已弃用）
+卸载 Resilio-Sync（单独） -> 2 5 3（已弃用）
 卸载 小雅助手（xiaoyahelper）-> 4 3
 卸载 小雅Alist-TVBox -> 5 3
 卸载 115清理助手 -> 6 3

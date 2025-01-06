@@ -944,6 +944,11 @@ EOF
 
 }
 
+if [ -n "$(date)" ]; then
+    ERROR "此脚本已弃用！"
+    exit 0
+fi
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
     --config_dir=*)
