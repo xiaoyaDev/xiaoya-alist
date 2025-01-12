@@ -92,8 +92,10 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 单独 下载 115.mp4 -> 2 2 10
 单独 解压 115.mp4 -> 2 2 11
 解压 115.mp4 的指定元数据目录【非全部解压】-> 2 2 12
+单独 下载 蓝光原盘.mp4 -> 2 2 13
+单独 解压 蓝光原盘.mp4 -> 2 2 14
 单独 下载并解压 config.new.mp4 -> 2 2 101
-选择 下载器【aria2/wget】-> 2 2 13
+选择 下载器【aria2/wget】-> 2 2 15
 单独 安装Emby（可选择版本，支持官方，amilys，lovechen）-> 2 3
 立即 同步小雅Emby的config目录 -> 2 6（已弃用）
 单独 创建/删除 同步定时更新任务 -> 2 7（已弃用）

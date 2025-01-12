@@ -1930,6 +1930,11 @@ function check_metadata_size() {
                 check_result=false
             fi
             ;;
+        蓝光原盘.mp4)
+            if [[ "$file_size" -le 4200000 ]]; then
+                check_result=false
+            fi
+            ;;
         config.new.mp4)
             if [[ "$file_size" -le 3200000 ]]; then
                 check_result=false
@@ -2487,13 +2492,15 @@ function main_download_unzip_xiaoya_emby() {
     echo -e "10、下载 115.mp4"
     echo -e "11、解压 115.mp4"
     echo -e "12、解压 115.mp4 的指定元数据目录【非全部解压】"
-    echo -e "13、当前下载器【aria2/wget】                  当前状态：${Green}${__data_downloader}${Font}"
+    echo -e "13、下载 蓝光原盘.mp4"
+    echo -e "14、解压 蓝光原盘.mp4"
+    echo -e "15、当前下载器【aria2/wget】                  当前状态：${Green}${__data_downloader}${Font}"
     echo -e "101、下载并解压 config.new.mp4（4.9.0.31）"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字（支持输入多个数字，空格分离，按输入顺序执行）[0-13]:" -a nums
+    read -erp "请输入数字（支持输入多个数字，空格分离，按输入顺序执行）[0-15]:" -a nums
     for num in "${nums[@]}"; do
-        if [ $num -ge 1 ] && [ $num -le 12 ]; then
+        if [ $num -ge 1 ] && [ $num -le 14 ]; then
             case "$num" in
             1)
                 clear
@@ -2543,13 +2550,21 @@ function main_download_unzip_xiaoya_emby() {
                 clear
                 unzip_appoint_xiaoya_emby_jellyfin "115.mp4"
                 ;;
+            13)
+                clear
+                download_xiaoya_emby "蓝光原盘.mp4"
+                ;;
+            14)
+                clear
+                unzip_xiaoya_emby "蓝光原盘.mp4"
+                ;;
             esac
             __next_operate=return_menu
         elif [ $num == 101 ]; then
             clear
             download_unzip_xiaoya_emby_new_config
             __next_operate=return_menu
-        elif [ $num == 13 ]; then
+        elif [ $num == 15 ]; then
             if [ "${__data_downloader}" == "wget" ]; then
                 echo 'aria2' > ${DDSREM_CONFIG_DIR}/data_downloader.txt
             elif [ "${__data_downloader}" == "aria2" ]; then
@@ -2566,7 +2581,7 @@ function main_download_unzip_xiaoya_emby() {
             break
         else
             clear
-            ERROR '请输入正确数字 [0-13]'
+            ERROR '请输入正确数字 [0-15]'
             __next_operate=main_download_unzip_xiaoya_emby
             break
         fi
