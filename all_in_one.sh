@@ -1894,13 +1894,13 @@ function check_metadata_size() {
     remote_metadata_size=$(grep 'Content-Length' "${MEDIA_DIR}/headers.log" | awk '{print $2}')
     rm -f ${MEDIA_DIR}/headers.log
 
-    file_size=$(du -k "${MEDIA_DIR}/temp/${1}" | cut -f1)
+    file_size=$(pull_run_glue du -k "/media/temp/${1}" | cut -f1)
 
     if [ -n "${remote_metadata_size}" ] &&
         awk -v remote="${remote_metadata_size}" -v threshold="2147483648" 'BEGIN { if (remote > threshold) print "1"; else print "0"; }' | grep -q "1"; then
         INFO "精准校验文件大小模式"
 
-        file_size_b=$(du -b "${MEDIA_DIR}/temp/${1}" | awk '{print $1}')
+        file_size_b=$(pull_run_glue du -b "/media/temp/${1}" | awk '{print $1}')
 
         INFO "${1} REMOTE_METADATA_SIZE: ${remote_metadata_size}"
         INFO "${1} LOCAL_METADATA_SIZE: ${file_size_b}"
@@ -2369,7 +2369,7 @@ function download_unzip_xiaoya_emby_new_config() {
         rm -f ${MEDIA_DIR}/headers.log
 
         if [ -f "${MEDIA_DIR}/temp/${1}" ] && [ ! -f "${MEDIA_DIR}/temp/${1}.aria2" ]; then
-            LOCAL_METADATA_SIZE=$(du -b "${MEDIA_DIR}/temp/${1}" | awk '{print $1}')
+            LOCAL_METADATA_SIZE=$(pull_run_glue du -b "/media/temp/${1}" | awk '{print $1}')
         else
             LOCAL_METADATA_SIZE=0
         fi
