@@ -1560,11 +1560,10 @@ function main_xiaoya_alist() {
     echo -e "1、安装"
     echo -e "2、更新"
     echo -e "3、卸载"
-    echo -e "4、创建/删除 定时同步更新数据（${Red}功能已弃用，只提供删除${Font}）  当前状态：$(judgment_xiaoya_alist_sync_data_status)"
-    echo -e "5、账号管理"
+    echo -e "4、账号管理"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-5]:" num
+    read -erp "请输入数字 [0-4]:" num
     case "$num" in
     1)
         clear
@@ -1585,37 +1584,6 @@ function main_xiaoya_alist() {
         ;;
     4)
         clear
-        if command -v crontab > /dev/null 2>&1; then
-            if crontab -l | grep xiaoya_data_downloader > /dev/null 2>&1; then
-                for i in $(seq -w 3 -1 0); do
-                    echo -en "即将删除同步定时任务${Blue} $i ${Font}\r"
-                    sleep 1
-                done
-                uninstall_xiaoya_alist_sync_data
-                clear
-                INFO "已删除"
-            else
-                INFO "功能已弃用，目前只提供删除！"
-            fi
-        elif [ -f /etc/synoinfo.conf ]; then
-            if grep 'xiaoya_data_downloader' /etc/crontab > /dev/null 2>&1; then
-                for i in $(seq -w 3 -1 0); do
-                    echo -en "即将删除同步定时任务${Blue} $i ${Font}\r"
-                    sleep 1
-                done
-                uninstall_xiaoya_alist_sync_data
-                clear
-                INFO "已删除"
-            else
-                INFO "功能已弃用，目前只提供删除！"
-            fi
-        else
-            INFO "功能已弃用，目前只提供删除！"
-        fi
-        return_menu "main_xiaoya_alist"
-        ;;
-    5)
-        clear
         main_account_management
         ;;
     0)
@@ -1624,7 +1592,7 @@ function main_xiaoya_alist() {
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-5]'
+        ERROR '请输入正确数字 [0-4]'
         main_xiaoya_alist
         ;;
     esac
@@ -3813,17 +3781,13 @@ function main_xiaoya_all_emby() {
     echo -e "1、一键安装Emby全家桶
 2、下载/解压 元数据
 3、安装Emby（可选择版本）
-4、替换DOCKER_ADDRESS（${Red}已弃用${Font}）
-5、安装/更新/卸载 Resilio-Sync（${Red}已弃用${Font}）      当前状态：$(judgment_container "${xiaoya_resilio_name}")
-6、立即同步小雅Emby config目录（${Red}已弃用${Font}）
-7、创建/删除 同步定时更新任务（${Red}已弃用${Font}）       当前状态：$(judgment_xiaoya_notify_status)
-8、图形化编辑 emby_config.txt
-9、安装/更新/卸载 小雅元数据定时爬虫          当前状态：$(judgment_container xiaoya-emd)
-10、一键升级Emby容器（可选择镜像版本）
-11、卸载Emby全家桶"
+4、图形化编辑 emby_config.txt
+5、安装/更新/卸载 小雅元数据定时爬虫          当前状态：$(judgment_container xiaoya-emd)
+6、一键升级Emby容器（可选择镜像版本）
+7、卸载Emby全家桶"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-11]:" num
+    read -erp "请输入数字 [0-7]:" num
     case "$num" in
     1)
         clear
@@ -3867,74 +3831,20 @@ function main_xiaoya_all_emby() {
         ;;
     4)
         clear
-        WARN "此功能已弃用！"
-        return_menu "main_xiaoya_all_emby"
-        ;;
-    5)
-        clear
-        main_resilio
-        ;;
-    6)
-        clear
-        once_sync_emby_config
-        ;;
-    7)
-        clear
-        if command -v crontab > /dev/null 2>&1; then
-            if crontab -l | grep xiaoya_notify > /dev/null 2>&1; then
-                for i in $(seq -w 3 -1 0); do
-                    echo -en "即将删除Emby config同步定时任务${Blue} $i ${Font}\r"
-                    sleep 1
-                done
-                uninstall_xiaoya_notify_cron
-                clear
-                INFO "已删除"
-            else
-                install_xiaoya_notify_cron
-            fi
-        elif [ -f /etc/synoinfo.conf ]; then
-            if grep 'xiaoya_notify' /etc/crontab > /dev/null 2>&1; then
-                for i in $(seq -w 3 -1 0); do
-                    echo -en "即将删除Emby config同步定时任务${Blue} $i ${Font}\r"
-                    sleep 1
-                done
-                uninstall_xiaoya_notify_cron
-                clear
-                INFO "已删除"
-            else
-                install_xiaoya_notify_cron
-            fi
-        else
-            if docker container inspect xiaoya-cron > /dev/null 2>&1; then
-                for i in $(seq -w 3 -1 0); do
-                    echo -en "即将删除Emby config同步定时任务${Blue} $i ${Font}\r"
-                    sleep 1
-                done
-                uninstall_xiaoya_notify_cron
-                clear
-                INFO "已删除"
-            else
-                install_xiaoya_notify_cron
-            fi
-        fi
-        return_menu "main_xiaoya_all_emby"
-        ;;
-    8)
-        clear
         get_config_dir
         bash -c "$(curl -sLk https://ddsrem.com/xiaoya/emby_config_editor.sh)" -s ${CONFIG_DIR}
         main_xiaoya_all_emby
         ;;
-    9)
+    5)
         clear
         main_xiaoya_emd
         ;;
-    10)
+    6)
         clear
         oneclick_upgrade_emby
         return_menu "main_xiaoya_all_emby"
         ;;
-    11)
+    7)
         clear
         uninstall_xiaoya_all_emby
         ;;
@@ -3944,7 +3854,7 @@ function main_xiaoya_all_emby() {
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-11]'
+        ERROR '请输入正确数字 [0-7]'
         main_xiaoya_all_emby
         ;;
     esac
@@ -4904,7 +4814,7 @@ function main_docker_compose() {
         ;;
     0)
         clear
-        main_return
+        main_other_tools
         ;;
     *)
         clear
@@ -5134,9 +5044,10 @@ function main_advanced_configuration() {
     echo -e "5、开启/关闭 小雅连通性检测                   当前状态：${_xiaoya_connectivity_detection}"
     echo -e "6、Docker镜像源选择"
     echo -e "7、非可选网络模式容器默认网络模式             当前状态：${Blue}${_default_network}${Font}"
+    echo -e "8、弃用菜单"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-7]:" num
+    read -erp "请输入数字 [0-8]:" num
     case "$num" in
     1)
         clear
@@ -5193,13 +5104,17 @@ function main_advanced_configuration() {
         clear
         main_advanced_configuration
         ;;
+    8)
+        clear
+        main_deprecation
+        ;;
     0)
         clear
         main_return
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-7]'
+        ERROR '请输入正确数字 [0-8]'
         main_advanced_configuration
         ;;
     esac
@@ -5219,9 +5134,10 @@ function main_other_tools() {
     echo -e "6、查看系统磁盘挂载"
     echo -e "7、安装/卸载 CasaOS"
     echo -e "8、AI老G 安装脚本"
+    echo -e "9、Docker Compose 安装/卸载 小雅及全家桶（实验性功能）"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-8]:" num
+    read -erp "请输入数字 [0-9]:" num
     case "$num" in
     1)
         clear
@@ -5260,13 +5176,17 @@ function main_other_tools() {
         clear
         bash <(curl -sSLf https://xy.ggbond.org/xy/xy_install.sh)
         ;;
+    9)
+        clear
+        main_docker_compose
+        ;;
     0)
         clear
         main_return
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-8]'
+        ERROR '请输入正确数字 [0-9]'
         main_other_tools
         ;;
     esac
@@ -5288,16 +5208,14 @@ function main_return() {
     # shellcheck disable=SC2154
     echo -e "${out_tips}1、安装/更新/卸载 小雅Alist & 账号管理        当前状态：$(judgment_container "${xiaoya_alist_name}")
 2、安装/更新/卸载 小雅Emby全家桶              当前状态：$(judgment_container "${xiaoya_emby_name}")
-3、安装/卸载 小雅Jellyfin全家桶（已弃用）     当前状态：$(judgment_container "${xiaoya_jellyfin_name}")
-4、安装/更新/卸载 小雅助手（xiaoyahelper）    当前状态：$(judgment_container xiaoyakeeper)
-5、安装/更新/卸载 小雅Alist-TVBox（非原版）   当前状态：$(judgment_container "${xiaoya_tvbox_name}")
-6、安装/更新/卸载 115清理助手                 当前状态：$(judgment_container xiaoya-115cleaner)
-7、Docker Compose 安装/卸载 小雅及全家桶（实验性功能）
-8、其他工具 | Script info: ${DATE_VERSION} OS: ${_os},${OSNAME},${is64bit}
-9、高级配置 | Docker version: ${Blue}${DOCKER_VERSION}${Font} ${IP_CITY}
+3、安装/更新/卸载 小雅助手（xiaoyahelper）    当前状态：$(judgment_container xiaoyakeeper)
+4、安装/更新/卸载 小雅Alist-TVBox（非原版）   当前状态：$(judgment_container "${xiaoya_tvbox_name}")
+5、安装/更新/卸载 115清理助手                 当前状态：$(judgment_container xiaoya-115cleaner)
+6、其他工具 | Script info: ${DATE_VERSION} OS: ${_os},${OSNAME},${is64bit}
+7、高级配置 | Docker version: ${Blue}${DOCKER_VERSION}${Font} ${IP_CITY}
 0、退出脚本 | Thanks: ${Sky_Blue}heiheigui,xiaoyaLiu,Harold,AI老G,monlor,Rik${Font}
 ——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-9]:" num
+    read -erp "请输入数字 [0-7]:" num
     case "$num" in
     1)
         clear
@@ -5309,33 +5227,25 @@ function main_return() {
         ;;
     3)
         clear
-        main_xiaoya_all_jellyfin
+        main_xiaoyahelper
         ;;
     4)
         clear
-        main_xiaoyahelper
+        main_xiaoya_alist_tvbox
         ;;
     5)
         clear
-        main_xiaoya_alist_tvbox
+        main_xiaoya_115_cleaner
         ;;
     6)
         clear
-        main_xiaoya_115_cleaner
+        main_other_tools
         ;;
     7)
         clear
-        main_docker_compose
-        ;;
-    8)
-        clear
-        main_other_tools
-        ;;
-    9)
-        clear
         main_advanced_configuration
         ;;
-    96)
+    76)
         clear
         choose_image_mirror "main_return"
         ;;
@@ -5378,7 +5288,7 @@ function main_return() {
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-9]'
+        ERROR '请输入正确数字 [0-7]'
         main_return
         ;;
     esac
