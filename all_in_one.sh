@@ -2032,7 +2032,13 @@ function __download_metadata() {
                 exit 1
             fi
         else
-            if pull_run_glue aria2c -o "${1}" --header="User-Agent: ${_ua}" --allow-overwrite=true --auto-file-renaming=false --enable-color=false -c -x6 "${xiaoya_addr}/d/元数据/${1}"; then
+            local download_threads
+            if [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
+                download_threads="-x1"
+            else
+                download_threads="-x6"
+            fi
+            if pull_run_glue aria2c -o "${1}" --header="User-Agent: ${_ua}" --allow-overwrite=true --auto-file-renaming=false --enable-color=false -c "${download_threads}" "${xiaoya_addr}/d/元数据/${1}"; then
                 if [ -f "${MEDIA_DIR}/temp/${1}.aria2" ]; then
                     ERROR "存在 ${MEDIA_DIR}/temp/${1}.aria2 文件，下载不完整！"
                     exit 1
