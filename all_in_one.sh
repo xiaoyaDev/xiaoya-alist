@@ -1926,6 +1926,19 @@ function check_metadata_size() {
 
 function __unzip_metadata() {
 
+    function unzip_error() {
+
+        ERROR "解压元数据失败！"
+        ERROR "${OSNAME} $(uname -a)"
+        if [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
+            ERROR "ali2115 已开启！"
+        else
+            ERROR "ali2115 未配置！"
+        fi
+        exit 1
+
+    }
+
     function metadata_unziper() {
 
         if ! check_metadata_size "${1}"; then
@@ -1949,9 +1962,8 @@ function __unzip_metadata() {
                 cd "${MEDIA_DIR}/xiaoya" || return 1
             fi
             INFO "当前解压工作目录：$(pwd)"
-            if ! 7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}"; then
-                ERROR "解压元数据失败！"
-                exit 1
+            if ! 7z x -aoa -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}"; then
+                unzip_error
             fi
         else
             if [ "${1}" == "config.mp4" ] || [ "${1}" == "config.new.mp4" ]; then
@@ -1959,9 +1971,8 @@ function __unzip_metadata() {
             else
                 extra_parameters="--workdir=/media/xiaoya"
             fi
-            if ! pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}"; then
-                ERROR "解压元数据失败！"
-                exit 1
+            if ! pull_run_glue 7z x -aoa -mmt=16 -bb3 "/media/temp/${1}"; then
+                unzip_error
             fi
         fi
 
