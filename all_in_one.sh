@@ -2122,11 +2122,25 @@ function unzip_xiaoya_emby() {
 
 function unzip_appoint_xiaoya_emby_jellyfin() {
 
+    function unzip_error() {
+
+        ERROR "解压元数据失败！"
+        ERROR "${OSNAME} $(uname -a)"
+        if [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
+            ERROR "ali2115 已开启！"
+        else
+            ERROR "ali2115 未配置！"
+        fi
+        exit 1
+
+    }
+
     function metadata_unziper() {
 
         if ! check_metadata_size "${1}"; then
             exit 1
         fi
+
         if [[ "${OSNAME}" = "macos" ]]; then
             INFO "使用宿主机 7z 命令解压"
             if [ ! -d "${MEDIA_DIR}/xiaoya" ]; then
@@ -2136,15 +2150,13 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
             fi
             cd "${MEDIA_DIR}/xiaoya" || return 1
             INFO "当前解压工作目录：$(pwd)"
-            if ! 7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
-                ERROR "解压元数据失败！"
-                exit 1
+            if ! 7z x -aoa -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
+                unzip_error
             fi
         else
             extra_parameters="--workdir=/media/xiaoya"
-            if ! pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
-                ERROR "解压元数据失败！"
-                exit 1
+            if ! pull_run_glue 7z x -aoa -mmt=16 -bb3 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
+                unzip_error
             fi
         fi
 
