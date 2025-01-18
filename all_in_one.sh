@@ -1962,8 +1962,10 @@ function __unzip_metadata() {
                 cd "${MEDIA_DIR}/xiaoya" || return 1
             fi
             INFO "当前解压工作目录：$(pwd)"
-            if ! 7z x -aoa -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}"; then
-                unzip_error
+            if ! 7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}"; then
+                if ! 7z x -aoa -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}"; then
+                    unzip_error
+                fi
             fi
         else
             if [ "${1}" == "config.mp4" ] || [ "${1}" == "config.new.mp4" ]; then
@@ -1971,8 +1973,10 @@ function __unzip_metadata() {
             else
                 extra_parameters="--workdir=/media/xiaoya"
             fi
-            if ! pull_run_glue 7z x -aoa -mmt=16 -bb3 "/media/temp/${1}"; then
-                unzip_error
+            if ! pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}"; then
+                if ! pull_run_glue 7z x -aoa -mmt=16 -bb3 "/media/temp/${1}"; then
+                    unzip_error
+                fi
             fi
         fi
 
@@ -2161,13 +2165,17 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
             fi
             cd "${MEDIA_DIR}/xiaoya" || return 1
             INFO "当前解压工作目录：$(pwd)"
-            if ! 7z x -aoa -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
-                unzip_error
+            if ! 7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
+                if ! 7z x -aoa -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
+                    unzip_error
+                fi
             fi
         else
             extra_parameters="--workdir=/media/xiaoya"
-            if ! pull_run_glue 7z x -aoa -mmt=16 -bb3 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
-                unzip_error
+            if ! pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
+                if ! pull_run_glue 7z x -aoa -mmt=16 -bb3 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
+                    unzip_error
+                fi
             fi
         fi
 
