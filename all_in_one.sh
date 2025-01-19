@@ -39,6 +39,7 @@ Font="\033[0m"
 INFO="[${Green}INFO${Font}]"
 ERROR="[${Red}ERROR${Font}]"
 WARN="[${Yellow}WARN${Font}]"
+DEBUG="[${Sky_Blue}DEBUG${Font}]"
 function INFO() {
     echo -e "${INFO} ${1}"
 }
@@ -47,6 +48,22 @@ function ERROR() {
 }
 function WARN() {
     echo -e "${WARN} ${1}"
+}
+function DEBUG() {
+    echo -e "${DEBUG} ${1}"
+}
+
+function __unzip_metadata_debug() {
+
+    ERROR "解压元数据失败！"
+    DEBUG "${OSNAME} $(uname -a)"
+    if [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
+        DEBUG "ali2115 配置情况：已开启！"
+    else
+        DEBUG "ali2115 配置情况：未配置！"
+    fi
+    exit 1
+
 }
 
 # shellcheck disable=SC2034
@@ -1926,19 +1943,6 @@ function check_metadata_size() {
 
 function __unzip_metadata() {
 
-    function unzip_error() {
-
-        ERROR "解压元数据失败！"
-        ERROR "${OSNAME} $(uname -a)"
-        if [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
-            ERROR "ali2115 已开启！"
-        else
-            ERROR "ali2115 未配置！"
-        fi
-        exit 1
-
-    }
-
     function metadata_unziper() {
 
         if ! check_metadata_size "${1}"; then
@@ -1964,7 +1968,7 @@ function __unzip_metadata() {
             INFO "当前解压工作目录：$(pwd)"
             if ! 7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}"; then
                 if ! 7z x -aoa -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}"; then
-                    unzip_error
+                    __unzip_metadata_debug
                 fi
             fi
         else
@@ -1975,7 +1979,7 @@ function __unzip_metadata() {
             fi
             if ! pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}"; then
                 if ! pull_run_glue 7z x -aoa -mmt=16 -bb3 "/media/temp/${1}"; then
-                    unzip_error
+                    __unzip_metadata_debug
                 fi
             fi
         fi
@@ -2143,19 +2147,6 @@ function unzip_xiaoya_emby() {
 
 function unzip_appoint_xiaoya_emby_jellyfin() {
 
-    function unzip_error() {
-
-        ERROR "解压元数据失败！"
-        ERROR "${OSNAME} $(uname -a)"
-        if [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
-            ERROR "ali2115 已开启！"
-        else
-            ERROR "ali2115 未配置！"
-        fi
-        exit 1
-
-    }
-
     function metadata_unziper() {
 
         if ! check_metadata_size "${1}"; then
@@ -2173,14 +2164,14 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
             INFO "当前解压工作目录：$(pwd)"
             if ! 7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
                 if ! 7z x -aoa -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
-                    unzip_error
+                    __unzip_metadata_debug
                 fi
             fi
         else
             extra_parameters="--workdir=/media/xiaoya"
             if ! pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
                 if ! pull_run_glue 7z x -aoa -mmt=16 -bb3 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
-                    unzip_error
+                    __unzip_metadata_debug
                 fi
             fi
         fi
