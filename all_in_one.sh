@@ -55,13 +55,15 @@ function DEBUG() {
 
 function __unzip_metadata_debug() {
 
-    ERROR "解压元数据失败！"
     DEBUG "${OSNAME} $(uname -a)"
     if [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
         DEBUG "ali2115 配置情况：已开启！"
     else
         DEBUG "ali2115 配置情况：未配置！"
     fi
+    DEBUG "$(pull_run_glue xxd -g 1 -l 256 "${MEDIA_DIR}/temp/${1}")"
+    DEBUG "$(pull_run_glue xxd -g 1 -s -256 "${MEDIA_DIR}/temp/${1}")"
+    ERROR "解压元数据失败！"
     exit 1
 
 }
@@ -1968,7 +1970,7 @@ function __unzip_metadata() {
             INFO "当前解压工作目录：$(pwd)"
             if ! 7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}"; then
                 if ! 7z x -aoa -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}"; then
-                    __unzip_metadata_debug
+                    __unzip_metadata_debug "${1}"
                 fi
             fi
         else
@@ -1979,7 +1981,7 @@ function __unzip_metadata() {
             fi
             if ! pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}"; then
                 if ! pull_run_glue 7z x -aoa -mmt=16 -bb3 "/media/temp/${1}"; then
-                    __unzip_metadata_debug
+                    __unzip_metadata_debug "${1}"
                 fi
             fi
         fi
@@ -2164,14 +2166,14 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
             INFO "当前解压工作目录：$(pwd)"
             if ! 7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
                 if ! 7z x -aoa -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
-                    __unzip_metadata_debug
+                    __unzip_metadata_debug "${1}"
                 fi
             fi
         else
             extra_parameters="--workdir=/media/xiaoya"
             if ! pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
                 if ! pull_run_glue 7z x -aoa -mmt=16 -bb3 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
-                    __unzip_metadata_debug
+                    __unzip_metadata_debug "${1}"
                 fi
             fi
         fi
