@@ -5280,6 +5280,10 @@ function main_return() {
         ;;
     fuckaliyun)
         clear
+        if ! docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" > /dev/null 2>&1; then
+            ERROR "当前未安装小雅容器，请先安装小雅容器后重试！"
+            exit 1
+        fi
         INFO "AliyunPan ありがとう、あなたのせいで世界は爆発する"
         config_dir="$(docker inspect --format='{{range $v,$conf := .Mounts}}{{$conf.Source}}:{{$conf.Destination}}{{$conf.Type}}~{{end}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" | tr '~' '\n' | grep bind | sed 's/bind//g' | grep ":/data$" | awk -F: '{print $1}')"
         if [ -n "${config_dir}" ]; then
