@@ -61,8 +61,8 @@ function __unzip_metadata_debug() {
     else
         DEBUG "ali2115 配置情况：未配置！"
     fi
-    DEBUG "$(pull_run_glue xxd -g 1 -l 256 "${MEDIA_DIR}/temp/${1}")"
-    DEBUG "$(pull_run_glue xxd -g 1 -s -256 "${MEDIA_DIR}/temp/${1}")"
+    DEBUG "$(pull_run_glue xxd -g 1 -l 256 "/media/temp/${1}")"
+    DEBUG "$(pull_run_glue xxd -g 1 -s -256 "/media/temp/${1}")"
     ERROR "解压元数据失败！"
     exit 1
 
