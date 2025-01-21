@@ -168,19 +168,18 @@ function get_path() {
 
 function wait_emby_start() {
 
-    local CONTAINER_NAME TARGET_LOG_LINE_SUCCESS start_time check_time
+    local CONTAINER_NAME TARGET_LOG_LINE_SUCCESS start_time
     start_time=$(date +%s)
-    check_time=$(date --iso-8601=seconds)
     CONTAINER_NAME="$(cat "${DDSREM_CONFIG_DIR}"/container_name/xiaoya_emby_name.txt)"
     TARGET_LOG_LINE_SUCCESS="All entry points have started"
     while true; do
-        line=$(docker logs --since="${check_time}" "$CONTAINER_NAME" 2>&1 | tail -n 10)
+        line=$(docker logs "$CONTAINER_NAME" 2>&1 | tail -n 10)
         echo -e "$line"
-        if [[ "$line" == *"$TARGET_LOG_LINE_SUCCESS"* ]]; then
-            break
-        fi
         current_time=$(date +%s)
         elapsed_time=$((current_time - start_time))
+        if [[ "$line" == *"$TARGET_LOG_LINE_SUCCESS"* ]] && [ "$elapsed_time" -gt 60 ]; then
+            break
+        fi
         if [ "$elapsed_time" -gt 900 ]; then
             WARN "Emby 未正常启动超时 15 分钟！"
             break
@@ -192,19 +191,16 @@ function wait_emby_start() {
 
 function wait_xiaoya_start() {
 
-    local TARGET_LOG_LINE_SUCCESS start_time check_time
+    local TARGET_LOG_LINE_SUCCESS start_time
     start_time=$(date +%s)
-    check_time=$(date --iso-8601=seconds)
     TARGET_LOG_LINE_SUCCESS="success load storage: [/©️"
     while true; do
-        line=$(docker logs --since="${check_time}" "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" 2>&1 | tail -n 10)
+        line=$(docker logs "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" 2>&1 | tail -n 10)
         echo -e "$line"
         current_time=$(date +%s)
         elapsed_time=$((current_time - start_time))
-        if [[ "$line" == *"$TARGET_LOG_LINE_SUCCESS"* ]]; then
-            if [ "$elapsed_time" -gt 20 ]; then
-                break
-            fi
+        if [[ "$line" == *"$TARGET_LOG_LINE_SUCCESS"* ]] && [ "$elapsed_time" -gt 60 ]; then
+            break
         fi
         if [ "$elapsed_time" -gt 600 ]; then
             WARN "小雅alist 未正常启动超时 10 分钟！"
