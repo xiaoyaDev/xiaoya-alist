@@ -5231,7 +5231,7 @@ function main_return() {
         if auto_choose_image_mirror; then
             out_tips="${Green}提示：已为您自动配置Docker镜像源地址为: $(cat "${DDSREM_CONFIG_DIR}/image_mirror.txt")${Font}\n"
         else
-            out_tips="${Red}警告：当前环境无法访问Docker镜像仓库，请输入96进入Docker镜像源设置更改镜像源${Font}\n"
+            out_tips="${Red}警告：当前环境无法访问Docker镜像仓库，请输入76进入Docker镜像源设置更改镜像源${Font}\n"
         fi
     fi
     # shellcheck disable=SC2154
