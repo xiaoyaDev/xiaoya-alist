@@ -1942,6 +1942,7 @@ function __download_metadata() {
         extra_parameters="--workdir=/media/temp"
 
         if [ "${__data_downloader}" == "wget" ]; then
+            # wget 下载模式下只能单线程下载
             if ! pull_run_glue wget -c --show-progress "${xiaoya_addr}/d/元数据/${1}" -U "${GLOBAL_UA}"; then
                 DEBUG "${OSNAME} $(uname -a)"
                 ERROR "${1} 下载失败！"
@@ -1949,12 +1950,32 @@ function __download_metadata() {
             fi
         else
             local download_threads
-            if [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
-                download_threads="-x1"
+            pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "User-Agent: ${GLOBAL_UA}"
+            if [ -f "${MEDIA_DIR}/headers.log" ]; then
+                # 115网盘下载链接：头请求非 302，返回为 X-115-Request-Id，并且存在 ali2115.txt 文件
+                if ! grep 302 "${MEDIA_DIR}/headers.log" && grep "X-115-Request-Id" "${MEDIA_DIR}/headers.log" && [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
+                    download_threads="1"
+                # 阿里云盘下载链接：非 115 链接情况下，头请求非 302，返回为 X-Oss-Request-Id + X-Oss-Storage-Class
+                elif ! grep 302 "${MEDIA_DIR}/headers.log" && grep "X-Oss-Request-Id" "${MEDIA_DIR}/headers.log" && grep "X-Oss-Storage-Class" "${MEDIA_DIR}/headers.log"; then
+                    download_threads="6"
+                # 其余不确定的情况全部使用四线程下载
+                else
+                    download_threads="4"
+                fi
+                rm -f "${MEDIA_DIR}/headers.log"
             else
-                download_threads="-x6"
+                if [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
+                    download_threads="1"
+                else
+                    download_threads="6"
+                fi
             fi
-            if pull_run_glue aria2c -o "${1}" --header="User-Agent: ${GLOBAL_UA}" --allow-overwrite=true --auto-file-renaming=false --enable-color=false -c "${download_threads}" "${xiaoya_addr}/d/元数据/${1}"; then
+            if [ "${download_threads}" == "1" ]; then
+                INFO "单线程下载"
+            else
+                INFO "多线程下载，线程数：${download_threads}"
+            fi
+            if pull_run_glue aria2c -o "${1}" --header="User-Agent: ${GLOBAL_UA}" --allow-overwrite=true --auto-file-renaming=false --enable-color=false -c "-x${download_threads}" "${xiaoya_addr}/d/元数据/${1}"; then
                 if [ -f "${MEDIA_DIR}/temp/${1}.aria2" ]; then
                     ERROR "存在 ${MEDIA_DIR}/temp/${1}.aria2 文件，下载不完整！"
                     exit 1
