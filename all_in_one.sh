@@ -97,6 +97,7 @@ quarkshare_list_base64="5Yqo5ryrL+WbveWGheWklue7j+WFuOWKqOeUu+WKqOa8q+Wkp+WFqCA2
 GLOBAL_UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" # MacOS
 GLOBAL_UA_2="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"     # Windows
 QUARK_UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) quark-cloud-drive/2.5.20 Chrome/100.0.4896.160 Electron/18.3.5.4-b478491100 Safari/537.36 Channel/pckk_other_ch"
+UC_UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) uc-cloud-drive/2.5.20 Chrome/100.0.4896.160 Electron/18.3.5.4-b478491100 Safari/537.36 Channel/pckk_other_ch"
 
 function get_default_network() {
 
@@ -263,7 +264,7 @@ function check_uc_cookie() {
     cookie=$(head -n1 "${1}/uc_cookie.txt")
     referer="https://drive.uc.cn"
     url="https://pc-api.uc.cn/1/clouddrive/file/sort?pr=UCBrowser&fr=pc&pdir_fid=0&_page=1&_size=50&_fetch_total=1&_fetch_sub_dirs=0&_sort=file_type:asc,updated_at:desc"
-    headers="Cookie: $cookie; User-Agent: $GLOBAL_UA_2; Referer: $referer"
+    headers="Cookie: $cookie; User-Agent: $UC_UA; Referer: $referer"
     response=$(curl -s -D - -H "$headers" "$url")
     set_cookie=$(echo "$response" | grep -i "^Set-Cookie:" | sed 's/Set-Cookie: //')
     status=$(echo "$response" | grep -i status | cut -f2 -d: | cut -f1 -d,)

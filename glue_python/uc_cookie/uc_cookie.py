@@ -7,7 +7,6 @@ import os
 import threading
 import sys
 import argparse
-import random
 
 import json
 import requests
@@ -23,6 +22,17 @@ if sys.platform.startswith("win32"):
     QRCODE_DIR = "qrcode.png"
 else:
     QRCODE_DIR = "/uc_cookie/qrcode.png"
+UC_UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) uc-cloud-drive/2.5.20 Chrome/100.0.4896.160 Electron/18.3.5.4-b478491100 Safari/537.36 Channel/pckk_other_ch"  # noqa: E501
+)
+NAVIGATION_START = int(time.time() * 1000)
+
+
+def get_dt():
+    """
+    模拟生成 dt 参数
+    """
+    return str(int(time.time() * 1000) - NAVIGATION_START)
 
 
 def cookiejar_to_string(cookiejar):
@@ -45,10 +55,10 @@ def poll_qrcode_status(stop, _token, log_print):
         __t = int(time.time() * 1000)
         _data = {"client_id": 381, "v": 1.2, "request_id": __t, "token": _token}
         _re = requests.post(
-            f"https://api.open.uc.cn/cas/ajax/getServiceTicketByQrcodeToken?__dt={random.randint(100, 999)}&__t={__t}",
+            f"https://api.open.uc.cn/cas/ajax/getServiceTicketByQrcodeToken?__dt={get_dt()}&__t={__t}",
             data=_data,
-            timeout=10,
-        )  # noqa: E501
+            timeout=100,
+        )
         if _re.status_code == 200:
             re_data = json.loads(_re.content)
             if re_data["status"] == 2000000:
@@ -58,7 +68,7 @@ def poll_qrcode_status(stop, _token, log_print):
                 if _re.status_code == 200:
                     uc_cookie = cookiejar_to_string(_re.cookies)
                     headers = {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) quark-cloud-drive/2.5.20 Chrome/100.0.4896.160 Electron/18.3.5.4-b478491100 Safari/537.36 Channel/pckk_other_ch",  # noqa: E501
+                        "User-Agent": UC_UA,
                         "Referer": "https://drive.uc.cn",
                         "Cookie": uc_cookie,
                     }
@@ -89,7 +99,7 @@ def poll_qrcode_status(stop, _token, log_print):
             elif re_data["status"] == 50004001:
                 if log_print:
                     logging.info("等待用户扫码...")
-                    time.sleep(2)
+                time.sleep(2)
 
 
 @app.route("/")
@@ -141,7 +151,7 @@ if __name__ == "__main__":
     __t = int(time.time() * 1000)
     data = {"client_id": 381, "v": 1.2, "request_id": __t}
     re = requests.post(
-        f"https://api.open.uc.cn/cas/ajax/getTokenForQrcodeLogin?__dt={random.randint(100, 999)}&__t={__t}",
+        f"https://api.open.uc.cn/cas/ajax/getTokenForQrcodeLogin?__dt={get_dt()}&__t={__t}",
         data=data,
         timeout=10,
     )

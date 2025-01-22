@@ -23,6 +23,9 @@ if sys.platform.startswith("win32"):
     QRCODE_DIR = "qrcode.png"
 else:
     QRCODE_DIR = "/quark_cookie/qrcode.png"
+QUARK_UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) quark-cloud-drive/2.5.20 Chrome/100.0.4896.160 Electron/18.3.5.4-b478491100 Safari/537.36 Channel/pckk_other_ch"  # noqa: E501
+)
 
 
 def cookiejar_to_string(cookiejar):
@@ -56,7 +59,7 @@ def poll_qrcode_status(_token, stop, log_print):
                 if _re.status_code == 200:
                     quark_cookie = cookiejar_to_string(_re.cookies)
                     headers = {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) quark-cloud-drive/2.5.20 Chrome/100.0.4896.160 Electron/18.3.5.4-b478491100 Safari/537.36 Channel/pckk_other_ch",  # noqa: E501
+                        "User-Agent": QUARK_UA,
                         "Referer": "https://pan.quark.cn",
                         "Cookie": quark_cookie,
                     }
@@ -87,7 +90,7 @@ def poll_qrcode_status(_token, stop, log_print):
             elif re_data["status"] == 50004001:
                 if log_print:
                     logging.info("等待用户扫码...")
-                    time.sleep(2)
+                time.sleep(2)
 
 
 @app.route("/")
