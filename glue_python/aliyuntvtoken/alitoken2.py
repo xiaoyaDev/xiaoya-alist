@@ -99,15 +99,15 @@ class AliyunPanTvToken:
 
     def get_qrcode_url(self):
         data = requests.post(
-                "http://api.extscreen.com/aliyundrive/qrcode",
-                data={
-                    "scopes": ",".join(["user:base", "file:all:read", "file:all:write"]),
-                    "width": 500,
-                    "height": 500,
-                },
-                headers=self.get_headers(),
-                timeout=10,
-            ).json()["data"]
+            "http://api.extscreen.com/aliyundrive/qrcode",
+            data={
+                "scopes": ",".join(["user:base", "file:all:read", "file:all:write"]),
+                "width": 500,
+                "height": 500,
+            },
+            headers=self.get_headers(),
+            timeout=10,
+        ).json()["data"]
         qr_link = "https://www.aliyundrive.com/o/oauth/authorize?sid=" + data["sid"]
         return {"qr_link": qr_link, "sid": data["sid"]}
 
@@ -125,7 +125,7 @@ def check_qrcode_status(sid):
 
 
 def get_token(code):
-    data = { "code": code }
+    data = {"code": code}
     token_data = CLIENT.get_token(data)
     parsed_json = json.loads(token_data)
     refresh_token = parsed_json["refresh_token"]

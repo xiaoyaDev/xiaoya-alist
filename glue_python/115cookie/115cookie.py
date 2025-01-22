@@ -28,21 +28,24 @@ logging.basicConfig(level=logging.INFO)
 LAST_STATUS = 0
 
 
-AppEnum = Enum("AppEnum", {
-    "web": 1,
-    "ios": 6,
-    "115ios": 8,
-    "android": 9,
-    "115android": 11,
-    "115ipad": 14,
-    "tv": 15,
-    "qandroid": 16,
-    "windows": 19,
-    "mac": 20,
-    "linux": 21,
-    "wechatmini": 22,
-    "alipaymini": 23,
-})
+AppEnum = Enum(
+    "AppEnum",
+    {
+        "web": 1,
+        "ios": 6,
+        "115ios": 8,
+        "android": 9,
+        "115android": 11,
+        "115ipad": 14,
+        "tv": 15,
+        "qandroid": 16,
+        "windows": 19,
+        "mac": 20,
+        "linux": 21,
+        "wechatmini": 22,
+        "alipaymini": 23,
+    },
+)
 
 
 def get_enum_name(val, cls):
@@ -166,22 +169,22 @@ def poll_qrcode_status(_qrcode_token, qrcode_app):
         _status = resp["data"].get("status")
         if _status == 2:
             resp = post_qrcode_result(_qrcode_token["uid"], qrcode_app)
-            cookie_data = resp['data']['cookie']
+            cookie_data = resp["data"]["cookie"]
             cookie_str = "; ".join(f"{key}={value}" for key, value in cookie_data.items())
-            if sys.platform.startswith('win32'):
-                with open('115_cookie.txt', 'w', encoding='utf-8') as f:
+            if sys.platform.startswith("win32"):
+                with open("115_cookie.txt", "w", encoding="utf-8") as f:
                     f.write(cookie_str)
             else:
-                with open('/data/115_cookie.txt', 'w', encoding='utf-8') as f:
+                with open("/data/115_cookie.txt", "w", encoding="utf-8") as f:
                     f.write(cookie_str)
-            logging.info('扫码成功, cookie 已写入文件！')
+            logging.info("扫码成功, cookie 已写入文件！")
             LAST_STATUS = 1
         elif _status in [-1, -2]:
-            logging.error('扫码失败')
+            logging.error("扫码失败")
             LAST_STATUS = 2
 
 
-@flask_app.route('/')
+@flask_app.route("/")
 def index():
     """
     网页扫码首页
@@ -192,25 +195,25 @@ def index():
     qrcode_image = Image.open(qrcode_image_io)
     buffered = BytesIO()
     qrcode_image.save(buffered, format="PNG")
-    qrcode_image_b64_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
-    threading.Thread(target=poll_qrcode_status, args=(_qrcode_token, flask_app.config['QRCODE_APP'])).start()
-    return render_template('index.html', qrcode_image_b64_str=qrcode_image_b64_str)
+    qrcode_image_b64_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    threading.Thread(target=poll_qrcode_status, args=(_qrcode_token, flask_app.config["QRCODE_APP"])).start()
+    return render_template("index.html", qrcode_image_b64_str=qrcode_image_b64_str)
 
 
-@flask_app.route('/status')
+@flask_app.route("/status")
 def status():
     """
     扫码状态获取
     """
     if LAST_STATUS == 1:
-        return jsonify({'status': 'success'})
+        return jsonify({"status": "success"})
     elif LAST_STATUS == 2:
-        return jsonify({'status': 'failure'})
+        return jsonify({"status": "failure"})
     else:
-        return jsonify({'status': 'unknown'})
+        return jsonify({"status": "unknown"})
 
 
-@flask_app.route('/shutdown_server', methods=['GET'])
+@flask_app.route("/shutdown_server", methods=["GET"])
 def shutdown():
     """
     退出进程
@@ -218,25 +221,31 @@ def shutdown():
     os._exit(0)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='115 Cookie')
-    parser.add_argument('--qrcode_mode', type=str, required=True, help='扫码模式')
-    parser.add_argument('--qrcode_app', type=str, default='alipaymini', help='扫码绑定设备')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="115 Cookie")
+    parser.add_argument("--qrcode_mode", type=str, required=True, help="扫码模式")
+    parser.add_argument("--qrcode_app", type=str, default="alipaymini", help="扫码绑定设备")
     args = parser.parse_args()
-    if args.qrcode_mode == 'web':
-        flask_app.config['QRCODE_APP'] = args.qrcode_app
-        flask_app.run(host='0.0.0.0', port=34256)
-    elif args.qrcode_mode == 'shell':
+    if args.qrcode_mode == "web":
+        flask_app.config["QRCODE_APP"] = args.qrcode_app
+        flask_app.run(host="0.0.0.0", port=34256)
+    elif args.qrcode_mode == "shell":
         qrcode_token = get_qrcode_token()["data"]
-        threading.Thread(target=poll_qrcode_status, args=(qrcode_token, args.qrcode_app,)).start()
+        threading.Thread(
+            target=poll_qrcode_status,
+            args=(
+                qrcode_token,
+                args.qrcode_app,
+            ),
+        ).start()
         qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=5, border=4)
         qr.add_data(qrcode_token_url(qrcode_token["uid"]))
         qr.make(fit=True)
-        logging.info('请打开 115网盘 扫描此二维码！')
+        logging.info("请打开 115网盘 扫描此二维码！")
         qr.print_ascii(invert=True, tty=sys.stdout.isatty())
         while LAST_STATUS != 1 and LAST_STATUS != 2:
             time.sleep(1)
         os._exit(0)
     else:
-        logging.error('未知的扫码模式')
+        logging.error("未知的扫码模式")
         os._exit(1)

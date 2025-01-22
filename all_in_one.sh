@@ -94,6 +94,10 @@ pikpakshare_list_base64="6auY5riF55S15b2xL+WQiOmbhjEgICAgICAgICAgVk5SbE5MQVJMbXl
 pan115share_list_base64="NEtSZW11eCBzdzZwdzc5M3dmcCAyNjI4NDc4MjA5Nzg3MjY0MzE1IHc4MTYK55S15b2xMTA4MFAgc3c2OGZ1dTNubncgMTkyNjk2ODEwNTcyMjgyMzAzMSBwYjU3CueUteinhuWJpyBzdzY4ZTgxM25udyAyNjU5MDYzMTc4MTE3MjUwMzc0IG45ZTAK5ZCI6ZuGMSBzd3p5aXd3M3duOSAyNTI0ODExNTU3NTAwODUyMjc0IHcxZTAK5ZCI6ZuGMiBzd3p5aXdxM3duOSAyNjM3ODkwMjU4Mzc4OTIyNzc3IHg3MTYK5ZCI6ZuGMyBzd3p5aXdiM3duOSAyNjM3ODk2MzYwMjI3MjE1NzQ5IHFmZTgK5Yqo55S755S15b2xIHN3ejZnbWwzZndvIDI3ODM3NTM1OTgxNjc2NzgxNzYgODg4OArmrKfnvo7nlLXlvbEgc3c2OHd6OTNuY2IgMjY1NjIzMjA2MDQwMDM2NTc2OCA2NjY2Cue+juWJpyBzdzZwbHQyM25jYiAyNjI5ODMwMTg1MzI5NTUzNzk2IDY2NjYK5Y2D6YOo5oqW6Z+z55+t5Ymn5ZCI6ZuGIHN3enFoNjczaDR5IDI4NDQzODg1NDU0ODc5NjEyMTEgNTI5Ngrmipbpn7Pnn63liaflkIjpm4YxLjc3VCBzd3p4NzZmM3dmYSAyOTU1MjIwNTc2NzM3MDA5OTU4IG43MjQK5qyn576O5YmnIHN3em5tMzczdzFwIDI3NzU1NjcxMTY2OTYyNDU0MTIgcGUzNQrpn7PkuZAyMuS4h+mmliBzd3ptcWNyM2ZzNiAgMjc4MzMwNDQwMzU4NTU5NjU2NiB4ZDY3Cumfs+S5kDIy5LiH6aaWL0REUytIaVJlcyBzdzY1OHVxMzZ4MiAyNTY1NjcyNDAzNzY2MDAxNDM1IG1kOTgK6Z+z5LmQMjLkuIfpppYv5q+N5bim57O75YiXIHN3NjU4dXEzNngyIDI1NjU0MTY0Nzk3MDkxMTc4NDMgbWQ5OArpn7PkuZAyMuS4h+mmli/ntKLlsLznsr7pgIkgc3c2NTh1cTM2eDIgMjU2NTkxNzM3OTUxNTAzOTE3NiBtZDk4Cumfs+S5kDIy5LiH6aaWL+WQhOexu+mjjuagvCBzdzY1OHVxMzZ4MiAyNTY1NDY2NTg2OTUzNDY0ODU3IG1kOTgK6Z+z5LmQMjLkuIfpppYv5Y2O6K+tMjcwMDDpppbml6DmjZ8gc3c2NTh1YjM2eDIgMjU2NTI3NDA1NTc4MzM5ODczNCBxN2UwCuaXpemfqeeUteW9sSBzd3pnOGRkM3d5ZSAyOTMyMjcyODU3MTM0MTM3MTA3IG01YjMK5pel6Z+p5YmnIHN3emp4Y3Azd2ZhIDI5NTE4NzA2NjMxOTgzNTE2ODYgb2Y4OSAK55S15b2xL+WOn+ebmCBzd3pldzRtM25jNiAyOTIwNjE5NTc4NzUwOTI1OTQ2IGkwZDcK55S15b2xL+mfqeWbveWOn+ebmCBzd2hpZDV4M3dmYSAzMDQyOTM2NTE2NzE0NTM3MTA1IHhkZjkK55S15b2xL+WPsOa5vuWOn+ebmCBzd2gzcmloM3dmYSAyOTgxNTAzMjEwMTQ0MjQ0NDg2IGc1MTIK55S15b2xL+mmmea4r+WOn+ebmCBzd2hiZnkzM3dmYSAzMDI1MTI0NTg1MTY5NTkyNTcyIGEzNzIK"
 quarkshare_list_base64="5Yqo5ryrL+WbveWGheWklue7j+WFuOWKqOeUu+WKqOa8q+Wkp+WFqCA2Yjc5NTIxODM0MmQgMjNkOTUxMjcxZDQ2NDY5N2JlMjMyZGJiNzQ2YjIyN2UK5Yqo5ryrL+W3suWujOe7k+Wbvea8qyA2Yjc5NTIxODM0MmQgZjZhYjZkYzAyMTBhNDJiZWEyZGMyYmZlYTM4YzJiZTQK5Yqo5ryrL+W3suWujOe7k+aXpea8qyA2Yjc5NTIxODM0MmQgZDI2NTk1NmUyNDFlNDlkYmJiN2JmNWU3MTYzMGIxOTMK5Yqo5ryrL+W3suWujOe7k+e+jua8qyA2Yjc5NTIxODM0MmQgYzRkNDI5ZGZjNjQ0NDczNzg2YmRiMjJhYTY3NDIxOTAK5bCP5ZOB55u45aOwLzIwMjTlvrfkupHnpL4gZWNlNTJkNjNiNjk4IGRhZTJmMzZkMzZkMDQ3M2I4OWZmODRkYWE4MWI4MzAzCuWwj+WTgeebuOWjsC/lsI/lk4HlpKflkIjpm4YgZTgyNzI2NGVhNDUzIDYwOWM1ZWI4YjMyNDRkYzI5NThiYzEzZjE2ZDQ1NGVkCuWwj+WTgeebuOWjsC/lsI/lk4Hnuq/kuqvlkIjpm4YgZDhiNGE1ODRmZDFhIGE1Mjk5MzQ5ZDM2OTQyMDY4YWRjODhiOTUyYzdjNDYxCueUteW9sS/lkIjpm4Yv5LulQUJDROW8gOWktOWQiOmbhiBhNjMyOTY3NzYwY2YgN2RhNGZkMmRjMDhmNGZhNTg1MmY5OTcyMTU1OTI1MTcK55S15b2xL+WQiOmbhi/ku6VFRkdI5byA5aS05ZCI6ZuGIDJmNTliYjVkOTZiOSA3YjcxNzM3ZTNjZDg0M2M1YTkzN2FjOTdhNTM1NDJkZArnlLXlvbEv5ZCI6ZuGL+S7pUlKS0zlvIDlpLTlkIjpm4YgNTA4MjhjMzY4ZGVmIDA5Njk1MGUzZDEwMjQyYjE5NjZiNzc3ODExMTVhMDdhCueUteW9sS/lkIjpm4Yv5LulTU5PUOW8gOWktOWQiOmbhiBlMDdlMjZhZWNjMDggYTJiMzA1MzE2MzFjNDZkY2IzOWYzMjA2OTc4OTgyOTUK55S15b2xL+WQiOmbhi/ku6VRUlNU5byA5aS05ZCI6ZuGIDA1MzZhMzhhMzU2ZSAxZDE3NWRiMzBlYWE0NTRlOWRiYzVlYWEwOWUxZTQ1NArnlLXlvbEv5ZCI6ZuGL+S7pVVWV1jlvIDlpLTlkIjpm4YgZTI3M2VmNjk3NDAzIDZkYmRhNmU4MTdlYjQxNDViYTJkZDY4MWU1N2FhNjc1CueUteW9sS/lkIjpm4Yv5LulWVrlvIDlpLTlkIjpm4YgYzhhYzZjODhlNWQ4IDQ4YzQ3OWUyNGJhZTRlYzNhNGE5ZDU2ZmNiMDZmY2Y0CueUteW9sS/lkIjpm4Yv5Lul5pWw5a2X5byA5aS05ZCI6ZuGIDQ5YWI3NWQ1MmUwMCBjZWMwNzAyZGIyNmI0N2M1YWJkNDJjYTc5YWJiNjVlMQrnlLXlvbEv5a+85ryUL+WMl+mHjuatpiBmYWIxZWRiOWU1ZWIgZDdiYmZmYzQ1ZWY2NDEwODhmZTRiMjAyOTEwOGJjYWMK55S15b2xL+WvvOa8lC/mtKrph5Hlrp0gYmUyNjFjOGE3ZWI4IGUxZGI5ZDc4NDgyMjQyYzI5NzNkMWNjMjMwNjBjYzFlCueUteW9sS/mgZDmgJbniYcxMDDpg6ggNmMwNjY2ZWQyOGRlIDY2MjE4ZTczMTAxMTQ5ZGY5NzM4NzNiZGMxZjQ2NTAzCueUteW9sS/mvJTlkZgv5YiY5b635Y2OIDE3NjRjMmM4MTYwMyBhYmFlMmY3ZTYxZjU0OTgwODUxNjdlMDdlZjhkZWMzNArnlLXlvbEv5ryU5ZGYL+WRqOaYn+mpsCA2MGRjYTU4MDA5YWYgN2RhNTAyZDI0ZjQ3NGI2MGFmY2MzNDJmZDVhYzBkZTMK55S15b2xL+a8lOWRmC/lkajmtqblj5EgZTU4M2ZhYzQ1NTkyIDgyYzA0OWMxNDA1MDRkNGFhMzFjYmZlMTY0NWNiOWQ4CueUteW9sS/mvJTlkZgv5byg5Zu96I2jIGQzMDAwZjE0OTQyZSA4YzM1ZmNiYjRlODU0ZTUwYjM4NWRmNzAyNjA0ZDM4MgrnlLXlvbEv5ryU5ZGYL+aIkOm+mSBlNWI2NGRmYjFjODMgNjA3Yjg3OWRhMjVjNDQ2NDgzYmM3Zjg5NTBjZDczM2YK55S15b2xL+a8lOWRmC/mnY7kuL3nj40gNDczMzcwZTY1N2MwIGMzOWE1NjYwMDkyZTRiYmFhYzdjYWQzY2YwNjRlMjNjCueUteW9sS/mvJTlkZgv5p2O6L+e5p2wIGJmYzBhNjE1MGFmYyA2ZWViMDM2YzdkN2E0NTgwYWI5NWMxNjViYmVlNzRjMwrnlLXlvbEv5ryU5ZGYL+iIkua3hyA4NGU1M2RkMzc4ZjIgYzU5Yzc4MzU4NGU3NGQ3MDk0Yjk4YTY0OTg0OTI4NzYK55S15b2xL+a8lOWRmC/pgrHmt5HotJ4gYzRiMDQwM2MwZGZhIGE5MjBlMDY1NTVmYjRkNTA5NzU3MGNhMWI0MTBiZDAyCueUteW9sS/nsr7pgInpq5jnlLvotKjpq5jliIbnlLXlvbEgOGYxYjRiN2RjNjllIGQyZTVlOTE2NzRmOTQzNTJiMzMxMGFiODZiOGMyMzhlCueUteW9sS/pgrXmsI/lkIjpm4YgNTYxMmZlMWFkYjRhIGVkNDRkMDMzZTNmYzRjNWVhMmQ4YTVjODk1MWRmMGQ5CueUteW9sS/pn6nlm71S57qnIDU0MzJiZWFlNGYxYSA1MTI0ZjQ3ODlkYWY0NTAwOWJkMTMzYWY1MDk5ODEwMgrnlLXop4bliacvVFZC44CBQVRW5Lqa6KeGIDA4NTIxMmRmMzg1ZCAxNzJiN2VjY2MzODQ0YWU0YTExNDUxZDZhMTQ1ZmZlMArnlLXop4bliacv5bey5a6M57uTL+aVsOWtl+W8gOWktCBjZDRjNWFjN2U4MzAgZGZhMDFjYjE4OTU4NDA4Y2EwZGE3MmIxMzkzMTlhZjMK55S16KeG5YmnL+W3suWujOe7ky/osYbnk6Por4TliIY5LjDku6XkuIrlm73kuqfliacgZDE5YzRlYmUxZmY3IDdiNDI5NDNkNGYyMDQyYWJiOTA3Yzk5ZGRiYjM1NDBkCueUteinhuWJpy/lt7Llroznu5Mv6aaW5a2X5q+NQUJDRCBlMWIyYmE4YjZkNmMgYzg5MjQ2N2IwY2MyNGFhYmFjYmVjNzFhMGI2ZjRkM2MK55S16KeG5YmnL+W3suWujOe7ky/pppblrZfmr41FRkdIIDE2NmZhMGE3Y2E2ZiBmZjU3MDgzZDg5MjM0ZWQzODkzMmRjMDYwOTdkMTE1ZArnlLXop4bliacv5bey5a6M57uTL+mmluWtl+avjUlKS0wgMzdhOTJjMGI3ZjEwIDU4NTkwN2FiYTBlZjQ2NGJhMDBhMGYyMGI0N2ZhMTE2CueUteinhuWJpy/lt7Llroznu5Mv6aaW5a2X5q+NTk1PUCBmYjMzODZlNDJhZjIgMzZlMmY4MWZmNDE0NGE5YzhjMTQ5ODhlZDg5YTg2MGQK55S16KeG5YmnL+W3suWujOe7ky/pppblrZfmr41RUlNUIDQ2Y2UyMTRmNGVkNyAzYjRmOWUwYzY3NTk0OWM5OTI2OTQ3NmU1ZjljMDdhOArnlLXop4bliacv5bey5a6M57uTL+mmluWtl+avjVVWV1ggZmU0NjgxZDdmYjQzIGJjYmNmZDM4ZDI1NDRmNWY5NTFlY2ZlNDMwNDgzMjAzCueUteinhuWJpy/lt7Llroznu5Mv6aaW5a2X5q+NWVogOGQ2NWU4ODViMDU5IDAzNmZkOTg5NWM0YjRhNDdhNTliMTcwNDY3MTU4MTZmCumfs+S5kC/kuabpppnpn7PkuZDkuJbnuqrlhbjol48gZDJkZmEzMjY0N2Y2IDE2N2FlOWVkZDNmZTQ2NjJhMmNlMzc3NTU5ZTM1ZjU4Cumfs+S5kC/lj6Tlhbjpn7PkuZDnsr7pgInlkIjpm4YgMmI0OTc4MjEzYjI5IDY5MDM4ZmYwOTAwNTRhMWViODgwMzEyYmU0Nzc1MzkyCumfs+S5kC/lpKfoh6rnhLbpn7PkuZDns7vliJflkIjpm4YgNjUxZTVmYTkzMDU3IDljOWYzMzM2NzgzZTQ4YWY5ZjQ3YzVlY2Q5OThlOTE0Cumfs+S5kC/nuq/pn7PkuZDlkIjpm4YgMTI4NDgzODFkY2UxIGFlMmNhZWI3ODQ2ZDRmODU4NDY3ZDJiNjI2ZDc4Y2EzCumfs+S5kC/ovabovb3ml6DmjZ/njq/nu5Xpn7PmlYjpn7PkuZDlkIjpm4YgODA1ZDc2YTA4MDYzIDU5M2Y5ODEwNGYxOTQzMDJhMjdhZTkxYmE3Y2QxOGRiCumfs+S5kC/pnIfmkrzlv4PngbXnmoTlj7Lor5fpn7PkuZDlkIjpm4YgZDFhMGI3MDQ2YjIwIDI5NGE1M2EzYzllODRlZjBhMGFjYzA0MTk1YzAyNWQ4Cg=="
 
+GLOBAL_UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" # MacOS
+GLOBAL_UA_2="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" # Windows
+QUARK_UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) quark-cloud-drive/2.5.20 Chrome/100.0.4896.160 Electron/18.3.5.4-b478491100 Safari/537.36 Channel/pckk_other_ch"
+
 function get_default_network() {
 
     _default_network=$(cat "${DDSREM_CONFIG_DIR}/default_network.txt")
@@ -216,11 +220,10 @@ function check_quark_cookie() {
     if [[ ! -f "${1}/quark_cookie.txt" ]] && [[ ! -s "${1}/quark_cookie.txt" ]]; then
         return 1
     fi
-    local cookie user_agent url headers response status url2 response2 member member_type vip_88
+    local cookie url headers response status url2 response2 member member_type vip_88
     cookie=$(head -n1 "${1}/quark_cookie.txt")
-    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) quark-cloud-drive/2.5.20 Chrome/100.0.4896.160 Electron/18.3.5.4-b478491100 Safari/537.36 Channel/pckk_other_ch"
     url="https://drive-pc.quark.cn/1/clouddrive/config?pr=ucpro&fr=pc&uc_param_str="
-    headers="Cookie: $cookie; User-Agent: $user_agent; Referer: https://pan.quark.cn"
+    headers="Cookie: $cookie; User-Agent: $QUARK_UA; Referer: https://pan.quark.cn"
     response=$(curl -s -D - -H "$headers" "$url")
     status=$(echo "$response" | grep -i status | cut -f2 -d: | cut -f1 -d,)
     if [ "$status" == "401" ]; then
@@ -256,12 +259,11 @@ function check_uc_cookie() {
     if [[ ! -f "${1}/uc_cookie.txt" ]] && [[ ! -s "${1}/uc_cookie.txt" ]]; then
         return 1
     fi
-    local cookie user_agent url headers response status referer set_cookie
+    local cookie url headers response status referer set_cookie
     cookie=$(head -n1 "${1}/uc_cookie.txt")
     referer="https://drive.uc.cn"
-    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) quark-cloud-drive/2.5.20 Chrome/100.0.4896.160 Electron/18.3.5.4-b478491100 Safari/537.36 Channel/pckk_other_ch"
     url="https://pc-api.uc.cn/1/clouddrive/file/sort?pr=UCBrowser&fr=pc&pdir_fid=0&_page=1&_size=50&_fetch_total=1&_fetch_sub_dirs=0&_sort=file_type:asc,updated_at:desc"
-    headers="Cookie: $cookie; User-Agent: $user_agent; Referer: $referer"
+    headers="Cookie: $cookie; User-Agent: $GLOBAL_UA_2; Referer: $referer"
     response=$(curl -s -D - -H "$headers" "$url")
     set_cookie=$(echo "$response" | grep -i "^Set-Cookie:" | sed 's/Set-Cookie: //')
     status=$(echo "$response" | grep -i status | cut -f2 -d: | cut -f1 -d,)
@@ -290,11 +292,10 @@ function check_115_cookie() {
     if [[ ! -f "${1}/115_cookie.txt" ]] && [[ ! -s "${1}/115_cookie.txt" ]]; then
         return 1
     fi
-    local cookie user_agent url headers response vip
+    local cookie url headers response vip
     cookie=$(head -n1 "${1}/115_cookie.txt")
-    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
     url="https://my.115.com/?ct=ajax&ac=nav"
-    headers="Cookie: $cookie; User-Agent: $user_agent; Referer: https://115.com/"
+    headers="Cookie: $cookie; User-Agent: $GLOBAL_UA_2; Referer: https://115.com/"
     response=$(curl -s -D - -H "$headers" "$url")
     vip=$(echo -e "$response" | grep -o '"vip":[^,]*' | sed 's/"vip"://')
     if echo -e "${response}" | grep -q "user_id"; then
@@ -321,7 +322,7 @@ function check_aliyunpan_tvtoken() {
         token=$(head -n1 "${data_dir}/myopentoken.txt")
     fi
     url=$(head -n1 "${data_dir}/open_tv_token_url.txt")
-    if ! response=$(curl -s "${url}" -X POST -H "User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.83 Safari/537.36" -H "Rererer: https://www.aliyundrive.com/" -H "Content-Type: application/json" -d '{"refresh_token":"'$token'", "grant_type": "refresh_token"}'); then
+    if ! response=$(curl -s "${url}" -X POST -H "User-Agent: $GLOBAL_UA" -H "Rererer: https://www.aliyundrive.com/" -H "Content-Type: application/json" -d '{"refresh_token":"'$token'", "grant_type": "refresh_token"}'); then
         WARN "网络问题，无法检测 阿里云盘 TV Token 有效性"
         return 0
     fi
@@ -339,16 +340,15 @@ function check_aliyunpan_tvtoken() {
 
 function check_aliyunpan_refreshtoken() {
 
-    local token header referer response refresh_token data_dir
+    local token referer response refresh_token data_dir
     data_dir="${1}"
     if [ -n "${2}" ]; then
         token="${2}"
     else
         token=$(head -n1 "${data_dir}/mytoken.txt")
     fi
-    header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.54 Safari/537.36"
     referer=https://www.aliyundrive.com/
-    if ! response=$(curl -s https://auth.aliyundrive.com/v2/account/token -X POST -H "User-Agent: $header" -H "Content-Type:application/json" -H "Referer: $referer" -d '{"refresh_token":"'$token'", "grant_type": "refresh_token"}'); then
+    if ! response=$(curl -s https://auth.aliyundrive.com/v2/account/token -X POST -H "User-Agent: $GLOBAL_UA_2" -H "Content-Type:application/json" -H "Referer: $referer" -d '{"refresh_token":"'$token'", "grant_type": "refresh_token"}'); then
         WARN "网络问题，无法检测 阿里云盘 Refresh Token 有效性"
         return 0
     fi
@@ -413,7 +413,7 @@ function check_aliyunpan_opentoken() {
         else
             url_host="api-cf.nn.ci"
         fi
-        if ! response=$(curl -s "https://${url_host}/alist/ali_open/token" -X POST -H "User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.83 Safari/537.36" -H "Rererer: https://www.aliyundrive.com/" -H "Content-Type: application/json" -d '{"refresh_token":"'$token'", "grant_type": "refresh_token"}'); then
+        if ! response=$(curl -s "https://${url_host}/alist/ali_open/token" -X POST -H "User-Agent: $GLOBAL_UA" -H "Rererer: https://www.aliyundrive.com/" -H "Content-Type: application/json" -d '{"refresh_token":"'$token'", "grant_type": "refresh_token"}'); then
             WARN "网络问题，无法检测 阿里云盘 Open Token 有效性"
             cache_update "${data_dir}/myopentoken.txt" "${DDSREM_CONFIG_DIR}/cache_data/check_aliyunpan_opentoken.txt" "false"
             return 0
@@ -499,6 +499,25 @@ function qrcode_mode_choose() {
             fi
         done
         extra_parameters="--qrcode_app=${qrcode_app}"
+    elif [ "${2}" == "/aliyunopentoken/aliyunopentoken.py" ]; then
+        if curl -Is https://api.xhofe.top/alist/ali_open/qr | head -n 1 | grep -q '200'; then
+            extra_parameters="--api_url=api.xhofe.top"
+            INFO "使用 api.xhofe.top 地址"
+        else
+            extra_parameters="--api_url=api-cf.nn.ci"
+            INFO "使用 api-cf.nn.ci 地址"
+        fi
+    elif [ "${2}" == "/aliyuntoken/aliyuntoken.py" ]; then
+        if curl -Is https://api.xhofe.top/alist/ali/qr | head -n 1 | grep -q '200'; then
+            extra_parameters="--api_url=api.xhofe.top"
+            INFO "使用 api.xhofe.top 地址"
+        elif curl -Is https://api-cf.nn.ci/alist/ali/qr | head -n 1 | grep -q '200'; then
+            extra_parameters="--api_url=api-cf.nn.ci"
+            INFO "使用 api-cf.nn.ci 地址"
+        else
+            extra_parameters="--api_url=aliyuntoken.vercel.app"
+            INFO "使用 aliyuntoken.vercel.app 地址"
+        fi
     fi
 
     while true; do
@@ -524,128 +543,19 @@ function qrcode_mode_choose() {
 
 }
 
-function qrcode_aliyunpan_tvtoken() {
+function qrocde_common() {
 
     clear_qrcode_container
     cpu_arch=$(uname -m)
     case $cpu_arch in
     "x86_64" | *"amd64"* | "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
-        INFO "阿里云盘 TV Token 配置"
+        INFO "${1} 扫码获取"
         pull_glue_python_ddsrem
-        qrcode_mode_choose "${1}" "/aliyuntvtoken/alitoken2.py"
+        qrcode_mode_choose "${2}" "${3}"
         INFO "操作全部完成！"
         ;;
     *)
-        WARN "目前阿里云盘 TV Token 扫码获取只支持amd64和arm64架构，你的架构是：$cpu_arch"
-        ;;
-    esac
-
-}
-
-function qrcode_aliyunpan_refreshtoken() {
-
-    clear_qrcode_container
-    cpu_arch=$(uname -m)
-    case $cpu_arch in
-    "x86_64" | *"amd64"* | "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
-        INFO "阿里云盘 Refresh Token 配置"
-        local command_file
-        pull_glue_python_ddsrem
-        if curl -Is https://api.xhofe.top/alist/ali/qr | head -n 1 | grep -q '200'; then
-            command_file="aliyuntoken.py"
-            INFO "使用 api.xhofe.top 地址"
-        elif curl -Is https://api-cf.nn.ci/alist/ali/qr | head -n 1 | grep -q '200'; then
-            command_file="aliyuntoken_nn.ci.py"
-            INFO "使用 api-cf.nn.ci 地址"
-        else
-            command_file="aliyuntoken_vercel.py"
-            INFO "使用 aliyuntoken.vercel.app 地址"
-        fi
-        qrcode_mode_choose "${1}" "/aliyuntoken/${command_file}"
-        INFO "操作全部完成！"
-        ;;
-    *)
-        WARN "目前阿里云盘 Refresh Token 扫码获取只支持amd64和arm64架构，你的架构是：$cpu_arch"
-        ;;
-    esac
-
-}
-
-function qrcode_aliyunpan_opentoken() {
-
-    clear_qrcode_container
-    cpu_arch=$(uname -m)
-    case $cpu_arch in
-    "x86_64" | *"amd64"* | "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
-        INFO "阿里云盘 Open Token 配置"
-        local command_file
-        pull_glue_python_ddsrem
-        if curl -Is https://api.xhofe.top/alist/ali_open/qr | head -n 1 | grep -q '200'; then
-            command_file="aliyunopentoken.py"
-            INFO "使用 api.xhofe.top 地址"
-        else
-            command_file="aliyunopentoken_nn.ci.py"
-            INFO "使用 api-cf.nn.ci 地址"
-        fi
-        qrcode_mode_choose "${1}" "/aliyunopentoken/${command_file}"
-        INFO "操作全部完成！"
-        ;;
-    *)
-        WARN "目前阿里云盘 Open Token 扫码获取只支持amd64和arm64架构，你的架构是：$cpu_arch"
-        ;;
-    esac
-
-}
-
-function qrcode_115_cookie() {
-
-    clear_qrcode_container
-    cpu_arch=$(uname -m)
-    case $cpu_arch in
-    "x86_64" | *"amd64"* | "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
-        INFO "115 Cookie 扫码获取"
-        pull_glue_python_ddsrem
-        qrcode_mode_choose "${1}" "/115cookie/115cookie.py"
-        INFO "操作全部完成！"
-        ;;
-    *)
-        WARN "目前 115 Cookie 扫码获取只支持amd64和arm64架构，你的架构是：$cpu_arch"
-        ;;
-    esac
-
-}
-
-function qrcode_quark_cookie() {
-
-    clear_qrcode_container
-    cpu_arch=$(uname -m)
-    case $cpu_arch in
-    "x86_64" | *"amd64"* | "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
-        INFO "夸克 Cookie 扫码获取"
-        pull_glue_python_ddsrem
-        qrcode_mode_choose "${1}" "/quark_cookie/quark_cookie.py"
-        INFO "操作全部完成！"
-        ;;
-    *)
-        WARN "目前夸克 Cookie 扫码获取只支持amd64和arm64架构，你的架构是：$cpu_arch"
-        ;;
-    esac
-
-}
-
-function qrcode_uc_cookie() {
-
-    clear_qrcode_container
-    cpu_arch=$(uname -m)
-    case $cpu_arch in
-    "x86_64" | *"amd64"* | "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
-        INFO "UC Cookie 扫码获取"
-        pull_glue_python_ddsrem
-        qrcode_mode_choose "${1}" "/uc_cookie/uc_cookie.py"
-        INFO "操作全部完成！"
-        ;;
-    *)
-        WARN "目前 UC Cookie 扫码获取只支持amd64和arm64架构，你的架构是：$cpu_arch"
+        WARN "目前 ${1} 扫码获取只支持amd64和arm64架构，你的架构是：$cpu_arch"
         ;;
     esac
 
@@ -664,7 +574,7 @@ function enter_aliyunpan_refreshtoken() {
         fi
     done
     if [[ ${choose_qrcode_aliyunpan_refreshtoken} == [Yy] ]]; then
-        qrcode_aliyunpan_refreshtoken "${1}"
+        qrocde_common "阿里云盘 Refresh Token" "${1}" "/aliyuntoken/aliyuntoken.py"
     fi
     mytokenfilesize=$(cat "${1}"/mytoken.txt)
     mytokenstringsize=${#mytokenfilesize}
@@ -717,7 +627,7 @@ function enter_aliyunpan_opentoken() {
         fi
     done
     if [[ ${choose_qrcode_aliyunpan_opentoken} == [Yy] ]]; then
-        qrcode_aliyunpan_opentoken "${1}"
+        qrocde_common "阿里云盘 Open Token" "${1}" "/aliyunopentoken/aliyunopentoken.py"
     fi
     myopentokenfilesize=$(cat "${1}"/myopentoken.txt)
     myopentokenstringsize=${#myopentokenfilesize}
@@ -775,7 +685,7 @@ function enter_115_cookie() {
         fi
     done
     if [[ ${choose_qrcode_115_cookie} == [Yy] ]]; then
-        qrcode_115_cookie "${1}"
+        qrocde_common "115 Cookie" "${1}" "/115cookie/115cookie.py"
     fi
     if ! check_115_cookie "${1}"; then
         if [[ ${choose_qrcode_115_cookie} == [Yy] ]]; then
@@ -831,7 +741,7 @@ function enter_quark_cookie() {
         fi
     done
     if [[ ${choose_qrcode_quark_cookie} == [Yy] ]]; then
-        qrcode_quark_cookie "${1}"
+        qrocde_common "夸克 Cookie" "${1}" "/quark_cookie/quark_cookie.py"
     fi
     if ! check_quark_cookie "${1}"; then
         if [[ ${choose_qrcode_quark_cookie} == [Yy] ]]; then
@@ -887,7 +797,7 @@ function enter_uc_cookie() {
         fi
     done
     if [[ ${choose_qrcode_uc_cookie} == [Yy] ]]; then
-        qrcode_uc_cookie "${1}"
+        qrocde_common "UC Cookie" "${1}" "/uc_cookie/uc_cookie.py"
     fi
     if ! check_uc_cookie "${1}"; then
         if [[ ${choose_qrcode_uc_cookie} == [Yy] ]]; then
@@ -1871,13 +1781,12 @@ function set_emby_server_infuse_api_key() {
 
 function check_metadata_size() {
 
-    local file_size file_size_b remote_metadata_size _ua check_result
+    local file_size file_size_b remote_metadata_size check_result
 
     if [ -z "${xiaoya_addr}" ]; then
         test_xiaoya_status
     fi
-    _ua="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-    pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "User-Agent: ${_ua}"
+    pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "User-Agent: ${GLOBAL_UA}"
     remote_metadata_size=$(grep 'Content-Length' "${MEDIA_DIR}/headers.log" | awk '{print $2}')
     rm -f ${MEDIA_DIR}/headers.log
 
@@ -2016,7 +1925,7 @@ function __download_metadata() {
 
     function metadata_downloader() {
 
-        local __data_downloader _ua
+        local __data_downloader
 
         INFO "开始下载 ${1} ..."
         INFO "下载路径：${MEDIA_DIR}/temp/${1}"
@@ -2027,9 +1936,8 @@ function __download_metadata() {
 
         extra_parameters="--workdir=/media/temp"
 
-        _ua="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
         if [ "${__data_downloader}" == "wget" ]; then
-            if ! pull_run_glue wget -c --show-progress "${xiaoya_addr}/d/元数据/${1}" -U "${_ua}"; then
+            if ! pull_run_glue wget -c --show-progress "${xiaoya_addr}/d/元数据/${1}" -U "${GLOBAL_UA}"; then
                 ERROR "${1} 下载失败！"
                 exit 1
             fi
@@ -2040,7 +1948,7 @@ function __download_metadata() {
             else
                 download_threads="-x6"
             fi
-            if pull_run_glue aria2c -o "${1}" --header="User-Agent: ${_ua}" --allow-overwrite=true --auto-file-renaming=false --enable-color=false -c "${download_threads}" "${xiaoya_addr}/d/元数据/${1}"; then
+            if pull_run_glue aria2c -o "${1}" --header="User-Agent: ${GLOBAL_UA}" --allow-overwrite=true --auto-file-renaming=false --enable-color=false -c "${download_threads}" "${xiaoya_addr}/d/元数据/${1}"; then
                 if [ -f "${MEDIA_DIR}/temp/${1}.aria2" ]; then
                     ERROR "存在 ${MEDIA_DIR}/temp/${1}.aria2 文件，下载不完整！"
                     exit 1
@@ -2359,10 +2267,9 @@ function download_unzip_xiaoya_emby_new_config() {
 
     function compare_metadata_size() {
 
-        local REMOTE_METADATA_SIZE LOCAL_METADATA_SIZE _ua
+        local REMOTE_METADATA_SIZE LOCAL_METADATA_SIZE
 
-        _ua="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-        pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "User-Agent: ${_ua}"
+        pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "User-Agent: ${GLOBAL_UA}"
         REMOTE_METADATA_SIZE=$(cat ${MEDIA_DIR}/headers.log | grep 'Content-Length' | awk '{print $2}')
         rm -f ${MEDIA_DIR}/headers.log
 
@@ -4608,7 +4515,7 @@ function install_xiaoya_aliyuntvtoken_connector() {
 
     if [ ! -f "${CONFIG_DIR}/open_tv_token_url.txt" ]; then
         INFO "当前未配置 阿里云盘 TV Token，开始进入 TV Token 配置流程..."
-        qrcode_aliyunpan_tvtoken "${CONFIG_DIR}"
+        qrocde_common "阿里云盘 TV Token" "${CONFIG_DIR}" "/aliyuntvtoken/alitoken2.py"
     else
         INFO "阿里云盘 TV Token 当前已配置！"
     fi
@@ -5287,7 +5194,7 @@ function main_return() {
         INFO "AliyunPan ありがとう、あなたのせいで世界は爆発する"
         config_dir="$(docker inspect --format='{{range $v,$conf := .Mounts}}{{$conf.Source}}:{{$conf.Destination}}{{$conf.Type}}~{{end}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" | tr '~' '\n' | grep bind | sed 's/bind//g' | grep ":/data$" | awk -F: '{print $1}')"
         if [ -n "${config_dir}" ]; then
-            qrcode_aliyunpan_tvtoken "${config_dir}"
+            qrocde_common "阿里云盘 TV Token" "${config_dir}" "/aliyuntvtoken/alitoken2.py"
             if ! docker container inspect xiaoya-aliyuntvtoken_connector > /dev/null 2>&1; then
                 while true; do
                     INFO "是否自建阿里云盘 TV Token 令牌刷新接口 [Y/n]（默认 Y）"
