@@ -1560,14 +1560,14 @@ function test_xiaoya_status() {
     get_docker0_url
 
     INFO "测试xiaoya的联通性..."
-    if curl -siL -m 10 http://127.0.0.1:5678/d/README.md | grep -v 302 | grep -e "x-oss-" -e "x-115-request-id"; then
+    if curl -siL -m 10 http://127.0.0.1:5678/d/README.md | grep -e "x-oss-" -e "x-115-request-id"; then
         xiaoya_addr="http://127.0.0.1:5678"
-    elif curl -siL -m 10 http://${docker0}:5678/d/README.md | grep -v 302 | grep -e "x-oss-" -e "x-115-request-id"; then
+    elif curl -siL -m 10 http://${docker0}:5678/d/README.md | grep -e "x-oss-" -e "x-115-request-id"; then
         xiaoya_addr="http://${docker0}:5678"
     else
         if [ -s ${CONFIG_DIR}/docker_address.txt ]; then
             docker_address=$(head -n1 ${CONFIG_DIR}/docker_address.txt)
-            if curl -siL -m 10 ${docker_address}/d/README.md | grep -v 302 | grep -e "x-oss-" -e "x-115-request-id"; then
+            if curl -siL -m 10 ${docker_address}/d/README.md | grep -e "x-oss-" -e "x-115-request-id"; then
                 xiaoya_addr=${docker_address}
             else
                 __xiaoya_connectivity_detection=$(cat ${DDSREM_CONFIG_DIR}/xiaoya_connectivity_detection.txt)
