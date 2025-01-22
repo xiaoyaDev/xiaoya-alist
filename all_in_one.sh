@@ -1943,6 +1943,7 @@ function __download_metadata() {
 
         if [ "${__data_downloader}" == "wget" ]; then
             if ! pull_run_glue wget -c --show-progress "${xiaoya_addr}/d/元数据/${1}" -U "${GLOBAL_UA}"; then
+                DEBUG "${OSNAME} $(uname -a)"
                 ERROR "${1} 下载失败！"
                 exit 1
             fi
@@ -1961,6 +1962,7 @@ function __download_metadata() {
                     INFO "${1} 下载成功！"
                 fi
             else
+                DEBUG "${OSNAME} $(uname -a)"
                 ERROR "${1} 下载失败！"
                 exit 1
             fi
