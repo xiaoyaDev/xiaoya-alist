@@ -1952,11 +1952,11 @@ function __download_metadata() {
             local download_threads
             pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "User-Agent: ${GLOBAL_UA}"
             if [ -f "${MEDIA_DIR}/headers.log" ]; then
-                # 115网盘下载链接：头请求非 302，返回为 X-115-Request-Id，并且存在 ali2115.txt 文件
-                if ! grep 302 "${MEDIA_DIR}/headers.log" && grep "X-115-Request-Id" "${MEDIA_DIR}/headers.log" && [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
+                # 115网盘下载链接：返回为 X-115-Request-Id，并且存在 ali2115.txt 文件
+                if grep "X-115-Request-Id" "${MEDIA_DIR}/headers.log" && [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
                     download_threads="1"
-                # 阿里云盘下载链接：非 115 链接情况下，头请求非 302，返回为 X-Oss-Request-Id + X-Oss-Storage-Class
-                elif ! grep 302 "${MEDIA_DIR}/headers.log" && grep "X-Oss-Request-Id" "${MEDIA_DIR}/headers.log" && grep "X-Oss-Storage-Class" "${MEDIA_DIR}/headers.log"; then
+                # 阿里云盘下载链接：非 115 链接情况下，返回为 X-Oss-Request-Id + X-Oss-Storage-Class
+                elif grep "X-Oss-Request-Id" "${MEDIA_DIR}/headers.log" && grep "X-Oss-Storage-Class" "${MEDIA_DIR}/headers.log"; then
                     download_threads="6"
                 # 其余不确定的情况全部使用四线程下载
                 else
