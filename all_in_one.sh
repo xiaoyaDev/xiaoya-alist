@@ -227,7 +227,7 @@ function check_quark_cookie() {
     headers="Cookie: $cookie; User-Agent: $QUARK_UA; Referer: https://pan.quark.cn"
     response=$(curl -s -D - -H "$headers" "$url")
     status=$(echo "$response" | grep -i status | cut -f2 -d: | cut -f1 -d,)
-    if [ "$status" == "401" ]; then
+    if [ "$status" == "401" ] || grep -qv "__puus" "${1}/quark_cookie.txt"; then
         ERROR "无效夸克 Cookie"
         return 1
     elif [ "$status" == "200" ]; then
@@ -268,7 +268,7 @@ function check_uc_cookie() {
     response=$(curl -s -D - -H "$headers" "$url")
     set_cookie=$(echo "$response" | grep -i "^Set-Cookie:" | sed 's/Set-Cookie: //')
     status=$(echo "$response" | grep -i status | cut -f2 -d: | cut -f1 -d,)
-    if [ "$status" == "401" ]; then
+    if [ "$status" == "401" ] || grep -qv "__puus" "${1}/uc_cookie.txt"; then
         ERROR "无效 UC Cookie"
         return 1
     elif [ -n "${set_cookie}" ]; then
