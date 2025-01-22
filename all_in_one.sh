@@ -394,7 +394,11 @@ function check_aliyunpan_opentoken() {
     function cache_update() {
 
         if [ "${3}" == true ]; then
-            md5sum "${1}" | awk '{ print $1 }' > "${2}"
+            if command -v md5sum > /dev/null 2>&1; then
+                md5sum "${1}" | awk '{ print $1 }' > "${2}"
+            else
+                head -n 1 "${1}" > "${2}"
+            fi
         else
             rm -f "${2}"
         fi
