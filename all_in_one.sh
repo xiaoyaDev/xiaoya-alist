@@ -1786,6 +1786,43 @@ function set_emby_server_infuse_api_key() {
 
 function check_metadata_size() {
 
+    function simple_check_metadata_size() {
+
+        case "${1}" in
+        config.mp4)
+            if [[ "$2" -le 3200000 ]]; then
+                return 1
+            fi
+            ;;
+        all.mp4)
+            if [[ "$2" -le 30000000 ]]; then
+                return 1
+            fi
+            ;;
+        pikpak.mp4)
+            if [[ "$2" -le 14000000 ]]; then
+                return 1
+            fi
+            ;;
+        115.mp4)
+            if [[ "$2" -le 16000000 ]]; then
+                return 1
+            fi
+            ;;
+        蓝光原盘.mp4)
+            if [[ "$2" -le 4200000 ]]; then
+                return 1
+            fi
+            ;;
+        config.new.mp4)
+            if [[ "$2" -le 3200000 ]]; then
+                return 1
+            fi
+            ;;
+        esac
+
+    }
+
     local file_size file_size_b remote_metadata_size check_result
 
     if [ -z "${xiaoya_addr}" ]; then
@@ -1793,55 +1830,41 @@ function check_metadata_size() {
     fi
     pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "User-Agent: ${GLOBAL_UA}"
     remote_metadata_size=$(grep 'Content-Length' "${MEDIA_DIR}/headers.log" | awk '{print $2}')
-    rm -f ${MEDIA_DIR}/headers.log
+    rm -f "${MEDIA_DIR}/headers.log"
 
-    file_size=$(pull_run_glue du -k "/media/temp/${1}" | cut -f1)
+    pull_run_glue bash -c "du -k /media/temp/${1} | cut -f1 > /media/size.txt"
+    if [ ! -f "${MEDIA_DIR}/size.txt" ]; then
+        ERROR "获取元数据文件本地大小失败（单位k）"
+        return 1
+    fi
+    file_size=$(head -n 1 "${MEDIA_DIR}/size.txt")
+    rm -f "${MEDIA_DIR}/size.txt"
 
     if [ -n "${remote_metadata_size}" ] &&
         awk -v remote="${remote_metadata_size}" -v threshold="2147483648" 'BEGIN { if (remote > threshold) print "1"; else print "0"; }' | grep -q "1"; then
         INFO "精准校验文件大小模式"
 
-        file_size_b=$(pull_run_glue du -b "/media/temp/${1}" | awk '{print $1}')
+        pull_run_glue bash -c "du -b /media/temp/${1} | cut -f1 > /media/size.txt"
+        if [ ! -f "${MEDIA_DIR}/size.txt" ]; then
+            WARN "获取元数据文件本地大小失败（单位b）"
+            if ! simple_check_metadata_size "${1}" "${file_size}"; then
+                check_result=false
+            fi
+        else
+            file_size_b=$(head -n 1 "${MEDIA_DIR}/size.txt")
+            rm -f "${MEDIA_DIR}/size.txt"
 
-        INFO "${1} REMOTE_METADATA_SIZE: ${remote_metadata_size}"
-        INFO "${1} LOCAL_METADATA_SIZE: ${file_size_b}"
+            INFO "${1} REMOTE_METADATA_SIZE: ${remote_metadata_size}"
+            INFO "${1} LOCAL_METADATA_SIZE: ${file_size_b}"
 
-        if [ "${remote_metadata_size}" != "${file_size_b}" ]; then
-            check_result=false
+            if [ "${remote_metadata_size}" != "${file_size_b}" ]; then
+                check_result=false
+            fi
         fi
     else
-        case "${1}" in
-        config.mp4)
-            if [[ "$file_size" -le 3200000 ]]; then
-                check_result=false
-            fi
-            ;;
-        all.mp4)
-            if [[ "$file_size" -le 30000000 ]]; then
-                check_result=false
-            fi
-            ;;
-        pikpak.mp4)
-            if [[ "$file_size" -le 14000000 ]]; then
-                check_result=false
-            fi
-            ;;
-        115.mp4)
-            if [[ "$file_size" -le 16000000 ]]; then
-                check_result=false
-            fi
-            ;;
-        蓝光原盘.mp4)
-            if [[ "$file_size" -le 4200000 ]]; then
-                check_result=false
-            fi
-            ;;
-        config.new.mp4)
-            if [[ "$file_size" -le 3200000 ]]; then
-                check_result=false
-            fi
-            ;;
-        esac
+        if ! simple_check_metadata_size "${1}" "${file_size}"; then
+            check_result=false
+        fi
     fi
 
     if [ "${check_result}" == false ]; then
@@ -2302,7 +2325,14 @@ function download_unzip_xiaoya_emby_new_config() {
         rm -f ${MEDIA_DIR}/headers.log
 
         if [ -f "${MEDIA_DIR}/temp/${1}" ] && [ ! -f "${MEDIA_DIR}/temp/${1}.aria2" ]; then
-            LOCAL_METADATA_SIZE=$(pull_run_glue du -b "/media/temp/${1}" | awk '{print $1}')
+            pull_run_glue bash -c "du -b /media/temp/${1} | cut -f1 > /media/size.txt"
+            if [ ! -f "${MEDIA_DIR}/size.txt" ]; then
+                WARN "获取元数据文件本地大小失败（单位b）"
+                LOCAL_METADATA_SIZE=0
+            else
+                LOCAL_METADATA_SIZE=$(head -n 1 "${MEDIA_DIR}/size.txt")
+                rm -f "${MEDIA_DIR}/size.txt"
+            fi
         else
             LOCAL_METADATA_SIZE=0
         fi
