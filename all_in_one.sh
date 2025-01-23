@@ -3454,6 +3454,43 @@ function install_xiaoya_emd() {
         esac
     done
 
+    while true; do
+        INFO "是否自动配置系统 inotify watches & instances 的数值 [Y/n]（默认 Y）"
+        read -erp "inotify:" inotify_set
+        [[ -z "${inotify_set}" ]] && inotify_set="y"
+        if [[ ${inotify_set} == [YyNn] ]]; then
+            break
+        else
+            ERROR "非法输入，请输入 [Y/n]"
+        fi
+    done
+    if [[ ${inotify_set} == [Yy] ]]; then
+        if ! grep -q "fs.inotify.max_user_watches=524288" /etc/sysctl.conf; then
+            echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf
+        else
+            INFO "系统 inotify watches 数值已存在！"
+        fi
+        if ! grep -q "fs.inotify.max_user_instances=524288" /etc/sysctl.conf; then
+            echo fs.inotify.max_user_instances=524288 | tee -a /etc/sysctl.conf
+        else
+            INFO "系统 inotify instances 数值已存在！"
+        fi
+        # 清除多余的inotify设置
+        awk \
+            '!seen[$0]++ || !/^(fs\.inotify\.max_user_instances|fs\.inotify\.max_user_watches)/' /etc/sysctl.conf > \
+            /tmp/sysctl.conf.tmp && mv /tmp/sysctl.conf.tmp /etc/sysctl.conf
+        sysctl -p
+        if docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)" > /dev/null 2>&1; then
+            case "$(docker inspect --format='{{.State.Status}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)")" in
+            "running")
+                INFO "重启 Emby 容器中..."
+                docker restart "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)"
+                ;;
+            esac
+        fi
+        INFO "系统 inotify watches & instances 数值配置成功！"
+    fi
+
     extra_parameters=
     container_run_extra_parameters=$(cat ${DDSREM_CONFIG_DIR}/container_run_extra_parameters.txt)
     if [ "${container_run_extra_parameters}" == "true" ]; then
