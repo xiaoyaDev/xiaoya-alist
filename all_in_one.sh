@@ -2000,7 +2000,7 @@ function __download_metadata() {
             else
                 INFO "多线程下载，线程数：${download_threads}"
             fi
-            if pull_run_glue aria2c -o "${1}" --header="User-Agent: ${GLOBAL_UA}" --allow-overwrite=true --auto-file-renaming=false --enable-color=false -c "-x${download_threads}" "${xiaoya_addr}/d/元数据/${1}"; then
+            if pull_run_glue aria2c -o "${1}" --header="User-Agent: ${GLOBAL_UA}" --allow-overwrite=true --auto-file-renaming=false --enable-color=false --file-allocation=none -c "-x${download_threads}" "${xiaoya_addr}/d/元数据/${1}"; then
                 if [ -f "${MEDIA_DIR}/temp/${1}.aria2" ]; then
                     ERROR "存在 ${MEDIA_DIR}/temp/${1}.aria2 文件，下载不完整！"
                     exit 1
