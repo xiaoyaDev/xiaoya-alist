@@ -551,18 +551,14 @@ function qrcode_mode_choose() {
 function qrocde_common() {
 
     clear_qrcode_container
-    cpu_arch=$(uname -m)
-    case $cpu_arch in
-    "x86_64" | *"amd64"* | "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
+    if [ "${DOCKER_ARCH}" == "linux/amd64" ] || [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
         INFO "${1} 扫码获取"
         pull_glue_python_ddsrem
         qrcode_mode_choose "${2}" "${3}"
         INFO "操作全部完成！"
-        ;;
-    *)
-        WARN "目前 ${1} 扫码获取只支持amd64和arm64架构，你的架构是：$cpu_arch"
-        ;;
-    esac
+    else
+        WARN "目前 ${1} 扫码获取只支持amd64和arm64架构，你的架构是：$CPU_ARCH"
+    fi
 
 }
 
@@ -961,9 +957,7 @@ function settings_ali2115() {
 function get_aliyunpan_folder_id() {
 
     clear_qrcode_container
-    cpu_arch=$(uname -m)
-    case $cpu_arch in
-    "x86_64" | *"amd64"* | "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
+    if [ "${DOCKER_ARCH}" == "linux/amd64" ] || [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
         INFO "阿里云盘 folder id 自动获取"
         pull_glue_python_ddsrem
         # shellcheck disable=SC2046
@@ -973,11 +967,9 @@ function get_aliyunpan_folder_id() {
             $(auto_privileged) \
             ddsderek/xiaoya-glue:python \
             /get_folder_id/get_folder_id.py --data_path='/data' --drive_mode=r
-        ;;
-    *)
-        WARN "目前阿里云盘 folder id 自动获取只支持amd64和arm64架构，你的架构是：$cpu_arch"
-        ;;
-    esac
+    else
+        WARN "目前阿里云盘 folder id 自动获取只支持amd64和arm64架构，你的架构是：$CPU_ARCH"
+    fi
 
 }
 
@@ -2562,20 +2554,15 @@ function main_download_unzip_xiaoya_emby() {
 
 function install_emby_embyserver() {
 
-    cpu_arch=$(uname -m)
     INFO "开始安装Emby容器....."
-    case $cpu_arch in
-    "x86_64" | *"amd64"*)
+    if [ "${DOCKER_ARCH}" == "linux/amd64" ]; then
         image_name="emby/embyserver"
-        ;;
-    "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
+    elif [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
         image_name="emby/embyserver_arm64v8"
-        ;;
-    *)
-        ERROR "目前只支持amd64和arm64架构，你的架构是：$cpu_arch"
+    else
+        ERROR "目前只支持amd64和arm64架构，你的架构是：$CPU_ARCH"
         exit 1
-        ;;
-    esac
+    fi
     docker_pull "${image_name}:${IMAGE_VERSION}"
     if [ -n "${extra_parameters}" ]; then
         # shellcheck disable=SC2046
@@ -2614,20 +2601,15 @@ function install_emby_embyserver() {
 
 function install_amilys_embyserver() {
 
-    cpu_arch=$(uname -m)
     INFO "开始安装Emby容器....."
-    case $cpu_arch in
-    "x86_64" | *"amd64"*)
+    if [ "${DOCKER_ARCH}" == "linux/amd64" ]; then
         image_name="amilys/embyserver"
-        ;;
-    "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
+    elif [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
         image_name="amilys/embyserver_arm64v8"
-        ;;
-    *)
-        ERROR "目前只支持amd64和arm64架构，你的架构是：$cpu_arch"
+    else
+        ERROR "目前只支持amd64和arm64架构，你的架构是：$CPU_ARCH"
         exit 1
-        ;;
-    esac
+    fi
     docker_pull "${image_name}:${IMAGE_VERSION}"
     if [ -n "${extra_parameters}" ]; then
         # shellcheck disable=SC2046
@@ -2745,10 +2727,8 @@ function choose_network_mode() {
 
 function choose_emby_image() {
 
-    cpu_arch=$(uname -m)
-    INFO "您的架构是：$cpu_arch"
-    case $cpu_arch in
-    "x86_64" | *"amd64"*)
+    INFO "您的架构是：$CPU_ARCH"
+    if [ "${DOCKER_ARCH}" == "linux/amd64" ]; then
         INFO "请选择使用的Emby镜像 [ 1:amilys/embyserver | 2:emby/embyserver | 3:lovechen/embyserver(不推荐！目前不能直接同步config数据，且还存在一些已知问题未修复) ]（默认 2）"
         read -erp "IMAGE:" IMAGE
         [[ -z "${IMAGE}" ]] && IMAGE="2"
@@ -2762,8 +2742,7 @@ function choose_emby_image() {
             ERROR "输入无效，请重新选择"
             choose_emby_image
         fi
-        ;;
-    "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
+    elif [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
         INFO "请选择使用的Emby镜像 [ 1:amilys/embyserver | 2:emby/embyserver | 3:lovechen/embyserver(不推荐！目前不能直接同步config数据，且还存在一些已知问题未修复) ]（默认 2）"
         read -erp "IMAGE:" IMAGE
         [[ -z "${IMAGE}" ]] && IMAGE="2"
@@ -2777,12 +2756,10 @@ function choose_emby_image() {
             ERROR "输入无效，请重新选择"
             choose_emby_image
         fi
-        ;;
-    *)
-        ERROR "全家桶 Emby 目前只支持 amd64 和 arm64 架构，你的架构是：$cpu_arch"
+    else
+        ERROR "全家桶 Emby 目前只支持 amd64 和 arm64 架构，你的架构是：$CPU_ARCH"
         exit 1
-        ;;
-    esac
+    fi
 
 }
 
@@ -2908,6 +2885,19 @@ function get_xiaoya_hosts() { # 调用这个函数必须设置 $MODE 此变量
 
 }
 
+function emby_fix_strmassistant() {
+
+    if [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
+        WARN "检测当前为 arm64 机器，自动卸载 Emby神医助手 中..."
+        if [ -f "${1}/config/plugins/StrmAssistant.dll" ]; then
+            rm -f "${1}/config/plugins/StrmAssistant.dll"
+            DEBUG "删除 ${1}/config/plugins/StrmAssistant.dll 文件成功！"
+        fi
+        INFO "卸载 Emby神医助手 完成！"
+    fi
+
+}
+
 function install_emby_xiaoya_all_emby() {
 
     get_docker0_url
@@ -2970,20 +2960,18 @@ function install_emby_xiaoya_all_emby() {
             IMAGE_VERSION=4.8.9.0
         fi
 
+        emby_fix_strmassistant "${MEDIA_DIR}"
+
         # shellcheck disable=SC2154
         if [ "${image}" == "emby" ]; then
             install_emby_embyserver
         else
-            cpu_arch=$(uname -m)
-            case $cpu_arch in
-            "x86_64" | *"amd64"* | "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
+            if [ "${DOCKER_ARCH}" == "linux/amd64" ] || [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
                 install_amilys_embyserver
-                ;;
-            *)
-                ERROR "全家桶 Emby 目前只支持 amd64 和 arm64 架构，你的架构是：$cpu_arch"
+            else
+                ERROR "全家桶 Emby 目前只支持 amd64 和 arm64 架构，你的架构是：$CPU_ARCH"
                 exit 1
-                ;;
-            esac
+            fi
         fi
 
     else
@@ -3020,8 +3008,7 @@ function install_emby_xiaoya_all_emby() {
         while true; do
             case ${CHOOSE_EMBY} in
             "amilys_embyserver")
-                cpu_arch=$(uname -m)
-                if [[ $cpu_arch == "aarch64" || $cpu_arch == *"arm64"* || $cpu_arch == *"armv8"* || $cpu_arch == *"arm/v8"* ]]; then
+                if [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
                     WARN "amilys/embyserver_arm64v8 镜像无法指定版本号，默认拉取 latest 镜像！"
                     IMAGE_VERSION=latest
                     break
@@ -3086,6 +3073,8 @@ function install_emby_xiaoya_all_emby() {
             esac
         done
 
+        emby_fix_strmassistant "${MEDIA_DIR}"
+
         case ${CHOOSE_EMBY} in
         emby_embyserver)
             install_emby_embyserver
@@ -3143,8 +3132,7 @@ function oneclick_upgrade_emby() {
     fi
     while true; do
         if [ "${old_image_name}" == "amilys/embyserver" ] || [ "${old_image_name}" == "amilys/embyserver_arm64v8" ]; then
-            cpu_arch=$(uname -m)
-            if [[ $cpu_arch == "aarch64" || $cpu_arch == *"arm64"* || $cpu_arch == *"armv8"* || $cpu_arch == *"arm/v8"* ]]; then
+            if [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
                 WARN "amilys/embyserver_arm64v8 镜像无法指定版本号，默认重新拉取 latest 镜像更新容器！"
                 IMAGE_VERSION=latest
                 break
@@ -4104,10 +4092,8 @@ function install_xiaoya_alist_tvbox() {
     read -erp "MEM_OPT:" MEM_OPT
     [[ -z "${MEM_OPT}" ]] && MEM_OPT="-Xmx512M"
 
-    cpu_arch=$(uname -m)
-    INFO "您的CPU架构：${cpu_arch}"
-    case $cpu_arch in
-    "x86_64" | *"amd64"*)
+    INFO "您的CPU架构：${CPU_ARCH}"
+    if [ "${DOCKER_ARCH}" == "linux/amd64" ]; then
         while true; do
             INFO "是否使用内存优化版镜像 [Y/n]（默认 n 不使用）"
             read -erp "Native:" choose_native
@@ -4123,15 +4109,12 @@ function install_xiaoya_alist_tvbox() {
         else
             __choose_native="latest"
         fi
-        ;;
-    "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
+    elif [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
         __choose_native="latest"
-        ;;
-    *)
-        ERROR "Xiaoya-TVBox 目前只支持 amd64 和 arm64 架构，你的架构是：$cpu_arch"
+    else
+        ERROR "Xiaoya-TVBox 目前只支持 amd64 和 arm64 架构，你的架构是：$CPU_ARCH"
         exit 1
-        ;;
-    esac
+    fi
 
     container_run_extra_parameters=$(cat ${DDSREM_CONFIG_DIR}/container_run_extra_parameters.txt)
     if [ "${container_run_extra_parameters}" == "true" ]; then
@@ -5335,6 +5318,20 @@ function first_init() {
 
     INFO "获取系统信息中..."
     get_os
+
+    CPU_ARCH=$(uname -m)
+    case $CPU_ARCH in
+    "x86_64" | *"amd64"*)
+        DOCKER_ARCH="linux/amd64"
+        ;;
+    "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
+        DOCKER_ARCH="linux/arm64/v8"
+        ;;
+    *)
+        DOCKER_ARCH="others"
+        ;;
+    esac
+    INFO "CPU_ARCH：${CPU_ARCH}  DOCKER_ARCH：${DOCKER_ARCH}"
 
     if [ -f /tmp/run_xiaoya_install_user.txt ]; then
         INFO "运行脚本的用户：$(head -n 1 /tmp/run_xiaoya_install_user.txt)"
