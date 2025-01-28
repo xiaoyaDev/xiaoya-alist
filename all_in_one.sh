@@ -605,6 +605,12 @@ function settings_aliyunpan_refreshtoken() {
 
     if [ "${2}" == "force" ]; then
         enter_aliyunpan_refreshtoken "${1}"
+    elif [ "${2}" == "remove" ]; then
+        if [ -f "${1}/mytoken.txt" ]; then
+            rm -f "${1}/mytoken.txt"
+        fi
+        INFO "删除 mytoken.txt 成功！"
+        sleep 2
     else
         mytokenfilesize=$(cat "${1}"/mytoken.txt)
         mytokenstringsize=${#mytokenfilesize}
@@ -662,6 +668,12 @@ function settings_aliyunpan_opentoken() {
 
     if [ "${2}" == "force" ]; then
         enter_aliyunpan_opentoken "${1}"
+    elif [ "${2}" == "remove" ]; then
+        if [ -f "${1}/myopentoken.txt" ]; then
+            rm -f "${1}/myopentoken.txt"
+        fi
+        INFO "删除 myopentoken.txt 成功！"
+        sleep 2
     else
         myopentokenfilesize=$(cat "${1}"/myopentoken.txt)
         myopentokenstringsize=${#myopentokenfilesize}
@@ -708,6 +720,12 @@ function settings_115_cookie() {
 
     if [ "${2}" == "force" ]; then
         enter_115_cookie "${1}"
+    elif [ "${2}" == "remove" ]; then
+        if [ -f "${1}/115_cookie.txt" ]; then
+            rm -f "${1}/115_cookie.txt"
+        fi
+        INFO "删除 115_cookie.txt 成功！"
+        sleep 2
     else
         if [ ! -f "${1}/115_cookie.txt" ] || ! check_115_cookie "${1}"; then
             while true; do
@@ -764,6 +782,12 @@ function settings_quark_cookie() {
 
     if [ "${2}" == "force" ]; then
         enter_quark_cookie "${1}"
+    elif [ "${2}" == "remove" ]; then
+        if [ -f "${1}/quark_cookie.txt" ]; then
+            rm -f "${1}/quark_cookie.txt"
+        fi
+        INFO "删除 quark_cookie.txt 成功！"
+        sleep 2
     else
         if [ ! -f "${1}/quark_cookie.txt" ] || ! check_quark_cookie "${1}"; then
             while true; do
@@ -820,6 +844,12 @@ function settings_uc_cookie() {
 
     if [ "${2}" == "force" ]; then
         enter_uc_cookie "${1}"
+    elif [ "${2}" == "remove" ]; then
+        if [ -f "${1}/uc_cookie.txt" ]; then
+            rm -f "${1}/uc_cookie.txt"
+        fi
+        INFO "删除 uc_cookie.txt 成功！"
+        sleep 2
     else
         if [ ! -f "${1}/uc_cookie.txt" ] || ! check_uc_cookie "${1}"; then
             while true; do
@@ -858,6 +888,12 @@ function settings_pikpak_account() {
 
     if [ "${2}" == "force" ]; then
         enter_pikpak_account "${1}"
+    elif [ "${2}" == "remove" ]; then
+        if [ -f "${1}/pikpak.txt" ]; then
+            rm -f "${1}/pikpak.txt"
+        fi
+        INFO "删除 pikpak.txt 成功！"
+        sleep 2
     else
         if [ ! -f "${1}/pikpak.txt" ]; then
             while true; do
@@ -934,6 +970,12 @@ function settings_ali2115() {
 
     if [ "${2}" == "force" ]; then
         enter_ali2115 "${1}"
+    elif [ "${2}" == "remove" ]; then
+        if [ -f "${1}/ali2115.txt" ]; then
+            rm -f "${1}/ali2115.txt"
+        fi
+        INFO "删除 ali2115.txt 成功！"
+        sleep 2
     else
         if [ ! -f "${1}/ali2115.txt" ]; then
             while true; do
@@ -1122,6 +1164,39 @@ function get_media_dir() {
 
 function main_account_management() {
 
+    function main_account_management_level_two() {
+
+        echo -e "——————————————————————————————————————————————————————————————————————————————————"
+        echo -e "${Blue}${1}${Font}\n"
+        echo -e "1、配置/更新"
+        echo -e "2、删除"
+        echo -e "0、返回上级"
+        echo -e "——————————————————————————————————————————————————————————————————————————————————"
+        read -erp "请输入数字 [0-2]:" num
+        case "$num" in
+        1)
+            clear
+            "${2}" "${3}" force
+            main_account_management
+            ;;
+        2)
+            clear
+            "${2}" "${3}" remove
+            main_account_management
+            ;;
+        0)
+            clear
+            main_account_management
+            ;;
+        *)
+            clear
+            ERROR '请输入正确数字 [0-2]'
+            main_account_management_level_two "$@"
+            ;;
+        esac
+
+    }
+
     clear
 
     local config_dir
@@ -1155,38 +1230,31 @@ function main_account_management() {
     case "$num" in
     1)
         clear
-        settings_115_cookie "${config_dir}" force
-        main_account_management
+        main_account_management_level_two "115 Cookie" settings_115_cookie "${config_dir}"
         ;;
     2)
         clear
-        settings_quark_cookie "${config_dir}" force
-        main_account_management
+        main_account_management_level_two "夸克 Cookie" settings_quark_cookie "${config_dir}"
         ;;
     3)
         clear
-        settings_aliyunpan_refreshtoken "${config_dir}" force
-        main_account_management
+        main_account_management_level_two "阿里云盘 Refresh Token（mytoken）" settings_aliyunpan_refreshtoken "${config_dir}"
         ;;
     4)
         clear
-        settings_aliyunpan_opentoken "${config_dir}" force
-        main_account_management
+        main_account_management_level_two "阿里云盘 Open Token（myopentoken）" settings_aliyunpan_opentoken "${config_dir}"
         ;;
     5)
         clear
-        settings_uc_cookie "${config_dir}" force
-        main_account_management
+        main_account_management_level_two "UC Cookie" settings_uc_cookie "${config_dir}"
         ;;
     6)
         clear
-        settings_pikpak_account "${config_dir}" force
-        main_account_management
+        main_account_management_level_two "PikPak" settings_pikpak_account "${config_dir}"
         ;;
     7)
         clear
-        settings_ali2115 "${config_dir}" force
-        main_account_management
+        main_account_management_level_two "阿里转存115播放（ali2115.txt）" settings_ali2115 "${config_dir}"
         ;;
     8)
         clear
