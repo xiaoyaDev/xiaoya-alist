@@ -3286,6 +3286,16 @@ function oneclick_upgrade_emby() {
             fi
         fi
     done
+    local config_dir
+    if docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" > /dev/null 2>&1; then
+        config_dir="$(docker inspect --format='{{range $v,$conf := .Mounts}}{{$conf.Source}}:{{$conf.Destination}}{{$conf.Type}}~{{end}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" | tr '~' '\n' | grep bind | sed 's/bind//g' | grep ":/data$" | awk -F: '{print $1}')"
+    fi
+    if [ -n "${config_dir}" ]; then
+        if [ -f "${config_dir}/emby_config.txt" ]; then
+            INFO "检测到配置 emby_config.txt，自动更新 emby_config.txt 版本信息"
+            sedsh "s/version=.*/version=${IMAGE_VERSION}/" "${config_dir}/emby_config.txt"
+        fi
+    fi
     run_image="$(echo "${old_image}" | cut -d':' -f1):${IMAGE_VERSION}"
     remove_image=$(docker images -q ${old_image})
     sedsh "s|${old_image}|${run_image}|g" "/tmp/container_update_${emby_name}"

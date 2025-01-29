@@ -106,17 +106,64 @@ function set_image() {
 
 }
 
-function set_version() {
+function main_set_version() {
 
-    if [ "${version}" == "4.8.9.0" ]; then
-        new_version=latest
-    elif [ "${version}" == "latest" ]; then
-        new_version=4.8.9.0
+    # shellcheck disable=SC1091
+    source "${config_dir}/emby_config.txt"
+
+    local versiom_list
+    interface=
+    versiom_list=("4.8.9.0" "latest")
+    for i in "${!versiom_list[@]}"; do
+        if [ "${versiom_list[$i]}" == "${version}" ]; then
+            interface+="$((i + 1))、${Green}${versiom_list[$i]}${Font}\n"
+        else
+            interface+="$((i + 1))、${versiom_list[$i]}\n"
+        fi
+    done
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    echo -e "${Blue}Emby镜像版本${Font}\n"
+    echo -e "${Sky_Blue}绿色代表已选中，输入对应选项数字可勾选或取消勾选${Font}\n"
+    echo -e "${interface}\c"
+    if [ "${version}" != "4.8.9.0" ] && [ "${version}" != "latest" ]; then
+        echo -e "3、${Green}用户自定义：${version}${Font}"
     else
-        new_version=4.8.9.0
+        echo -e "3、用户自定义：无"
     fi
-
-    sedsh "s/version=.*/version=${new_version}/" "${config_dir}/emby_config.txt"
+    echo -e "0、返回上级"
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    read -erp "请输入数字 [0-3]:" num
+    case "$num" in
+    1)
+        sedsh "s/version=.*/version=4.8.9.0/" "${config_dir}/emby_config.txt"
+        clear
+        main_set_version
+        ;;
+    2)
+        sedsh "s/version=.*/version=latest/" "${config_dir}/emby_config.txt"
+        clear
+        main_set_version
+        ;;
+    3)
+        local old_version new_version
+        old_version="${version}"
+        INFO "已读取当前Emby镜像版本：${old_version} (默认不更改回车继续，如果需要更改请输入新版本号)"
+        read -erp "NEW_VERSION:" new_version
+        [[ -z "${new_version}" ]] && new_version=${old_version}
+        sedsh "s/version=.*/version=${new_version}/" "${config_dir}/emby_config.txt"
+        clear
+        main_set_version
+        ;;
+    0)
+        clear
+        main_return
+        ;;
+    *)
+        clear
+        ERROR '请输入正确数字 [0-3]'
+        main_set_version
+        ;;
+    esac
 
 }
 
@@ -173,7 +220,7 @@ function main_return() {
     echo -e "1、开启/关闭硬解GPU映射    当前配置：$(get_dev_dri)"
     echo -e "2、Emby容器网络模式        当前配置：${Sky_Blue}${mode}模式${Font}"
     echo -e "3、Emby镜像                当前配置：${Sky_Blue}${image}${Font}"
-    echo -e "4、Emby镜像版              当前配置：${Sky_Blue}${version}${Font}"
+    echo -e "4、Emby镜像版本            当前配置：${Sky_Blue}${version}${Font}"
     echo -e "5、媒体库路径              当前配置：${Sky_Blue}${media_dir}${Font}"
     echo -e "6、是否安装Resilio         当前配置：$(get_resilio)"
     echo -e "0、退出脚本 | Script info: ${DATE_VERSION} Thanks: ${Blue}xiaoyaLiu${Font}"
@@ -196,9 +243,8 @@ function main_return() {
         main_return
         ;;
     4)
-        set_version
         clear
-        main_return
+        main_set_version
         ;;
     5)
         clear
