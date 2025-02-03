@@ -2957,11 +2957,14 @@ function emby_fix_strmassistant() {
 
     if [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
         WARN "检测当前为 arm64 机器，自动卸载 Emby神医助手 中..."
-        if [ -f "${1}/config/plugins/StrmAssistant.dll" ]; then
-            rm -f "${1}/config/plugins/StrmAssistant.dll"
-            DEBUG "删除 ${1}/config/plugins/StrmAssistant.dll 文件成功！"
+        if [ -f "${1}/plugins/StrmAssistant.dll" ]; then
+            DEBUG "Emby神医助手 已安装：${1}/plugins/StrmAssistant.dll"
+            rm -f "${1}/plugins/StrmAssistant.dll"
+            DEBUG "删除 ${1}/plugins/StrmAssistant.dll 文件成功！"
         fi
         INFO "卸载 Emby神医助手 完成！"
+    else
+        DEBUG "Emby神医助手 已安装：${1}/plugins/StrmAssistant.dll"
     fi
 
 }
@@ -3028,7 +3031,7 @@ function install_emby_xiaoya_all_emby() {
             IMAGE_VERSION=4.8.9.0
         fi
 
-        emby_fix_strmassistant "${MEDIA_DIR}"
+        emby_fix_strmassistant "${MEDIA_DIR}/config"
 
         # shellcheck disable=SC2154
         if [ "${image}" == "emby" ]; then
@@ -3141,7 +3144,7 @@ function install_emby_xiaoya_all_emby() {
             esac
         done
 
-        emby_fix_strmassistant "${MEDIA_DIR}"
+        emby_fix_strmassistant "${MEDIA_DIR}/config"
 
         case ${CHOOSE_EMBY} in
         emby_embyserver)
@@ -3175,7 +3178,7 @@ function install_emby_xiaoya_all_emby() {
 
 function oneclick_upgrade_emby() {
 
-    local emby_name
+    local emby_name emby_config_dir
     emby_name=$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)
     if docker inspect ddsderek/runlike:latest > /dev/null 2>&1; then
         local_sha=$(docker inspect --format='{{index .RepoDigests 0}}' ddsderek/runlike:latest 2> /dev/null | cut -f2 -d:)
@@ -3191,6 +3194,7 @@ function oneclick_upgrade_emby() {
     docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /tmp:/tmp ddsderek/runlike "${emby_name}" > "/tmp/container_update_${emby_name}"
     old_image=$(docker container inspect -f '{{.Config.Image}}' "${emby_name}")
     old_image_name="$(echo "${old_image}" | cut -d':' -f1)"
+    emby_config_dir="$(docker inspect --format='{{range $v,$conf := .Mounts}}{{$conf.Source}}:{{$conf.Destination}}{{$conf.Type}}~{{end}}' "${emby_name}" | tr '~' '\n' | grep bind | sed 's/bind//g' | grep ":/config$" | awk -F: '{print $1}')"
     INFO "获取 Emby 版本中..."
     if get_emby_version; then
         INFO "当前 Emby 版本：${emby_version}"
@@ -3295,6 +3299,9 @@ function oneclick_upgrade_emby() {
             INFO "检测到配置 emby_config.txt，自动更新 emby_config.txt 版本信息"
             sedsh "s/version=.*/version=${IMAGE_VERSION}/" "${config_dir}/emby_config.txt"
         fi
+    fi
+    if [ -n "${emby_config_dir}" ]; then
+        emby_fix_strmassistant "${emby_config_dir}"
     fi
     run_image="$(echo "${old_image}" | cut -d':' -f1):${IMAGE_VERSION}"
     remove_image=$(docker images -q ${old_image})
