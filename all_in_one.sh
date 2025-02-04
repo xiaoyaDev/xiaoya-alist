@@ -2968,7 +2968,7 @@ function emby_fix_strmassistant() {
         emby_test_exist_strmassistant "${1}"
     elif [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
         WARN "检测当前为 arm64 机器，自动卸载 Emby神医助手 中..."
-        if emby_test_exist_strmassistant "${1}"; then            
+        if emby_test_exist_strmassistant "${1}"; then
             rm -f "${1}/plugins/StrmAssistant.dll"
             DEBUG "删除 ${1}/plugins/StrmAssistant.dll 文件成功！"
         fi
