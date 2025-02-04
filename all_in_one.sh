@@ -2955,16 +2955,27 @@ function get_xiaoya_hosts() { # 调用这个函数必须设置 $MODE 此变量
 
 function emby_fix_strmassistant() {
 
-    if [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
-        WARN "检测当前为 arm64 机器，自动卸载 Emby神医助手 中..."
+    function emby_test_exist_strmassistant() {
         if [ -f "${1}/plugins/StrmAssistant.dll" ]; then
             DEBUG "Emby神医助手 已安装：${1}/plugins/StrmAssistant.dll"
+            return 0
+        fi
+        return 1
+    }
+
+    if [ "${DOCKER_ARCH}" == "linux/amd64" ]; then
+        INFO "当前系统架构支持 Emby神医助手"
+        emby_test_exist_strmassistant "${1}"
+    elif [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
+        WARN "检测当前为 arm64 机器，自动卸载 Emby神医助手 中..."
+        if emby_test_exist_strmassistant "${1}"; then            
             rm -f "${1}/plugins/StrmAssistant.dll"
             DEBUG "删除 ${1}/plugins/StrmAssistant.dll 文件成功！"
         fi
         INFO "卸载 Emby神医助手 完成！"
     else
-        DEBUG "Emby神医助手 已安装：${1}/plugins/StrmAssistant.dll"
+        WARN "未知的系统架构，无法确认是否支持 Emby神医助手"
+        emby_test_exist_strmassistant "${1}"
     fi
 
 }
