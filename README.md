@@ -212,9 +212,9 @@ Docker镜像源选择 -> 7 6
 | 小雅代理容器（xiaoya-proxy）  |        ✅         |         ✅         |        ✅        |
 | 115清理助手（xiaoya-115cleaner）  |        ✅         |         ✅         |        ✅        |
 | xiaoya-glue（官方 python） |        ✅         |         ✅         |        ❌        |
-| xiaoya-glue（官方 latest） |        ✅         |         ✅         |        ❌        |
+| xiaoya-glue（官方 latest） |        ✅         |         ✅         |        ✅        |
 | xiaoya-glue（DDSRem python） |        ✅         |         ✅         |        ❌        |
-| xiaoya-glue（DDSRem aliyuntvtoken_connector） |        ✅         |         ✅         |        ❌        |
+| xiaoya-glue（DDSRem aliyuntvtoken_connector） |        ✅         |         ✅         |        ✅        |
 
 |    系统名称     | all_in_one.sh | emby_config_editor.sh | xiaoya_notify.sh（已弃用） |
 | :-------------: | :-----: | :-------------------: | :-------------: |
