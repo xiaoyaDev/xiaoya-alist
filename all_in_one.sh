@@ -4351,7 +4351,7 @@ function main_xiaoya_alist_tvbox() {
         ;;
     0)
         clear
-        main_return
+        main_other_tools
         ;;
     *)
         clear
@@ -5242,14 +5242,15 @@ function main_other_tools() {
 2、安装/更新/卸载 Auto_Symlink                    当前状态：$(judgment_container "${auto_symlink_name}")
 3、安装/更新/卸载 Onelist                         当前状态：$(judgment_container "${xiaoya_onelist_name}")
 4、安装/更新/卸载 Xiaoya Proxy                    当前状态：$(judgment_container xiaoya-proxy)
-5、安装/更新/卸载 Xiaoya aliyuntvtoken_connector  当前状态：$(judgment_container xiaoya-aliyuntvtoken_connector)"
-    echo -e "6、查看系统磁盘挂载"
-    echo -e "7、安装/卸载 CasaOS"
-    echo -e "8、AI老G 安装脚本"
-    echo -e "9、Docker Compose 安装/卸载 小雅及全家桶（实验性功能）"
+5、安装/更新/卸载 Xiaoya aliyuntvtoken_connector  当前状态：$(judgment_container xiaoya-aliyuntvtoken_connector)
+6、安装/更新/卸载 小雅Alist-TVBox（非原版）       当前状态：$(judgment_container "${xiaoya_tvbox_name}")"
+    echo -e "7、查看系统磁盘挂载"
+    echo -e "8、安装/卸载 CasaOS"
+    echo -e "9、AI老G 安装脚本"
+    echo -e "10、Docker Compose 安装/卸载 小雅及全家桶（实验性功能）"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-9]:" num
+    read -erp "请输入数字 [0-10]:" num
     case "$num" in
     1)
         clear
@@ -5273,6 +5274,10 @@ function main_other_tools() {
         ;;
     6)
         clear
+        main_xiaoya_alist_tvbox
+        ;;
+    7)
+        clear
         INFO "系统磁盘挂载情况:"
         show_disk_mount
         INFO "按任意键返回菜单"
@@ -5280,15 +5285,15 @@ function main_other_tools() {
         clear
         main_other_tools
         ;;
-    7)
+    8)
         clear
         main_casaos
         ;;
-    8)
+    9)
         clear
         bash <(curl -sSLf https://xy.ggbond.org/xy/xy_install.sh)
         ;;
-    9)
+    10)
         clear
         main_docker_compose
         ;;
@@ -5298,7 +5303,7 @@ function main_other_tools() {
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-9]'
+        ERROR '请输入正确数字 [0-10]'
         main_other_tools
         ;;
     esac
@@ -5314,20 +5319,19 @@ function main_return() {
         if auto_choose_image_mirror; then
             out_tips="${Green}提示：已为您自动配置Docker镜像源地址为: $(cat "${DDSREM_CONFIG_DIR}/image_mirror.txt")${Font}\n"
         else
-            out_tips="${Red}警告：当前环境无法访问Docker镜像仓库，请输入76进入Docker镜像源设置更改镜像源${Font}\n"
+            out_tips="${Red}警告：当前环境无法访问Docker镜像仓库，请输入66进入Docker镜像源设置更改镜像源${Font}\n"
         fi
     fi
     # shellcheck disable=SC2154
     echo -e "${out_tips}1、安装/更新/卸载 小雅Alist & 账号管理        当前状态：$(judgment_container "${xiaoya_alist_name}")
 2、安装/更新/卸载 小雅Emby全家桶              当前状态：$(judgment_container "${xiaoya_emby_name}")
 3、安装/更新/卸载 小雅助手（xiaoyahelper）    当前状态：$(judgment_container xiaoyakeeper)
-4、安装/更新/卸载 小雅Alist-TVBox（非原版）   当前状态：$(judgment_container "${xiaoya_tvbox_name}")
-5、安装/更新/卸载 115清理助手                 当前状态：$(judgment_container xiaoya-115cleaner)
-6、其他工具 | Script info: ${DATE_VERSION} OS: ${_os},${OSNAME},${is64bit}
-7、高级配置 | Docker version: ${Blue}${DOCKER_VERSION}${Font} ${IP_CITY}
+4、安装/更新/卸载 115清理助手                 当前状态：$(judgment_container xiaoya-115cleaner)
+5、其他工具 | Script info: ${DATE_VERSION} OS: ${_os},${OSNAME},${is64bit}
+6、高级配置 | Docker version: ${Blue}${DOCKER_VERSION}${Font} ${IP_CITY}
 0、退出脚本 | Thanks: ${Sky_Blue}heiheigui,xiaoyaLiu,Harold,AI老G,monlor,Rik${Font}
 ——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-7]:" num
+    read -erp "请输入数字 [0-6]:" num
     case "$num" in
     1)
         clear
@@ -5343,21 +5347,17 @@ function main_return() {
         ;;
     4)
         clear
-        main_xiaoya_alist_tvbox
+        main_xiaoya_115_cleaner
         ;;
     5)
         clear
-        main_xiaoya_115_cleaner
+        main_other_tools
         ;;
     6)
         clear
-        main_other_tools
-        ;;
-    7)
-        clear
         main_advanced_configuration
         ;;
-    76)
+    66)
         clear
         choose_image_mirror "main_return"
         ;;
@@ -5404,7 +5404,7 @@ function main_return() {
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-7]'
+        ERROR '请输入正确数字 [0-6]'
         main_return
         ;;
     esac
