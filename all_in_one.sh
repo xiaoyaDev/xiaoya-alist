@@ -2965,7 +2965,17 @@ function emby_fix_strmassistant() {
 
     if [ "${DOCKER_ARCH}" == "linux/amd64" ]; then
         INFO "当前系统架构支持 Emby神医助手"
-        emby_test_exist_strmassistant "${1}"
+        if emby_test_exist_strmassistant "${1}"; then
+            clear_qrcode_container
+            pull_glue_python_ddsrem
+            # shellcheck disable=SC2046
+            docker run -it --rm \
+                -v "${1}:/media/config" \
+                -e LANG=C.UTF-8 \
+                $(auto_privileged) \
+                ddsderek/xiaoya-glue:python \
+                /strmassistanthelper/strmassistanthelper.py
+        fi
     elif [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
         WARN "检测当前为 arm64 机器，自动卸载 Emby神医助手 中..."
         if emby_test_exist_strmassistant "${1}"; then
