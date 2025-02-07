@@ -222,10 +222,10 @@ function main_return() {
     echo -e "3、Emby镜像                当前配置：${Sky_Blue}${image}${Font}"
     echo -e "4、Emby镜像版本            当前配置：${Sky_Blue}${version}${Font}"
     echo -e "5、媒体库路径              当前配置：${Sky_Blue}${media_dir}${Font}"
-    echo -e "6、是否安装Resilio         当前配置：$(get_resilio)"
+    # echo -e "6、是否安装Resilio         当前配置：$(get_resilio)"
     echo -e "0、退出脚本 | Script info: ${DATE_VERSION} Thanks: ${Blue}xiaoyaLiu${Font}"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-6]:" num
+    read -erp "请输入数字 [0-5]:" num
     case "$num" in
     1)
         set_dev_dri
@@ -263,7 +263,7 @@ function main_return() {
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-6]'
+        ERROR '请输入正确数字 [0-5]'
         main_return
         ;;
     esac
