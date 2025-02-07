@@ -1,0 +1,18 @@
+{
+    "EditorTitle": "体验增强",
+    "MergeMultiVersion": false,
+    "UIFunctionOptions": {
+        "EditorTitle": "UI 功能",
+        "HidePersonNoImage": false,
+        "BeautifyMissingMetadata": false,
+        "EnhanceMissingEpisodes": false,
+        "EnforceLibraryOrder": false,
+        "NoBoxsetsAutoCreation": false,
+        "IsModSupported": true,
+        "FeatureRequiresPremiere": false,
+        "IsNewItem": false
+    },
+    "IsModSupported": true,
+    "FeatureRequiresPremiere": false,
+    "IsNewItem": false
+}

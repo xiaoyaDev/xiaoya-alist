@@ -1,0 +1,238 @@
+{
+    "EditorTitle": "媒体信息提取",
+    "IncludeExtra": false,
+    "EnableImageCapture": false,
+    "ImageCaptureExcludeMediaContainers": "MpegTs,Ts,M2Ts",
+    "ExclusiveExtract": true,
+    "ExclusiveControlList": [
+        {
+            "Value": "IgnoreFileChange",
+            "Name": "忽略文件变更",
+            "IsEnabled": true
+        },
+        {
+            "Value": "CatchAllAllow",
+            "Name": "尽可能全放行",
+            "IsEnabled": true
+        },
+        {
+            "Value": "CatchAllBlock",
+            "Name": "尽可能全阻止",
+            "IsEnabled": true
+        },
+        {
+            "Value": "IgnoreExtSubChange",
+            "Name": "忽略外挂字幕变更",
+            "IsEnabled": true
+        },
+        {
+            "Value": "NoPersistIntegration",
+            "Name": "无持久化整合",
+            "IsEnabled": true
+        }
+    ],
+    "ExclusiveControlFeatures": "CatchAllBlock",
+    "PersistMediaInfo": false,
+    "MediaInfoJsonRootFolder": "",
+    "LibraryList": [
+        {
+            "Value": "-1",
+            "Name": "❤️最爱",
+            "IsEnabled": true
+        },
+        {
+            "Value": "1869322",
+            "Name": "115/电视剧",
+            "IsEnabled": true
+        },
+        {
+            "Value": "1835042",
+            "Name": "115/电影",
+            "IsEnabled": true
+        },
+        {
+            "Value": "2255870",
+            "Name": "115/电影 4K REMUX",
+            "IsEnabled": true
+        },
+        {
+            "Value": "2072397",
+            "Name": "115/动漫-剧场版",
+            "IsEnabled": true
+        },
+        {
+            "Value": "1867424",
+            "Name": "115/动漫合集",
+            "IsEnabled": true
+        },
+        {
+            "Value": "2279059",
+            "Name": "115/蓝光原盘",
+            "IsEnabled": true
+        },
+        {
+            "Value": "2076877",
+            "Name": "测试",
+            "IsEnabled": true
+        },
+        {
+            "Value": "114140",
+            "Name": "电视剧/国产剧",
+            "IsEnabled": true
+        },
+        {
+            "Value": "113637",
+            "Name": "电视剧/韩剧",
+            "IsEnabled": true
+        },
+        {
+            "Value": "118860",
+            "Name": "电视剧/每日更新",
+            "IsEnabled": true
+        },
+        {
+            "Value": "115892",
+            "Name": "电视剧/欧美剧",
+            "IsEnabled": true
+        },
+        {
+            "Value": "113755",
+            "Name": "电视剧/日剧",
+            "IsEnabled": true
+        },
+        {
+            "Value": "108733",
+            "Name": "电视剧/台剧",
+            "IsEnabled": true
+        },
+        {
+            "Value": "77300",
+            "Name": "电视剧/TVB",
+            "IsEnabled": true
+        },
+        {
+            "Value": "112652",
+            "Name": "电影/4K 系列",
+            "IsEnabled": true
+        },
+        {
+            "Value": "112908",
+            "Name": "电影/4K REMUX",
+            "IsEnabled": true
+        },
+        {
+            "Value": "112521",
+            "Name": "电影/豆瓣 Top 1000",
+            "IsEnabled": true
+        },
+        {
+            "Value": "112823",
+            "Name": "电影/杜比视界",
+            "IsEnabled": true
+        },
+        {
+            "Value": "394560",
+            "Name": "电影/儿童",
+            "IsEnabled": true
+        },
+        {
+            "Value": "111752",
+            "Name": "电影/韩国",
+            "IsEnabled": true
+        },
+        {
+            "Value": "118755",
+            "Name": "电影/每日更新",
+            "IsEnabled": true
+        },
+        {
+            "Value": "113247",
+            "Name": "电影/人人影视合集",
+            "IsEnabled": true
+        },
+        {
+            "Value": "111388",
+            "Name": "电影/日本",
+            "IsEnabled": true
+        },
+        {
+            "Value": "1425692",
+            "Name": "电影/泰国",
+            "IsEnabled": true
+        },
+        {
+            "Value": "1425690",
+            "Name": "电影/印度",
+            "IsEnabled": true
+        },
+        {
+            "Value": "112395",
+            "Name": "电影/中国",
+            "IsEnabled": true
+        },
+        {
+            "Value": "118322",
+            "Name": "动漫/迪斯尼",
+            "IsEnabled": true
+        },
+        {
+            "Value": "394489",
+            "Name": "动漫/儿童",
+            "IsEnabled": true
+        },
+        {
+            "Value": "1649163",
+            "Name": "动漫/每日更新",
+            "IsEnabled": true
+        },
+        {
+            "Value": "1616971",
+            "Name": "动漫/每日更新 剧场版",
+            "IsEnabled": true
+        },
+        {
+            "Value": "118566",
+            "Name": "动漫/爷青回合集",
+            "IsEnabled": true
+        },
+        {
+            "Value": "15569",
+            "Name": "合集",
+            "IsEnabled": true
+        },
+        {
+            "Value": "740118",
+            "Name": "画质测试",
+            "IsEnabled": true
+        },
+        {
+            "Value": "775355",
+            "Name": "纪录片",
+            "IsEnabled": true
+        },
+        {
+            "Value": "1613320",
+            "Name": "音乐/演唱会",
+            "IsEnabled": true
+        },
+        {
+            "Value": "539213",
+            "Name": "综艺",
+            "IsEnabled": true
+        },
+        {
+            "Value": "1316551",
+            "Name": "PikPak/电视节目",
+            "IsEnabled": true
+        },
+        {
+            "Value": "589279",
+            "Name": "PikPak/电影",
+            "IsEnabled": true
+        }
+    ],
+    "LibraryScope": "",
+    "IsModSupported": true,
+    "FeatureRequiresPremiere": false,
+    "IsNewItem": false
+}

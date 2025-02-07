@@ -1,0 +1,528 @@
+{
+    "EditorTitle": "神医助手",
+    "EditorDescription": "",
+    "GeneralOptions": {
+        "EditorTitle": "通用",
+        "CatchupMode": false,
+        "MaxConcurrentCount": 1,
+        "FeatureRequiresPremiere": false,
+        "IsNewItem": false
+    },
+    "MediaInfoExtractOptions": {
+        "EditorTitle": "媒体信息提取",
+        "IncludeExtra": false,
+        "EnableImageCapture": false,
+        "ImageCaptureExcludeMediaContainers": "MpegTs,Ts,M2Ts",
+        "ExclusiveExtract": false,
+        "PersistMediaInfo": false,
+        "MediaInfoJsonRootFolder": "",
+        "LibraryList": [
+            {
+                "Value": "-1",
+                "Name": "❤️最爱",
+                "IsEnabled": true
+            },
+            {
+                "Value": "1869322",
+                "Name": "115/电视剧",
+                "IsEnabled": true
+            },
+            {
+                "Value": "1835042",
+                "Name": "115/电影",
+                "IsEnabled": true
+            },
+            {
+                "Value": "2072397",
+                "Name": "115/动漫-剧场版",
+                "IsEnabled": true
+            },
+            {
+                "Value": "1867424",
+                "Name": "115/动漫合集",
+                "IsEnabled": true
+            },
+            {
+                "Value": "2076877",
+                "Name": "测试",
+                "IsEnabled": true
+            },
+            {
+                "Value": "114140",
+                "Name": "电视剧/国产剧",
+                "IsEnabled": true
+            },
+            {
+                "Value": "113637",
+                "Name": "电视剧/韩剧",
+                "IsEnabled": true
+            },
+            {
+                "Value": "118860",
+                "Name": "电视剧/每日更新",
+                "IsEnabled": true
+            },
+            {
+                "Value": "115892",
+                "Name": "电视剧/欧美剧",
+                "IsEnabled": true
+            },
+            {
+                "Value": "113755",
+                "Name": "电视剧/日剧",
+                "IsEnabled": true
+            },
+            {
+                "Value": "108733",
+                "Name": "电视剧/台剧",
+                "IsEnabled": true
+            },
+            {
+                "Value": "77300",
+                "Name": "电视剧/TVB",
+                "IsEnabled": true
+            },
+            {
+                "Value": "112652",
+                "Name": "电影/4K 系列",
+                "IsEnabled": true
+            },
+            {
+                "Value": "112908",
+                "Name": "电影/4K REMUX",
+                "IsEnabled": true
+            },
+            {
+                "Value": "112521",
+                "Name": "电影/豆瓣 Top 1000",
+                "IsEnabled": true
+            },
+            {
+                "Value": "112823",
+                "Name": "电影/杜比视界",
+                "IsEnabled": true
+            },
+            {
+                "Value": "394560",
+                "Name": "电影/儿童",
+                "IsEnabled": true
+            },
+            {
+                "Value": "111752",
+                "Name": "电影/韩国",
+                "IsEnabled": true
+            },
+            {
+                "Value": "118755",
+                "Name": "电影/每日更新",
+                "IsEnabled": true
+            },
+            {
+                "Value": "113247",
+                "Name": "电影/人人影视合集",
+                "IsEnabled": true
+            },
+            {
+                "Value": "111388",
+                "Name": "电影/日本",
+                "IsEnabled": true
+            },
+            {
+                "Value": "1425692",
+                "Name": "电影/泰国",
+                "IsEnabled": true
+            },
+            {
+                "Value": "1425690",
+                "Name": "电影/印度",
+                "IsEnabled": true
+            },
+            {
+                "Value": "112395",
+                "Name": "电影/中国",
+                "IsEnabled": true
+            },
+            {
+                "Value": "118322",
+                "Name": "动漫/迪斯尼",
+                "IsEnabled": true
+            },
+            {
+                "Value": "394489",
+                "Name": "动漫/儿童",
+                "IsEnabled": true
+            },
+            {
+                "Value": "1649163",
+                "Name": "动漫/每日更新",
+                "IsEnabled": true
+            },
+            {
+                "Value": "1616971",
+                "Name": "动漫/每日更新 剧场版",
+                "IsEnabled": true
+            },
+            {
+                "Value": "118566",
+                "Name": "动漫/爷青回合集",
+                "IsEnabled": true
+            },
+            {
+                "Value": "15569",
+                "Name": "合集",
+                "IsEnabled": true
+            },
+            {
+                "Value": "740118",
+                "Name": "画质测试",
+                "IsEnabled": true
+            },
+            {
+                "Value": "775355",
+                "Name": "纪录片",
+                "IsEnabled": true
+            },
+            {
+                "Value": "1613320",
+                "Name": "音乐/演唱会",
+                "IsEnabled": true
+            },
+            {
+                "Value": "539213",
+                "Name": "综艺",
+                "IsEnabled": true
+            },
+            {
+                "Value": "1316551",
+                "Name": "PikPak/电视节目",
+                "IsEnabled": true
+            },
+            {
+                "Value": "589279",
+                "Name": "PikPak/电影",
+                "IsEnabled": true
+            },
+            {
+                "Value": "2249312",
+                "Name": "播放列表",
+                "IsEnabled": true
+            }
+        ],
+        "LibraryScope": "2076877,1616971,118860,118755",
+        "IsModSupported": true,
+        "FeatureRequiresPremiere": false,
+        "IsNewItem": false
+    },
+    "MetadataEnhanceOptions": {
+        "EditorTitle": "元数据增强",
+        "ChineseMovieDb": true,
+        "LanguageList": [
+            {
+                "Value": "zh-cn",
+                "Name": "zh-CN",
+                "IsEnabled": true
+            },
+            {
+                "Value": "zh-sg",
+                "Name": "zh-SG",
+                "IsEnabled": true
+            },
+            {
+                "Value": "zh-hk",
+                "Name": "zh-HK",
+                "IsEnabled": true
+            },
+            {
+                "Value": "zh-tw",
+                "Name": "zh-TW",
+                "IsEnabled": true
+            },
+            {
+                "Value": "ja-jp",
+                "Name": "ja-JP",
+                "IsEnabled": true
+            }
+        ],
+        "FallbackLanguages": "zh-cn",
+        "EnhanceMovieDbPerson": false,
+        "RefreshPersonMode": "Default",
+        "PreferOriginalPoster": true,
+        "PinyinSortName": true,
+        "EnhanceNfoMetadata": true,
+        "AltMovieDbConfig": false,
+        "AltMovieDbApiUrl": "https://api.tmdb.org",
+        "AltMovieDbImageUrl": "",
+        "AltMovieDbApiKey": "",
+        "IsMovieDbPluginLoaded": true,
+        "IsNfoMetadataPluginLoaded": true,
+        "IsModSupported": true,
+        "FeatureRequiresPremiere": false,
+        "IsNewItem": false
+    },
+    "IntroSkipOptions": {
+        "EditorTitle": "片头片尾探测",
+        "EnableIntroSkip": false,
+        "MaxIntroDurationSeconds": 150,
+        "MaxCreditsDurationSeconds": 360,
+        "MinOpeningPlotDurationSeconds": 60,
+        "LibraryList": [
+            {
+                "Value": "1869322",
+                "Name": "115/电视剧",
+                "IsEnabled": true
+            },
+            {
+                "Value": "1867424",
+                "Name": "115/动漫合集",
+                "IsEnabled": true
+            },
+            {
+                "Value": "2076877",
+                "Name": "测试",
+                "IsEnabled": true
+            },
+            {
+                "Value": "114140",
+                "Name": "电视剧/国产剧",
+                "IsEnabled": true
+            },
+            {
+                "Value": "113637",
+                "Name": "电视剧/韩剧",
+                "IsEnabled": true
+            },
+            {
+                "Value": "118860",
+                "Name": "电视剧/每日更新",
+                "IsEnabled": true
+            },
+            {
+                "Value": "115892",
+                "Name": "电视剧/欧美剧",
+                "IsEnabled": true
+            },
+            {
+                "Value": "113755",
+                "Name": "电视剧/日剧",
+                "IsEnabled": true
+            },
+            {
+                "Value": "108733",
+                "Name": "电视剧/台剧",
+                "IsEnabled": true
+            },
+            {
+                "Value": "77300",
+                "Name": "电视剧/TVB",
+                "IsEnabled": true
+            },
+            {
+                "Value": "394489",
+                "Name": "动漫/儿童",
+                "IsEnabled": true
+            },
+            {
+                "Value": "1649163",
+                "Name": "动漫/每日更新",
+                "IsEnabled": true
+            },
+            {
+                "Value": "118566",
+                "Name": "动漫/爷青回合集",
+                "IsEnabled": true
+            },
+            {
+                "Value": "775355",
+                "Name": "纪录片",
+                "IsEnabled": true
+            },
+            {
+                "Value": "539213",
+                "Name": "综艺",
+                "IsEnabled": true
+            },
+            {
+                "Value": "1316551",
+                "Name": "PikPak/电视节目",
+                "IsEnabled": true
+            }
+        ],
+        "LibraryScope": "",
+        "UserList": [
+            {
+                "Value": "1",
+                "Name": "👑xiaoya",
+                "IsEnabled": true
+            },
+            {
+                "Value": "3",
+                "Name": "👤kid",
+                "IsEnabled": true
+            }
+        ],
+        "UserScope": "",
+        "UnlockIntroSkip": false,
+        "IntroDetectionFingerprintMinutes": 10,
+        "MarkerEnabledLibraryList": [
+            
+        ],
+        "MarkerEnabledLibraryScope": "",
+        "IsModSupported": true,
+        "FeatureRequiresPremiere": false,
+        "IsNewItem": false
+    },
+    "UIFunctionOptions": {
+        "EditorTitle": "UI 功能",
+        "HidePersonNoImage": false,
+        "BeautifyMissingMetadata": true,
+        "EnhanceMissingEpisodes": false,
+        "EnforceLibraryOrder": false,
+        "IsModSupported": true,
+        "FeatureRequiresPremiere": false,
+        "IsNewItem": false
+    },
+    "ModOptions": {
+        "EditorTitle": "魔改",
+        "MergeMultiVersion": false,
+        "EnhanceChineseSearch": true,
+        "EnhanceChineseSearchRestore": false,
+        "SearchItemTypeList": [
+            {
+                "Value": "Movie",
+                "Name": "电影",
+                "IsEnabled": true
+            },
+            {
+                "Value": "Collection",
+                "Name": "合集",
+                "IsEnabled": true
+            },
+            {
+                "Value": "Series",
+                "Name": "电视节目",
+                "IsEnabled": true
+            },
+            {
+                "Value": "Episode",
+                "Name": "集",
+                "IsEnabled": true
+            },
+            {
+                "Value": "Person",
+                "Name": "人物",
+                "IsEnabled": true
+            },
+            {
+                "Value": "LiveTv",
+                "Name": "电视直播",
+                "IsEnabled": true
+            },
+            {
+                "Value": "Music",
+                "Name": "音乐",
+                "IsEnabled": true
+            },
+            {
+                "Value": "MusicAlbum",
+                "Name": "专辑",
+                "IsEnabled": true
+            },
+            {
+                "Value": "MusicArtist",
+                "Name": "艺术家",
+                "IsEnabled": true
+            },
+            {
+                "Value": "Playlist",
+                "Name": "播放列表",
+                "IsEnabled": true
+            },
+            {
+                "Value": "Photo",
+                "Name": "照片",
+                "IsEnabled": true
+            },
+            {
+                "Value": "PhotoAlbum",
+                "Name": "相册",
+                "IsEnabled": true
+            },
+            {
+                "Value": "Genre",
+                "Name": "类型风格",
+                "IsEnabled": true
+            },
+            {
+                "Value": "Book",
+                "Name": "书籍",
+                "IsEnabled": true
+            },
+            {
+                "Value": "Game",
+                "Name": "游戏",
+                "IsEnabled": true
+            },
+            {
+                "Value": "Trailer",
+                "Name": "预告片",
+                "IsEnabled": true
+            },
+            {
+                "Value": "Tag",
+                "Name": "标签",
+                "IsEnabled": true
+            },
+            {
+                "Value": "Studio",
+                "Name": "工作室",
+                "IsEnabled": true
+            }
+        ],
+        "SearchScope": "Movie,Collection,Series",
+        "IsModSupported": true,
+        "IsChineseSearchSupported": true,
+        "FeatureRequiresPremiere": false,
+        "IsNewItem": false
+    },
+    "AboutOptions": {
+        "EditorTitle": "关于",
+        "VersionInfoList": [
+            {
+                "Icon": "info",
+                "IconMode": "SmallRegular",
+                "Status": "Unavailable",
+                "PrimaryText": "1.0.0.45+5f8b172",
+                "ShowSecondaryFirst": false,
+                "HasPercentage": false,
+                "PercentComplete": 0
+            },
+            {
+                "Icon": "code",
+                "IconMode": "SmallRegular",
+                "Status": "Unavailable",
+                "PrimaryText": "项目链接",
+                "ShowSecondaryFirst": false,
+                "HasPercentage": false,
+                "PercentComplete": 0,
+                "HyperLink": "https://github.com/sjtuross/StrmAssistant"
+            },
+            {
+                "Icon": "menu_book",
+                "IconMode": "SmallRegular",
+                "Status": "Unavailable",
+                "PrimaryText": "功能介绍",
+                "ShowSecondaryFirst": false,
+                "HasPercentage": false,
+                "PercentComplete": 0,
+                "HyperLink": "https://github.com/sjtuross/StrmAssistant/wiki"
+            }
+        ],
+        "GitHubToken": "",
+        "GitHubProxy": "",
+        "FeatureRequiresPremiere": false,
+        "IsNewItem": false
+    },
+    "IsConflictPluginLoaded": false,
+    "FeatureRequiresPremiere": false,
+    "IsNewItem": false
+}
