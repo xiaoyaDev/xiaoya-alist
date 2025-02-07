@@ -4,6 +4,7 @@
 
 import logging
 import sys
+import shutil
 from pathlib import Path
 
 import pefile
@@ -29,10 +30,12 @@ def move_and_replace_file(src_file: Path, dst_path: Path):
     try:
         if not dst_path.parent.exists():
             dst_path.parent.mkdir(parents=True)
-        src_file.replace(dst_path)
-        logging.info("移动 %s 文件成功！", src_file.name)
+        if dst_path.exists():
+            dst_path.unlink()
+        shutil.copy2(src_file, dst_path)
+        logging.info("复制 %s 文件成功！", src_file.name)
     except Exception as e:  # pylint: disable=W0718
-        logging.error("移动 %s 文件失败：%s", src_file.name, e)
+        logging.error("复制 %s 文件失败：%s", src_file.name, e)
 
 
 def move_and_replace_config(file_name: str):
