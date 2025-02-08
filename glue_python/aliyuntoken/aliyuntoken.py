@@ -174,7 +174,7 @@ if __name__ == "__main__":
         threading.Thread(target=poll_qrcode_status, args=(data, False, args.api_url)).start()
         logging.info("请打开阿里云盘扫描此二维码！")
         qr.print_ascii(invert=True, tty=sys.stdout.isatty())
-        while LAST_STATUS != 1 and LAST_STATUS != 2:
+        while LAST_STATUS not in [1, 2]:
             time.sleep(1)
         if os.path.isfile(QRCODE_DIR):
             os.remove(QRCODE_DIR)

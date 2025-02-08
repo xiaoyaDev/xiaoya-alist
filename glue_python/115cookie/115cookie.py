@@ -243,7 +243,7 @@ if __name__ == "__main__":
         qr.make(fit=True)
         logging.info("请打开 115网盘 扫描此二维码！")
         qr.print_ascii(invert=True, tty=sys.stdout.isatty())
-        while LAST_STATUS != 1 and LAST_STATUS != 2:
+        while LAST_STATUS not in [1, 2]:
             time.sleep(1)
         os._exit(0)
     else:
