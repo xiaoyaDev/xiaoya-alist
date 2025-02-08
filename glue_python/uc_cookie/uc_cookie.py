@@ -51,55 +51,63 @@ def poll_qrcode_status(stop, _token, log_print):
     循环等待扫码
     """
     global LAST_STATUS
+    retry_times = 0
     while not stop.is_set():
-        __t = int(time.time() * 1000)
-        _data = {"client_id": 381, "v": 1.2, "request_id": __t, "token": _token}
-        _re = requests.post(
-            f"https://api.open.uc.cn/cas/ajax/getServiceTicketByQrcodeToken?__dt={get_dt()}&__t={__t}",
-            data=_data,
-            timeout=100,
-        )
-        if _re.status_code == 200:
-            re_data = json.loads(_re.content)
-            if re_data["status"] == 2000000:
-                logging.info("扫码成功！")
-                service_ticket = re_data["data"]["members"]["service_ticket"]
-                _re = requests.get(f"https://drive.uc.cn/account/info?st={service_ticket}", timeout=10)
-                if _re.status_code == 200:
-                    uc_cookie = cookiejar_to_string(_re.cookies)
-                    headers = {
-                        "User-Agent": UC_UA,
-                        "Referer": "https://drive.uc.cn",
-                        "Cookie": uc_cookie,
-                    }
-                    _re = requests.get(
-                        "https://pc-api.uc.cn/1/clouddrive/file/sort?pr=UCBrowser&fr=pc&pdir_fid=0&_page=1&_size=50&_fetch_total=1&_fetch_sub_dirs=0&_sort=file_type:asc,updated_at:desc",
-                        headers=headers,
-                        timeout=10,
-                    )
-                    if _re.status_code == 200:
-                        uc_cookie += "; " + cookiejar_to_string(_re.cookies)
-                    else:
-                        logging.error("获取 __puus 失败！")
-                        LAST_STATUS = 2
-                        break
-                    if sys.platform.startswith("win32"):
-                        with open("uc_cookie.txt", "w", encoding="utf-8") as f:
-                            f.write(uc_cookie)
-                    else:
-                        with open("/data/uc_cookie.txt", "w", encoding="utf-8") as f:
-                            f.write(uc_cookie)
-                    logging.info("扫码成功，UC Cookie 已写入文件！")
-                LAST_STATUS = 1
-                break
-            elif re_data["status"] == 50004002:
-                logging.error("二维码无效或已过期！")
+        try:
+            if retry_times == 3:
                 LAST_STATUS = 2
                 break
-            elif re_data["status"] == 50004001:
-                if log_print:
-                    logging.info("等待用户扫码...")
-                time.sleep(2)
+            __t = int(time.time() * 1000)
+            _data = {"client_id": 381, "v": 1.2, "request_id": __t, "token": _token}
+            _re = requests.post(
+                f"https://api.open.uc.cn/cas/ajax/getServiceTicketByQrcodeToken?__dt={get_dt()}&__t={__t}",
+                data=_data,
+                timeout=100,
+            )
+            if _re.status_code == 200:
+                re_data = json.loads(_re.content)
+                if re_data["status"] == 2000000:
+                    logging.info("扫码成功！")
+                    service_ticket = re_data["data"]["members"]["service_ticket"]
+                    _re = requests.get(f"https://drive.uc.cn/account/info?st={service_ticket}", timeout=10)
+                    if _re.status_code == 200:
+                        uc_cookie = cookiejar_to_string(_re.cookies)
+                        headers = {
+                            "User-Agent": UC_UA,
+                            "Referer": "https://drive.uc.cn",
+                            "Cookie": uc_cookie,
+                        }
+                        _re = requests.get(
+                            "https://pc-api.uc.cn/1/clouddrive/file/sort?pr=UCBrowser&fr=pc&pdir_fid=0&_page=1&_size=50&_fetch_total=1&_fetch_sub_dirs=0&_sort=file_type:asc,updated_at:desc",
+                            headers=headers,
+                            timeout=10,
+                        )
+                        if _re.status_code == 200:
+                            uc_cookie += "; " + cookiejar_to_string(_re.cookies)
+                        else:
+                            logging.error("获取 __puus 失败！")
+                            LAST_STATUS = 2
+                            break
+                        if sys.platform.startswith("win32"):
+                            with open("uc_cookie.txt", "w", encoding="utf-8") as f:
+                                f.write(uc_cookie)
+                        else:
+                            with open("/data/uc_cookie.txt", "w", encoding="utf-8") as f:
+                                f.write(uc_cookie)
+                        logging.info("扫码成功，UC Cookie 已写入文件！")
+                    LAST_STATUS = 1
+                    break
+                elif re_data["status"] == 50004002:
+                    logging.error("二维码无效或已过期！")
+                    LAST_STATUS = 2
+                    break
+                elif re_data["status"] == 50004001:
+                    if log_print:
+                        logging.info("等待用户扫码...")
+                    time.sleep(2)
+        except Exception as e:  # pylint: disable=W0718
+            logging.error("错误：%s", e)
+            retry_times += 1
 
 
 @app.route("/")
