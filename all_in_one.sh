@@ -2042,7 +2042,7 @@ function __download_metadata() {
             if [ -f "${MEDIA_DIR}/headers.log" ]; then
                 # 115网盘下载链接：返回为 X-115-Request-Id，并且存在 ali2115.txt 文件
                 if grep "X-115-Request-Id" "${MEDIA_DIR}/headers.log" && [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
-                    download_threads="1"
+                    download_threads="2"
                 # 阿里云盘下载链接：非 115 链接情况下，返回为 X-Oss-Request-Id + X-Oss-Storage-Class
                 elif grep "X-Oss-Request-Id" "${MEDIA_DIR}/headers.log" && grep "X-Oss-Storage-Class" "${MEDIA_DIR}/headers.log"; then
                     download_threads="6"
@@ -2053,7 +2053,7 @@ function __download_metadata() {
                 rm -f "${MEDIA_DIR}/headers.log"
             else
                 if [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
-                    download_threads="1"
+                    download_threads="2"
                 else
                     download_threads="6"
                 fi
