@@ -2,6 +2,7 @@
 # pylint: disable=C0103
 # pylint: disable=C0114
 
+import json
 import logging
 import sys
 import shutil
@@ -47,6 +48,25 @@ def move_and_replace_config(file_name: str):
     move_and_replace_file(_source_file, _dst_file_path)
 
 
+def set_and_info_config():
+    """
+    替换配置文件并输出信息
+    """
+    if Path(f"{BASE_CONFIG_PATH}/plugins/configurations/Strm Assistant.json").exists():
+        with open(f"{BASE_CONFIG_PATH}/plugins/configurations/Strm Assistant.json", encoding="utf-8") as file:
+            data = json.load(file)
+        if data["ModOptions"]["EnhanceChineseSearch"] == "true":
+            logging.info("中文搜索增强已开启")
+        else:
+            logging.info("中文搜索增强未开启")
+    for file in [
+        "Strm Assistant.json",
+        "Strm Assistant_MediaInfoExtractOptions.json",
+        "Strm Assistant_ExperienceEnhanceOptions.json",
+    ]:
+        move_and_replace_config(file)
+
+
 logging.basicConfig(
     format="%(asctime)s %(levelname)s %(message)s",
     level=logging.INFO,
@@ -58,25 +78,15 @@ BASE_CONFIG_PATH = "/media/config"
 BASE_DATA_PATH = "/strmassistanthelper"
 
 version = get_file_version(f"{BASE_CONFIG_PATH}/plugins/StrmAssistant.dll")
-if version:
-    if version > "2.0.0.0":
-        for file in [
-            "Strm Assistant.json",
-            "Strm Assistant_MediaInfoExtractOptions.json",
-            "Strm Assistant_ExperienceEnhanceOptions.json",
-        ]:
-            move_and_replace_config(file)
+new_version = get_file_version(f"{BASE_DATA_PATH}/StrmAssistant.dll")
+if version and new_version:
+    if version >= new_version:
+        set_and_info_config()
     else:
         source_file = Path(f"{BASE_DATA_PATH}/StrmAssistant.dll")
         dst_file_path = Path(f"{BASE_CONFIG_PATH}/plugins/StrmAssistant.dll")
-        new_version = get_file_version(f"{BASE_DATA_PATH}/StrmAssistant.dll")
         logging.info("更新 神医助手 插件：%s --> %s", version, new_version)
         move_and_replace_file(source_file, dst_file_path)
-        for file in [
-            "Strm Assistant.json",
-            "Strm Assistant_MediaInfoExtractOptions.json",
-            "Strm Assistant_ExperienceEnhanceOptions.json",
-        ]:
-            move_and_replace_config(file)
+        set_and_info_config()
 else:
     logging.info("获取 StrmAssistant 版本失败！")
