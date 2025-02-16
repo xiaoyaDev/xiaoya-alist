@@ -508,12 +508,15 @@ function qrcode_mode_choose() {
         if curl -Is https://api.xhofe.top/alist/ali_open/qr | head -n 1 | grep -q '200'; then
             extra_parameters="--api_url=api.xhofe.top"
             INFO "使用 api.xhofe.top 地址"
-        elif curl -Is https://api-cf.nn.ci/alist/ali_open/qr | head -n 1 | grep -q '200'; then
+        else
             extra_parameters="--api_url=api-cf.nn.ci"
             INFO "使用 api-cf.nn.ci 地址"
-        else
-            extra_parameters="--api_url=aliyundrive-oauth.messense.me"
-            INFO "使用 aliyundrive-oauth.messense.me 地址"
+        # elif curl -Is https://api-cf.nn.ci/alist/ali_open/qr | head -n 1 | grep -q '200'; then
+        #     extra_parameters="--api_url=api-cf.nn.ci"
+        #     INFO "使用 api-cf.nn.ci 地址"
+        # else
+        #     extra_parameters="--api_url=aliyundrive-oauth.messense.me"
+        #     INFO "使用 aliyundrive-oauth.messense.me 地址"
         fi
     elif [ "${2}" == "/aliyuntoken/aliyuntoken.py" ]; then
         if curl -Is https://api.xhofe.top/alist/ali/qr | head -n 1 | grep -q '200'; then
