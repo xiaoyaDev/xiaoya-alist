@@ -55,7 +55,7 @@ def set_and_info_config():
     if Path(f"{BASE_CONFIG_PATH}/plugins/configurations/Strm Assistant.json").exists():
         with open(f"{BASE_CONFIG_PATH}/plugins/configurations/Strm Assistant.json", encoding="utf-8") as file:
             data = json.load(file)
-        if data["ModOptions"]["EnhanceChineseSearch"] == "true":
+        if data["ModOptions"]["EnhanceChineseSearch"]:
             logging.info("中文搜索增强已开启")
         else:
             logging.info("中文搜索增强未开启")
