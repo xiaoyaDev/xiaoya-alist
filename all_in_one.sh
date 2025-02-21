@@ -3116,7 +3116,7 @@ function install_emby_xiaoya_all_emby() {
                         ;;
                     2)
                         IMAGE_VERSION=4.9.0.38
-                        if [ "${IMAGE_VERSION}" == "${amilys_embyserver_latest_version}" ]; then
+                        if [ "${IMAGE_VERSION}" == "${amilys_embyserver_beta_version}" ]; then
                             IMAGE_VERSION=beta
                         fi
                         break
@@ -3236,10 +3236,12 @@ function oneclick_upgrade_emby() {
                     ;;
                 2)
                     IMAGE_VERSION=4.9.0.38
-                    if [ "${IMAGE_VERSION}" == "${amilys_embyserver_latest_version}" ]; then
+                    if [ "${IMAGE_VERSION}" == "${amilys_embyserver_beta_version}" ]; then
                         IMAGE_VERSION=beta
+                        choose_emby_version="${amilys_embyserver_beta_version}"
+                    else
+                        choose_emby_version="${IMAGE_VERSION}"
                     fi
-                    choose_emby_version="${IMAGE_VERSION}"
                     ;;
                 3)
                     IMAGE_VERSION=latest
