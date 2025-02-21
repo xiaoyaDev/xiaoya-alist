@@ -102,6 +102,15 @@ function set_image() {
         new_image=emby
     fi
 
+    CPU_ARCH=$(uname -m)
+    case $CPU_ARCH in
+    "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
+        new_image=emby
+        WARN "arm64 只支持官方镜像！"
+        sleep 3
+        ;;
+    esac
+
     sedsh "s/image=.*/image=${new_image}/" "${config_dir}/emby_config.txt"
 
 }
@@ -113,7 +122,7 @@ function main_set_version() {
 
     local versiom_list
     interface=
-    versiom_list=("4.8.9.0" "latest")
+    versiom_list=("4.8.9.0" "latest" "4.9.0.38")
     for i in "${!versiom_list[@]}"; do
         if [ "${versiom_list[$i]}" == "${version}" ]; then
             interface+="$((i + 1))、${Green}${versiom_list[$i]}${Font}\n"
@@ -125,14 +134,14 @@ function main_set_version() {
     echo -e "${Blue}Emby镜像版本${Font}\n"
     echo -e "${Sky_Blue}绿色代表已选中，输入对应选项数字可勾选或取消勾选${Font}\n"
     echo -e "${interface}\c"
-    if [ "${version}" != "4.8.9.0" ] && [ "${version}" != "latest" ]; then
-        echo -e "3、${Green}用户自定义：${version}${Font}"
+    if [ "${version}" != "4.8.9.0" ] && [ "${version}" != "latest" ] && [ "${version}" != "4.9.0.38" ]; then
+        echo -e "4、${Green}用户自定义：${version}${Font}"
     else
-        echo -e "3、用户自定义：无"
+        echo -e "4、用户自定义：无"
     fi
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-3]:" num
+    read -erp "请输入数字 [0-4]:" num
     case "$num" in
     1)
         sedsh "s/version=.*/version=4.8.9.0/" "${config_dir}/emby_config.txt"
@@ -145,6 +154,11 @@ function main_set_version() {
         main_set_version
         ;;
     3)
+        sedsh "s/version=.*/version=4.9.0.38/" "${config_dir}/emby_config.txt"
+        clear
+        main_set_version
+        ;;
+    4)
         local old_version new_version
         old_version="${version}"
         INFO "已读取当前Emby镜像版本：${old_version} (默认不更改回车继续，如果需要更改请输入新版本号)"
@@ -160,7 +174,7 @@ function main_set_version() {
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-3]'
+        ERROR '请输入正确数字 [0-4]'
         main_set_version
         ;;
     esac
@@ -300,7 +314,7 @@ if [ ! -s "${config_dir}/emby_config.txt" ]; then
         echo "image=emby"
         echo "media_dir="
         echo "resilio=no"
-        echo "version=4.8.9.0"
+        echo "version=4.9.0.38"
     } >> "${config_dir}/emby_config.txt"
 else
     # shellcheck disable=SC1091
@@ -321,7 +335,7 @@ else
         echo "resilio=no" >> "${config_dir}/emby_config.txt"
     fi
     if [ -z "${version}" ]; then
-        echo "version=4.8.9.0" >> "${config_dir}/emby_config.txt"
+        echo "version=4.9.0.38" >> "${config_dir}/emby_config.txt"
     fi
 fi
 
