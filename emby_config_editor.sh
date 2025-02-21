@@ -107,7 +107,8 @@ function set_image() {
     "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
         new_image=emby
         WARN "arm64 只支持官方镜像！"
-        sleep 3
+        INFO "按任意键继续配置"
+        read -rs -n 1 -p ""
         ;;
     esac
 
