@@ -2519,7 +2519,7 @@ function main_download_unzip_xiaoya_emby() {
     echo -e "13、下载 蓝光原盘.mp4"
     echo -e "14、解压 蓝光原盘.mp4"
     echo -e "15、当前下载器【aria2/wget】                  当前状态：${Green}${__data_downloader}${Font}"
-    echo -e "101、下载并解压 config.new.mp4（4.9.0.38）"
+    # echo -e "101、下载并解压 config.new.mp4（4.9.0.38）"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     read -erp "请输入数字（支持输入多个数字，空格分离，按输入顺序执行）[0-15]:" -a nums
@@ -3116,6 +3116,9 @@ function install_emby_xiaoya_all_emby() {
                         ;;
                     2)
                         IMAGE_VERSION=4.9.0.38
+                        if [ "${IMAGE_VERSION}" == "${amilys_embyserver_latest_version}" ]; then
+                            IMAGE_VERSION=beta
+                        fi
                         break
                         ;;
                     3)
@@ -3233,6 +3236,9 @@ function oneclick_upgrade_emby() {
                     ;;
                 2)
                     IMAGE_VERSION=4.9.0.38
+                    if [ "${IMAGE_VERSION}" == "${amilys_embyserver_latest_version}" ]; then
+                        IMAGE_VERSION=beta
+                    fi
                     choose_emby_version="${IMAGE_VERSION}"
                     ;;
                 3)
