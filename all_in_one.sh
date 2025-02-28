@@ -1995,6 +1995,7 @@ function __unzip_metadata() {
         chmod -R 777 "${MEDIA_DIR}"
     elif [ "${1}" == "config.mp4" ] || [ "${1}" == "config.new.mp4" ]; then
         metadata_unziper "${1}"
+        emby_fix_strmassistant "${MEDIA_DIR}/config"
         INFO "设置目录权限..."
         INFO "这可能需要一定时间，请耐心等待！"
         chmod -R 777 "${MEDIA_DIR}"/config
