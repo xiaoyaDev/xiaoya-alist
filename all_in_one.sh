@@ -1557,9 +1557,10 @@ function main_xiaoya_alist() {
     echo -e "2、更新"
     echo -e "3、卸载"
     echo -e "4、账号管理"
+    echo -e "5、非内网IP访问次数查看"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-4]:" num
+    read -erp "请输入数字 [0-5]:" num
     case "$num" in
     1)
         clear
@@ -1582,13 +1583,30 @@ function main_xiaoya_alist() {
         clear
         main_account_management
         ;;
+    5)
+        clear
+        if ! docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" > /dev/null 2>&1; then
+            ERROR "小雅容器未安装，无法查看！"
+        else
+            if [ "$(docker inspect --format='{{.State.Status}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)")" != "running" ]; then
+                ERROR "小雅容器未启动，无法查看！"
+            else
+                INFO "非内网IP访问次数情况："
+                docker exec -it "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" bash -c 'cat /opt/alist/log/alist.log |grep -o "([0-9]{1,3}\\.){3}[0-9]{1,3}" | grep -v "172\\.17|127\\.0|192\\.168" | sort | uniq -c | head -n10 | sed "s/^[ \t]*//"'
+            fi
+        fi
+        INFO "按任意键返回菜单"
+        read -rs -n 1 -p ""
+        clear
+        main_xiaoya_alist
+        ;;
     0)
         clear
         main_return
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-4]'
+        ERROR '请输入正确数字 [0-5]'
         main_xiaoya_alist
         ;;
     esac
