@@ -4019,7 +4019,7 @@ function main_xiaoya_all_emby() {
 
 function xiaoyahelper_install_check() {
     local URL="$1"
-    if bash -c "$(curl --insecure -fsSL ${URL} | tail -n +2)" -s "${MODE}" ${TG_CHOOSE}; then
+    if bash -c "$(curl --insecure -fsSL -k ${URL} | tail -n +2)" -s "${MODE}" ${TG_CHOOSE}; then
         if docker container inspect xiaoyakeeper > /dev/null 2>&1; then
             INFO "安装完成！"
             return 0
@@ -4085,11 +4085,11 @@ function once_xiaoyahelper() {
     fi
 
     XIAOYAHELPER_URL="https://xiaoyahelper.ddsrem.com/aliyun_clear.sh"
-    if bash -c "$(curl --insecure -fsSL ${XIAOYAHELPER_URL} | tail -n +2)" -s 1 ${TG_CHOOSE}; then
+    if bash -c "$(curl --insecure -fsSL -k ${XIAOYAHELPER_URL} | tail -n +2)" -s 1 ${TG_CHOOSE}; then
         INFO "运行完成！"
     else
         XIAOYAHELPER_URL="https://xiaoyahelper.zengge99.eu.org/aliyun_clear.sh"
-        if bash -c "$(curl --insecure -fsSL ${XIAOYAHELPER_URL} | tail -n +2)" -s 1 ${TG_CHOOSE}; then
+        if bash -c "$(curl --insecure -fsSL -k ${XIAOYAHELPER_URL} | tail -n +2)" -s 1 ${TG_CHOOSE}; then
             INFO "运行完成！"
         else
             ERROR "运行失败！"
