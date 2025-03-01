@@ -1536,6 +1536,32 @@ function judgment_xiaoya_alist_sync_data_status() {
 
 }
 
+function show_xiaoya_non_intranet_ip() {
+
+    local output
+    output=
+    if ! docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" > /dev/null 2>&1; then
+        ERROR "小雅容器未安装，无法查看！"
+    else
+        if [ "$(docker inspect --format='{{.State.Status}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)")" != "running" ]; then
+            ERROR "小雅容器未启动，无法查看！"
+        else
+            if ! docker exec -it "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" cat /opt/alist/log/alist.log > /dev/null 2>&1; then
+                INFO "无非内网IP访问次数记录"
+            else
+                output="$(docker exec -it "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" bash -c 'cat /opt/alist/log/alist.log | grep -o "([0-9]{1,3}\\.){3}[0-9]{1,3}" | grep -v "172\\.17|127\\.0|192\\.168" | sort | uniq -c | head -n10 | sed "s/^[ \t]*//"')"
+                if [ -n "${output}" ]; then
+                    INFO "非内网IP访问次数情况："
+                    echo -e "${output}"
+                else
+                    INFO "无非内网IP访问次数记录"
+                fi
+            fi
+        fi
+    fi
+
+}
+
 function uninstall_xiaoya_alist_sync_data() {
 
     if command -v crontab > /dev/null 2>&1; then
@@ -1585,16 +1611,7 @@ function main_xiaoya_alist() {
         ;;
     5)
         clear
-        if ! docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" > /dev/null 2>&1; then
-            ERROR "小雅容器未安装，无法查看！"
-        else
-            if [ "$(docker inspect --format='{{.State.Status}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)")" != "running" ]; then
-                ERROR "小雅容器未启动，无法查看！"
-            else
-                INFO "非内网IP访问次数情况："
-                docker exec -it "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" bash -c 'cat /opt/alist/log/alist.log |grep -o "([0-9]{1,3}\\.){3}[0-9]{1,3}" | grep -v "172\\.17|127\\.0|192\\.168" | sort | uniq -c | head -n10 | sed "s/^[ \t]*//"'
-            fi
-        fi
+        show_xiaoya_non_intranet_ip
         INFO "按任意键返回菜单"
         read -rs -n 1 -p ""
         clear
