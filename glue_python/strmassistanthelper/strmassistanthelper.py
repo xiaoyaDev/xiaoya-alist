@@ -6,6 +6,7 @@ import json
 import logging
 import sys
 import shutil
+import argparse
 from pathlib import Path
 
 import pefile
@@ -77,16 +78,27 @@ logging.basicConfig(
 BASE_CONFIG_PATH = "/media/config"
 BASE_DATA_PATH = "/strmassistanthelper"
 
-version = get_file_version(f"{BASE_CONFIG_PATH}/plugins/StrmAssistant.dll")
-new_version = get_file_version(f"{BASE_DATA_PATH}/StrmAssistant.dll")
-if version and new_version:
-    if version >= new_version:
-        set_and_info_config()
-    else:
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="StrmAssistant Helper")
+    parser.add_argument("--run_mode", type=str, required=True, help="运行模式")
+    args = parser.parse_args()
+    new_version = get_file_version(f"{BASE_DATA_PATH}/StrmAssistant.dll")
+    if args.run_mode == "install":
         source_file = Path(f"{BASE_DATA_PATH}/StrmAssistant.dll")
         dst_file_path = Path(f"{BASE_CONFIG_PATH}/plugins/StrmAssistant.dll")
-        logging.info("更新 神医助手 插件：%s --> %s", version, new_version)
+        logging.info("安装 神医助手 插件：%s", new_version)
         move_and_replace_file(source_file, dst_file_path)
         set_and_info_config()
-else:
-    logging.info("获取 StrmAssistant 版本失败！")
+    else:
+        version = get_file_version(f"{BASE_CONFIG_PATH}/plugins/StrmAssistant.dll")
+        if version and new_version:
+            if version >= new_version:
+                set_and_info_config()
+            else:
+                source_file = Path(f"{BASE_DATA_PATH}/StrmAssistant.dll")
+                dst_file_path = Path(f"{BASE_CONFIG_PATH}/plugins/StrmAssistant.dll")
+                logging.info("更新 神医助手 插件：%s --> %s", version, new_version)
+                move_and_replace_file(source_file, dst_file_path)
+                set_and_info_config()
+        else:
+            logging.info("获取 StrmAssistant 版本失败！")
