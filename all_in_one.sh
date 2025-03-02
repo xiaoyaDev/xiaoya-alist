@@ -3128,6 +3128,9 @@ function install_emby_xiaoya_all_emby() {
                 INFO "已读取您上次设置的参数：${RETURN_DATA} (默认不更改回车继续，如果需要更改请输入新参数)"
                 read -erp "Extra parameters:" extra_parameters
                 [[ -z "${extra_parameters}" ]] && extra_parameters=${RETURN_DATA}
+                if [ "${extra_parameters}" == "None" ]; then
+                    extra_parameters="--device /dev/dri:/dev/dri --privileged -e GIDLIST=0,0 -e NVIDIA_VISIBLE_DEVICES=all -e NVIDIA_DRIVER_CAPABILITIES=all"
+                fi
             fi
             extra_parameters=$(data_crep "write" "install_xiaoya_emby")
         fi
