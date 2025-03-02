@@ -3640,6 +3640,9 @@ function install_xiaoya_emd() {
         extra_parameters="--media /media --paths /media/pathlib.txt"
     fi
     script_extra_parameters="$(data_crep "write" "install_xiaoya_emd")"
+    if [ -z "${script_extra_parameters}" ]; then
+        script_extra_parameters="--media /media --paths /media/pathlib.txt"
+    fi
 
     extra_parameters=
     container_run_extra_parameters=$(cat ${DDSREM_CONFIG_DIR}/container_run_extra_parameters.txt)
