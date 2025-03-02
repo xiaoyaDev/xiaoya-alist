@@ -3635,14 +3635,14 @@ function install_xiaoya_emd() {
             WARN "警告！！！ 默认请勿修改 /media 路径！！！"
             read -erp "Extra parameters:" extra_parameters
             [[ -z "${extra_parameters}" ]] && extra_parameters=${RETURN_DATA}
+            if [ "${extra_parameters}" == "None" ]; then
+                extra_parameters="--media /media --paths /media/pathlib.txt"
+            fi
         fi
     else
         extra_parameters="--media /media --paths /media/pathlib.txt"
     fi
     script_extra_parameters="$(data_crep "write" "install_xiaoya_emd")"
-    if [ -z "${script_extra_parameters}" ]; then
-        script_extra_parameters="--media /media --paths /media/pathlib.txt"
-    fi
 
     extra_parameters=
     container_run_extra_parameters=$(cat ${DDSREM_CONFIG_DIR}/container_run_extra_parameters.txt)
