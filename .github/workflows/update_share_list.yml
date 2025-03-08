@@ -29,24 +29,9 @@ jobs:
             pikpakshare_list_base64="$(cat ./data/pikpakshare_list.txt | base64)"
             pan115share_list_base64="$(cat ./data/115share_list.txt | base64)"
             quarkshare_list_base64="$(cat ./data/quarkshare_list.txt | base64)"
-            awk -v var="${pikpakshare_list_base64}" '
-            NR>=1 && NR<=150 && index($0, "pikpakshare_list_base64=") == 1 {
-                $0 = "pikpakshare_list_base64=" var
-            }
-            { print }
-            ' all_in_one.sh > tmp && mv tmp all_in_one.sh
-            awk -v var="${pan115share_list_base64}" '
-            NR>=1 && NR<=150 && index($0, "pan115share_list_base64=") == 1 {
-                $0 = "pan115share_list_base64=" var
-            }
-            { print }
-            ' all_in_one.sh > tmp && mv tmp all_in_one.sh
-            awk -v var="${quarkshare_list_base64}" '
-            NR>=1 && NR<=150 && index($0, "quarkshare_list_base64=") == 1 {
-                $0 = "quarkshare_list_base64=" var
-            }
-            { print }
-            ' all_in_one.sh > tmp && mv tmp all_in_one.sh
+            sed -i "1,150s|pikpakshare_list_base64=.*|pikpakshare_list_base64=${pikpakshare_list_base64}|" all_in_one.sh
+            sed -i "1,150s|pan115share_list_base64=.*|pan115share_list_base64=${pan115share_list_base64}|" all_in_one.sh
+            sed -i "1,150s|quarkshare_list_base64=.*|quarkshare_list_base64=${quarkshare_list_base64}|" all_in_one.sh
 
       - 
         uses: stefanzweifel/git-auto-commit-action@v5
