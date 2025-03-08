@@ -1,0 +1,43 @@
+name: update share list
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - master
+        paths:
+            - ".github/workflows/update_share_list.yml"
+
+jobs:
+  get:
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v4
+
+      - 
+        name: Checkout Data
+        uses: actions/checkout@v4
+        with:
+          repository: xiaoyaDev/data
+          path: './data'
+
+      -
+        name: Update
+        run: |
+            pikpakshare_list_base64="$(cat ./data/pikpakshare_list.txt | base64)"
+            pan115share_list_base64="$(cat ./data/115share_list.txt | base64)"
+            quarkshare_list_base64="$(cat ./data/quarkshare_list.txt | base64)"
+            sed -i "1,150s|pikpakshare_list_base64=.*|pikpakshare_list_base64=${pikpakshare_list_base64}|" all_in_one.sh
+            sed -i "1,150s|pan115share_list_base64=.*|pan115share_list_base64=${pan115share_list_base64}|" all_in_one.sh
+            sed -i "1,150s|quarkshare_list_base64=.*|quarkshare_list_base64=${quarkshare_list_base64}|" all_in_one.sh
+
+      - 
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+            commit_message: 'chore: update share list'
+            branch: master
+            file_pattern: 'all_in_one.sh'
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
