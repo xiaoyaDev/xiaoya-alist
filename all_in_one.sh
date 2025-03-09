@@ -3455,7 +3455,7 @@ function xiaoya_emd_pathlib() {
     sedsh '/^[[:space:]]*$/d' "${PATHLIB_DIR}"
     while true; do
         clear
-        emd_all_paths=('115/' 'ISO/' 'PikPak/' '动漫/' '每日更新/' '电影/' '电视剧/' '纪录片/' '纪录片（已刮削）/' '综艺/' '音乐/' '📺画质演示测试（4K，8K，HDR，Dolby）/')
+        emd_all_paths=('115/' 'ISO/' 'PikPak/' '动漫/' '每日更新/' '电影/' '电视剧/' '纪录片/' '纪录片（已刮削）/' '综艺/' '音乐/' 'json/' '测试/' '📺画质演示测试（4K，8K，HDR，Dolby）/')
         interface=
         file_array=()
         while IFS= read -r line; do
@@ -3480,7 +3480,7 @@ function xiaoya_emd_pathlib() {
             else
                 CONTENT="${Red}未选中${Font}"
             fi
-            if ((i + 1 <= 11)); then
+            if ((i + 1 <= 14)); then
                 interface+="$((i + 1))、${emd_all_paths[$i]}（${CONTENT}）\n"
             else
                 interface+="$((i + 1))、${emd_all_paths[$i]}（${Sky_Blue}用户自定义${Font}）（${CONTENT}）\n"
