@@ -5426,6 +5426,10 @@ function main_return() {
         config_dir="$(docker inspect --format='{{range $v,$conf := .Mounts}}{{$conf.Source}}:{{$conf.Destination}}{{$conf.Type}}~{{end}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" | tr '~' '\n' | grep bind | sed 's/bind//g' | grep ":/data$" | awk -F: '{print $1}')"
         if [ -n "${config_dir}" ]; then
             qrocde_common "阿里云盘 TV Token" "${config_dir}" "/aliyuntvtoken/alitoken2.py"
+            if [ ! -f "${config_dir}/open_tv_token_url.txt" ] || [ ! -f "${config_dir}/myopentoken.txt" ]; then
+                ERROR "阿里云盘 TV Token 配置失败！"
+                exit 1
+            fi
             if ! docker container inspect xiaoya-aliyuntvtoken_connector > /dev/null 2>&1; then
                 while true; do
                     INFO "是否自建阿里云盘 TV Token 令牌刷新接口 [Y/n]（默认 Y）"
@@ -5440,7 +5444,7 @@ function main_return() {
                 if [[ ${INSTALL_TVTOKEN} == [Yy] ]]; then
                     install_xiaoya_aliyuntvtoken_connector "${config_dir}"
                 else
-                    WARN "请手动配置 ${CONFIG_DIR}/open_tv_token_url.txt 文件，内容为 TV Token 令牌刷新接口地址"
+                    WARN "请手动配置 ${config_dir}/open_tv_token_url.txt 文件，内容为 TV Token 令牌刷新接口地址"
                     WARN "配置完成请手动重启小雅容器！"
                 fi
             else
