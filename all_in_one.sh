@@ -3931,6 +3931,8 @@ function uninstall_xiaoya_all_emby() {
 
 function main_xiaoya_all_emby() {
 
+    local show_main_xiaoya_all_emby
+    show_main_xiaoya_all_emby=false
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     echo -e "${Blue}小雅Emby全家桶${Font}\n"
     echo -e "${Red}注意：当前 Emby 全家桶要求 Emby 容器版本不低于 4.9.0.38${Font}"
@@ -3941,6 +3943,7 @@ function main_xiaoya_all_emby() {
         case "${container_status}" in
         "running")
             echo
+            show_main_xiaoya_all_emby=true
             ;;
         *)
             echo -e "\n${Red}警告：您的小雅容器未正常启动，请先检查小雅容器后再安装全家桶${Font}\n"
@@ -3950,16 +3953,22 @@ function main_xiaoya_all_emby() {
         echo -e "${Red}\n警告：您未安装小雅容器，请先安装小雅容器后再安装全家桶${Font}\n"
     fi
     echo -ne "${INFO} 界面加载中...${Font}\r"
-    echo -e "1、一键安装Emby全家桶
+    if [ "${show_main_xiaoya_all_emby}" == "true" ]; then
+        echo -e "1、一键安装Emby全家桶
 2、下载/解压 元数据
 3、安装Emby（可选择版本）
 4、图形化编辑 emby_config.txt
 5、安装/更新/卸载 小雅元数据定时爬虫          当前状态：$(judgment_container xiaoya-emd)
 6、一键升级Emby容器（可选择镜像版本）
 7、卸载Emby全家桶"
-    echo -e "0、返回上级"
+    fi
+    echo -e "0、返回上级          "
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-7]:" num
+    if [ "${show_main_xiaoya_all_emby}" == "true" ]; then
+        read -erp "请输入数字 [0-7]:" num
+    else
+        read -erp "请输入数字 [0]:" num
+    fi
     case "$num" in
     1)
         clear
