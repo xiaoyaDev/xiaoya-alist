@@ -415,6 +415,8 @@ function check_aliyunpan_opentoken() {
     if cache_result "${data_dir}/myopentoken.txt" "${DDSREM_CONFIG_DIR}/cache_data/check_aliyunpan_opentoken.txt"; then
         if curl -Is https://api.xhofe.top/alist/ali_open/qr | head -n 1 | grep -q '200'; then
             url_host="api.xhofe.top"
+        elif curl -Is https://api.nn.ci/alist/ali_open/qr | head -n 1 | grep -q '200'; then
+            url_host="api.nn.ci"
         else
             url_host="api-cf.nn.ci"
         fi
@@ -508,6 +510,9 @@ function qrcode_mode_choose() {
         if curl -Is https://api.xhofe.top/alist/ali_open/qr | head -n 1 | grep -q '200'; then
             extra_parameters="--api_url=api.xhofe.top"
             INFO "使用 api.xhofe.top 地址"
+        elif curl -Is https://api.nn.ci/alist/ali_open/qr | head -n 1 | grep -q '200'; then
+            extra_parameters="--api_url=api.nn.ci"
+            INFO "使用 api.nn.ci 地址"
         else
             extra_parameters="--api_url=api-cf.nn.ci"
             INFO "使用 api-cf.nn.ci 地址"
@@ -3935,8 +3940,8 @@ function main_xiaoya_all_emby() {
     show_main_xiaoya_all_emby=false
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     echo -e "${Blue}小雅Emby全家桶${Font}\n"
-    echo -e "${Red}注意：当前 Emby 全家桶要求 Emby 容器版本不低于 4.9.0.38${Font}"
-    echo -e "${Red}如果您的版本低于 4.9.0.38 请使用 菜单2-10 一键升级版本${Font}"
+    echo -e "${Yellow}注意：当前 Emby 全家桶要求 Emby 容器版本不低于 4.9.0.38${Font}"
+    echo -e "${Yellow}如果您的版本低于 4.9.0.38 请使用 菜单2-10 一键升级版本${Font}"
     if docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" > /dev/null 2>&1; then
         local container_status
         container_status=$(docker inspect --format='{{.State.Status}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)")

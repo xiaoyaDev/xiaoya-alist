@@ -77,6 +77,9 @@ def poll_qrcode_status(data, log_print, _api_url):
             elif _api_url == "api-cf.nn.ci":
                 url = f"https://api-cf.nn.ci/proxy/https://open.aliyundrive.com/oauth/qrcode/{data}/status"
                 _re = requests.get(url, timeout=10)
+            elif _api_url == "api.nn.ci":
+                url = f"https://api.nn.ci/proxy/https://open.aliyundrive.com/oauth/qrcode/{data}/status"
+                _re = requests.get(url, timeout=10)
             else:
                 url = f"https://openapi.aliyundrive.com/oauth/qrcode/{data}/status"
                 _re = requests.get(url, timeout=10)
@@ -96,6 +99,8 @@ def poll_qrcode_status(data, log_print, _api_url):
                         )
                     elif _api_url == "api-cf.nn.ci":
                         _re = requests.post("https://api-cf.nn.ci/alist/ali_open/code", json=data_2, timeout=10)
+                    elif _api_url == "api.nn.ci":
+                        _re = requests.post("https://api.nn.ci/alist/ali_open/code", json=data_2, timeout=10)
                     else:
                         _re = requests.post(
                             "https://aliyundrive-oauth.messense.me/oauth/access_token",
@@ -191,6 +196,8 @@ if __name__ == "__main__":
                 re = requests.get("https://api.xhofe.top/alist/ali_open/qr", headers=headers, timeout=10)
             elif args.api_url == "api-cf.nn.ci":
                 re = requests.get("https://api-cf.nn.ci/alist/ali_open/qr", timeout=10)
+            elif args.api_url == "api.nn.ci":
+                re = requests.get("https://api.nn.ci/alist/ali_open/qr", timeout=10)
             else:
                 re = requests.post(
                     "https://aliyundrive-oauth.messense.me/oauth/authorize/qrcode",
