@@ -1985,7 +1985,7 @@ function __unzip_metadata() {
         if ! check_metadata_size "${1}"; then
             exit 1
         fi
-        if [[ "${OSNAME}" = "macos" ]]; then
+        if [[ "${OSNAME}" = "macos" ]] || [[ "$(cat "${DDSREM_CONFIG_DIR}/container_run_extra_parameters.txt")" == "true" ]]; then
             INFO "使用宿主机 7z 命令解压"
             if [ "${1}" == "config.mp4" ] || [ "${1}" == "config.new.mp4" ]; then
                 if [ ! -d "${MEDIA_DIR}" ]; then
@@ -2213,7 +2213,7 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
             exit 1
         fi
 
-        if [[ "${OSNAME}" = "macos" ]]; then
+        if [[ "${OSNAME}" = "macos" ]] || [[ "$(cat "${DDSREM_CONFIG_DIR}/container_run_extra_parameters.txt")" == "true" ]]; then
             INFO "使用宿主机 7z 命令解压"
             if [ ! -d "${MEDIA_DIR}/xiaoya" ]; then
                 mkdir -p "${MEDIA_DIR}/xiaoya"
@@ -5187,13 +5187,22 @@ function reset_script_configuration() {
 
 function main_advanced_configuration() {
 
-    __container_run_extra_parameters=$(cat ${DDSREM_CONFIG_DIR}/container_run_extra_parameters.txt)
+    __container_run_extra_parameters=$(cat "${DDSREM_CONFIG_DIR}/container_run_extra_parameters.txt")
     if [ "${__container_run_extra_parameters}" == "true" ]; then
         _container_run_extra_parameters="${Green}开启${Font}"
     elif [ "${__container_run_extra_parameters}" == "false" ]; then
         _container_run_extra_parameters="${Red}关闭${Font}"
     else
         _container_run_extra_parameters="${Red}错误${Font}"
+    fi
+
+    __use_host_7z_command=$(cat "${DDSREM_CONFIG_DIR}/use_host_7z_command.txt")
+    if [ "${__use_host_7z_command}" == "true" ]; then
+        _use_host_7z_command="${Green}开启${Font}"
+    elif [ "${__use_host_7z_command}" == "false" ]; then
+        _use_host_7z_command="${Red}关闭${Font}"
+    else
+        _use_host_7z_command="${Red}错误${Font}"
     fi
 
     __disk_capacity_detection=$(cat ${DDSREM_CONFIG_DIR}/disk_capacity_detection.txt)
@@ -5226,9 +5235,10 @@ function main_advanced_configuration() {
     echo -e "6、Docker镜像源选择"
     echo -e "7、非可选网络模式容器默认网络模式             当前状态：${Blue}${_default_network}${Font}"
     echo -e "8、弃用菜单"
+    echo -e "9、开启/关闭 使用宿主机7z命令解压             当前状态：${_use_host_7z_command}"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-8]:" num
+    read -erp "请输入数字 [0-9]:" num
     case "$num" in
     1)
         clear
@@ -5289,13 +5299,22 @@ function main_advanced_configuration() {
         clear
         main_deprecation
         ;;
+    9)
+        if [ "${__use_host_7z_command}" == "false" ]; then
+            echo 'true' > ${DDSREM_CONFIG_DIR}/use_host_7z_command.txt
+        else
+            echo 'false' > ${DDSREM_CONFIG_DIR}/use_host_7z_command.txt
+        fi
+        clear
+        main_advanced_configuration
+        ;;
     0)
         clear
         main_return
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-8]'
+        ERROR '请输入正确数字 [0-9]'
         main_advanced_configuration
         ;;
     esac
@@ -5531,6 +5550,10 @@ function first_init() {
 
     if [ ! -f ${DDSREM_CONFIG_DIR}/container_run_extra_parameters.txt ]; then
         echo 'false' > ${DDSREM_CONFIG_DIR}/container_run_extra_parameters.txt
+    fi
+
+    if [ ! -f "${DDSREM_CONFIG_DIR}/use_host_7z_command.txt" ]; then
+        echo 'false' > "${DDSREM_CONFIG_DIR}/use_host_7z_command.txt"
     fi
 
     if [ ! -d "${DDSREM_CONFIG_DIR}/data_crep" ]; then
