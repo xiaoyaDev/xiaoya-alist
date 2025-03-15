@@ -1985,7 +1985,7 @@ function __unzip_metadata() {
         if ! check_metadata_size "${1}"; then
             exit 1
         fi
-        if [[ "${OSNAME}" = "macos" ]] || [[ "$(cat "${DDSREM_CONFIG_DIR}/container_run_extra_parameters.txt")" == "true" ]]; then
+        if [[ "${OSNAME}" = "macos" ]] || [[ "$(cat "${DDSREM_CONFIG_DIR}/use_host_7z_command.txt")" == "true" ]]; then
             INFO "使用宿主机 7z 命令解压"
             if [ "${1}" == "config.mp4" ] || [ "${1}" == "config.new.mp4" ]; then
                 if [ ! -d "${MEDIA_DIR}" ]; then
@@ -2213,7 +2213,7 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
             exit 1
         fi
 
-        if [[ "${OSNAME}" = "macos" ]] || [[ "$(cat "${DDSREM_CONFIG_DIR}/container_run_extra_parameters.txt")" == "true" ]]; then
+        if [[ "${OSNAME}" = "macos" ]] || [[ "$(cat "${DDSREM_CONFIG_DIR}/use_host_7z_command.txt")" == "true" ]]; then
             INFO "使用宿主机 7z 命令解压"
             if [ ! -d "${MEDIA_DIR}/xiaoya" ]; then
                 mkdir -p "${MEDIA_DIR}/xiaoya"
