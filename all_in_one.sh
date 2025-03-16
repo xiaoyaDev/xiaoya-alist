@@ -3430,6 +3430,99 @@ function oneclick_upgrade_emby() {
 
 }
 
+function emby_close_6908_port() {
+
+    echo -e "${Yellow}此功能关闭 6908 访问是通过将 Emby 设置为桥接模式并取消端口映射，非防火墙屏蔽！！！${Font}"
+    echo -e "${Yellow}如果您使用此功能关闭 6908 访问，那您无法再使用浏览器访问 6908 端口使用 Emby！！！${Font}"
+    echo -e "${Yellow}如果您需要访问 Emby 并且走服务端流量，可以访问 2347 端口，此端口与 6908 逻辑一致！！！${Font}"
+    echo -e "${Yellow}正常使用依旧是访问 2345 端口即可愉快观影！！！${Font}"
+    local OPERATE
+    while true; do
+        INFO "是否继续操作 [Y/n]（默认 Y）"
+        read -erp "OPERATE:" OPERATE
+        [[ -z "${OPERATE}" ]] && OPERATE="y"
+        if [[ ${OPERATE} == [YyNn] ]]; then
+            break
+        else
+            ERROR "非法输入，请输入 [Y/n]"
+        fi
+    done
+    if [[ "${OPERATE}" == [Nn] ]]; then
+        exit 0
+    fi
+
+    local emby_name emby_ip config_dir xiaoya_name
+    xiaoya_name="$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"
+    emby_name="$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)"
+    if docker inspect ddsderek/runlike:latest > /dev/null 2>&1; then
+        local_sha=$(docker inspect --format='{{index .RepoDigests 0}}' ddsderek/runlike:latest 2> /dev/null | cut -f2 -d:)
+        remote_sha=$(curl -s -m 10 "https://hub.docker.com/v2/repositories/ddsderek/runlike/tags/latest" | grep -o '"digest":"[^"]*' | grep -o '[^"]*$' | tail -n1 | cut -f2 -d:)
+        if [ "$local_sha" != "$remote_sha" ]; then
+            docker rmi ddsderek/runlike:latest
+            docker_pull "ddsderek/runlike:latest"
+        fi
+    else
+        docker_pull "ddsderek/runlike:latest"
+    fi
+    INFO "获取 ${emby_name} 容器信息中..."
+    docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /tmp:/tmp ddsderek/runlike -p "${emby_name}" > "/tmp/container_update_${emby_name}"
+    INFO "更改 Emby 为桥接模式并取消端口映射中..."
+    if grep -q 'network=host' "/tmp/container_update_${emby_name}"; then
+        INFO "更改网络模式为桥接模式"
+        sedsh 's/network=host/network=bridge/' "/tmp/container_update_${emby_name}"
+    fi
+    if grep -q '6908:6908' "/tmp/container_update_${emby_name}"; then
+        INFO "关闭 6908 端口映射"
+        sedsh '/-p 6908:6908/d' "/tmp/container_update_${emby_name}"
+    fi
+    MODE=bridge
+    get_docker0_url
+    get_xiaoya_hosts
+    INFO "更改容器 host 配置"
+    sedsh "s/--add-host xiaoya.host.*/--add-host xiaoya.host:${xiaoya_host} \\\/" "/tmp/container_update_${emby_name}"
+    if ! docker stop "${emby_name}" > /dev/null 2>&1; then
+        if ! docker kill "${emby_name}" > /dev/null 2>&1; then
+            docker rmi "${IMAGE_MIRROR}/${run_image}"
+            ERROR "停止 ${emby_name} 容器失败！"
+            exit 1
+        fi
+    fi
+    INFO "停止 ${emby_name} 容器成功！"
+    if ! docker rm --force "${emby_name}" > /dev/null 2>&1; then
+        ERROR "删除 ${emby_name} 容器失败！"
+        exit 1
+    fi
+    if bash "/tmp/container_update_${emby_name}"; then
+        rm -f "/tmp/container_update_${emby_name}"
+        wait_emby_start
+        INFO "${emby_name} 容器启动成功！"
+    else
+        ERROR "创建 ${emby_name} 容器失败！"
+        exit 1
+    fi
+    INFO "获取 ${emby_name} 容器 IP"
+    emby_ip="$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${emby_name}")"
+    if [ -n "${emby_ip}" ]; then
+        INFO "${emby_name} 容器 IP：${emby_ip}"
+    else
+        ERROR "获取 ${emby_name} 容器 IP 错误！"
+    fi
+    INFO "配置 emby_server.txt 文件中"
+    config_dir="$(docker inspect --format='{{range $v,$conf := .Mounts}}{{$conf.Source}}:{{$conf.Destination}}{{$conf.Type}}~{{end}}' "${xiaoya_name}" | tr '~' '\n' | grep bind | sed 's/bind//g' | grep ":/data$" | awk -F: '{print $1}')"
+    if [ -z "${config_dir}" ]; then
+        WARN "小雅容器配置目录获取失败，请手动输入！"
+        get_config_dir
+        config_dir=${CONFIG_DIR}
+    fi
+    echo "http://$emby_ip:6908" > "${config_dir}"/emby_server.txt
+    auto_chown "${config_dir}/emby_server.txt"
+    INFO "重启小雅容器"
+    docker restart "${xiaoya_name}"
+    wait_xiaoya_start
+    INFO "关闭 Emby 6908 端口完成！"
+
+}
+
 function xiaoya_emd_updated_tips() {
 
     if ! docker exec -i xiaoya-emd grep -q 'main_solid' /entrypoint.sh > /dev/null 2>&1; then
@@ -3961,16 +4054,17 @@ function main_xiaoya_all_emby() {
     if [ "${show_main_xiaoya_all_emby}" == "true" ]; then
         echo -e "1、一键安装Emby全家桶
 2、下载/解压 元数据
-3、安装Emby（可选择版本）
+3、安装 Emby（可选择版本）
 4、图形化编辑 emby_config.txt
 5、安装/更新/卸载 小雅元数据定时爬虫          当前状态：$(judgment_container xiaoya-emd)
-6、一键升级Emby容器（可选择镜像版本）
-7、卸载Emby全家桶"
+6、一键升级 Emby 容器（可选择镜像版本）
+7、卸载 Emby 全家桶
+8、关闭 Emby 6908 端口访问"
     fi
     echo -e "0、返回上级          "
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     if [ "${show_main_xiaoya_all_emby}" == "true" ]; then
-        read -erp "请输入数字 [0-7]:" num
+        read -erp "请输入数字 [0-8]:" num
     else
         read -erp "请输入数字 [0]:" num
     fi
@@ -4034,13 +4128,18 @@ function main_xiaoya_all_emby() {
         clear
         uninstall_xiaoya_all_emby
         ;;
+    8)
+        clear
+        emby_close_6908_port
+        return_menu "main_xiaoya_all_emby"
+        ;;
     0)
         clear
         main_return
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-7]'
+        ERROR '请输入正确数字 [0-8]'
         main_xiaoya_all_emby
         ;;
     esac
