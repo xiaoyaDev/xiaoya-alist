@@ -521,6 +521,9 @@ function qrcode_mode_choose() {
         if curl -Is https://api.xhofe.top/alist/ali/qr | head -n 1 | grep -q '200'; then
             extra_parameters="--api_url=api.xhofe.top"
             INFO "使用 api.xhofe.top 地址"
+        elif curl -Is https://api.nn.ci/alist/ali/qr | head -n 1 | grep -q '200'; then
+            extra_parameters="--api_url=api.nn.ci"
+            INFO "使用 api.nn.ci 地址"
         elif curl -Is https://api-cf.nn.ci/alist/ali/qr | head -n 1 | grep -q '200'; then
             extra_parameters="--api_url=api-cf.nn.ci"
             INFO "使用 api-cf.nn.ci 地址"

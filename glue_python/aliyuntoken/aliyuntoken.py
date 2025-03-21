@@ -54,6 +54,8 @@ def poll_qrcode_status(_data, log_print, _api_url):
             _re = requests.post("https://api.xhofe.top/alist/ali/ck", json=_data, headers=headers, timeout=10)
         elif _api_url == "api-cf.nn.ci":
             _re = requests.post("https://api-cf.nn.ci/alist/ali/ck", json=_data, timeout=10)
+        elif _api_url == "api.nn.ci":
+            _re = requests.post("https://api.nn.ci/alist/ali/ck", json=_data, timeout=10)
         else:
             _ck = str(_data["ck"])
             _t = str(_data["t"])
@@ -142,6 +144,8 @@ if __name__ == "__main__":
             re = requests.get("https://api.xhofe.top/alist/ali/qr", headers=headers, timeout=10)
         elif args.api_url == "api-cf.nn.ci":
             re = requests.get("https://api-cf.nn.ci/alist/ali/qr", timeout=10)
+        elif args.api_url == "api.nn.ci":
+            re = requests.get("https://api.nn.ci/alist/ali/qr", timeout=10)
         else:
             re = requests.get("https://aliyuntoken.vercel.app/api/generate", timeout=10)
         if re.status_code == 200:
