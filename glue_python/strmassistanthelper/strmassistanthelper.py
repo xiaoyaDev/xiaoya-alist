@@ -6,7 +6,6 @@ import json
 import logging
 import sys
 import shutil
-import argparse
 from pathlib import Path
 
 import pefile
@@ -40,18 +39,9 @@ def move_and_replace_file(src_file: Path, dst_path: Path):
         logging.error("复制 %s 文件失败：%s", src_file.name, e)
 
 
-def move_and_replace_config(file_name: str):
-    """
-    替换配置文件
-    """
-    _source_file = Path(f"{BASE_DATA_PATH}/{file_name}")
-    _dst_file_path = Path(f"{BASE_CONFIG_PATH}/plugins/configurations/{file_name}")
-    move_and_replace_file(_source_file, _dst_file_path)
-
-
 def set_and_info_config():
     """
-    替换配置文件并输出信息
+    更新配置文件并输出信息
     """
     if Path(f"{BASE_CONFIG_PATH}/plugins/configurations/Strm Assistant.json").exists():
         with open(f"{BASE_CONFIG_PATH}/plugins/configurations/Strm Assistant.json", encoding="utf-8") as file:
@@ -60,12 +50,18 @@ def set_and_info_config():
             logging.info("中文搜索增强已开启")
         else:
             logging.info("中文搜索增强未开启")
-    for file in [
-        "Strm Assistant.json",
-        "Strm Assistant_MediaInfoExtractOptions.json",
-        "Strm Assistant_ExperienceEnhanceOptions.json",
-    ]:
-        move_and_replace_config(file)
+            try:
+                logging.info("自动开启中文搜索增强中...")
+                data["ModOptions"]["EnhanceChineseSearch"] = True
+                with open(
+                    f"{BASE_CONFIG_PATH}/plugins/configurations/Strm Assistant.json", "w", encoding="utf-8"
+                ) as file:
+                    json.dump(data, file, ensure_ascii=False, indent=4)
+                logging.info("开启中文搜索增强成功！")
+            except Exception as e:  # pylint: disable=W0718
+                logging.info("开启中文搜索增强失败：%s", e)
+    else:
+        logging.warning("Strm Assistant.json 配置文件不存在，跳过自动配置！")
 
 
 logging.basicConfig(
@@ -79,26 +75,16 @@ BASE_CONFIG_PATH = "/media/config"
 BASE_DATA_PATH = "/strmassistanthelper"
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="StrmAssistant Helper")
-    parser.add_argument("--run_mode", type=str, required=True, help="运行模式")
-    args = parser.parse_args()
     new_version = get_file_version(f"{BASE_DATA_PATH}/StrmAssistant.dll")
-    if args.run_mode == "install":
-        source_file = Path(f"{BASE_DATA_PATH}/StrmAssistant.dll")
-        dst_file_path = Path(f"{BASE_CONFIG_PATH}/plugins/StrmAssistant.dll")
-        logging.info("安装 神医助手 插件：%s", new_version)
-        move_and_replace_file(source_file, dst_file_path)
-        set_and_info_config()
-    else:
-        version = get_file_version(f"{BASE_CONFIG_PATH}/plugins/StrmAssistant.dll")
-        if version and new_version:
-            if version >= new_version:
-                set_and_info_config()
-            else:
-                source_file = Path(f"{BASE_DATA_PATH}/StrmAssistant.dll")
-                dst_file_path = Path(f"{BASE_CONFIG_PATH}/plugins/StrmAssistant.dll")
-                logging.info("更新 神医助手 插件：%s --> %s", version, new_version)
-                move_and_replace_file(source_file, dst_file_path)
-                set_and_info_config()
+    version = get_file_version(f"{BASE_CONFIG_PATH}/plugins/StrmAssistant.dll")
+    if version and new_version:
+        if version >= new_version:
+            set_and_info_config()
         else:
-            logging.info("获取 StrmAssistant 版本失败！")
+            source_file = Path(f"{BASE_DATA_PATH}/StrmAssistant.dll")
+            dst_file_path = Path(f"{BASE_CONFIG_PATH}/plugins/StrmAssistant.dll")
+            logging.info("更新 神医助手 插件：%s --> %s", version, new_version)
+            move_and_replace_file(source_file, dst_file_path)
+            set_and_info_config()
+    else:
+        logging.info("获取 StrmAssistant 版本失败！")
