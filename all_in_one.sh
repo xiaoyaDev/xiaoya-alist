@@ -2243,18 +2243,18 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
     get_media_dir
 
     if [ "${1}" == "all.mp4" ] || [ "${1}" == "all_jf.mp4" ]; then
-        INFO "请选择要解压的压缩包目录 [ 1:动漫 | 2:每日更新 | 3:电影 | 4:电视剧 | 5:纪录片 | 6:纪录片（已刮削）| 7:综艺 ]"
+        INFO "请选择要解压的压缩包目录 [ 1:动漫 | 2:每日更新 | 3:电影 | 4:电视剧 | 5:纪录片 | 6:纪录片（已刮削）| 7:综艺 | 8:短剧 ]"
         valid_choice=false
         while [ "$valid_choice" = false ]; do
-            read -erp "请输入数字 [1-7]:" choice
-            for i in {1..7}; do
+            read -erp "请输入数字 [1-8]:" choice
+            for i in {1..8}; do
                 if [ "$choice" = "$i" ]; then
                     valid_choice=true
                     break
                 fi
             done
             if [ "$valid_choice" = false ]; then
-                ERROR "请输入正确数字 [1-7]"
+                ERROR "请输入正确数字 [1-8]"
             fi
         done
         case $choice in
@@ -2278,6 +2278,9 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
             ;;
         7)
             UNZIP_FOLD=综艺
+            ;;
+        8)
+            UNZIP_FOLD=短剧
             ;;
         esac
     elif [ "${1}" == "115.mp4" ]; then
