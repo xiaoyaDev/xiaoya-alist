@@ -2565,13 +2565,15 @@ function main_download_unzip_xiaoya_emby() {
     echo -e "12、解压 115.mp4 的指定元数据目录【非全部解压】"
     echo -e "13、下载 蓝光原盘.mp4"
     echo -e "14、解压 蓝光原盘.mp4"
-    echo -e "15、当前下载器【aria2/wget】                  当前状态：${Green}${__data_downloader}${Font}"
+    echo -e "15、下载 json.mp4"
+    echo -e "16、解压 json.mp4"
+    echo -e "17、当前下载器【aria2/wget】                  当前状态：${Green}${__data_downloader}${Font}"
     # echo -e "101、下载并解压 config.new.mp4（4.9.0.38）"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字（支持输入多个数字，空格分离，按输入顺序执行）[0-15]:" -a nums
+    read -erp "请输入数字（支持输入多个数字，空格分离，按输入顺序执行）[0-17]:" -a nums
     for num in "${nums[@]}"; do
-        if [ $num -ge 1 ] && [ $num -le 14 ]; then
+        if [ $num -ge 1 ] && [ $num -le 16 ]; then
             case "$num" in
             1)
                 clear
@@ -2629,6 +2631,14 @@ function main_download_unzip_xiaoya_emby() {
                 clear
                 unzip_xiaoya_emby "蓝光原盘.mp4"
                 ;;
+            15)
+                clear
+                download_xiaoya_emby "json.mp4"
+                ;;
+            16)
+                clear
+                unzip_xiaoya_emby "json.mp4"
+                ;;
             esac
             __next_operate=return_menu
         elif [ $num == 101 ]; then
@@ -2652,7 +2662,7 @@ function main_download_unzip_xiaoya_emby() {
             break
         else
             clear
-            ERROR '请输入正确数字 [0-15]'
+            ERROR '请输入正确数字 [0-17]'
             __next_operate=main_download_unzip_xiaoya_emby
             break
         fi
