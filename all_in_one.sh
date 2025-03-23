@@ -5676,7 +5676,7 @@ function first_init() {
         if [ "$OSNAME" = "ugos" ] || [ "$OSNAME" = "ugos pro" ]; then
             echo 'wget' > ${DDSREM_CONFIG_DIR}/data_downloader.txt
         else
-            echo 'aria2' > ${DDSREM_CONFIG_DIR}/data_downloader.txt
+            echo 'wget' > ${DDSREM_CONFIG_DIR}/data_downloader.txt
         fi
     fi
 
