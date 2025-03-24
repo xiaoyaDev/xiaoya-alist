@@ -56,13 +56,13 @@ function DEBUG() {
 function __unzip_metadata_debug() {
 
     DEBUG "${OSNAME} $(uname -a)"
-    if [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
-        DEBUG "ali2115 配置情况：已开启！"
-    else
-        DEBUG "ali2115 配置情况：未配置！"
-    fi
-    DEBUG "$(pull_run_glue xxd -g 1 -l 256 "/media/temp/${1}")"
-    DEBUG "$(pull_run_glue xxd -g 1 -s -256 "/media/temp/${1}")"
+    # if [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
+    #     DEBUG "ali2115 配置情况：已开启！"
+    # else
+    #     DEBUG "ali2115 配置情况：未配置！"
+    # fi
+    # DEBUG "$(pull_run_glue xxd -g 1 -l 256 "/media/temp/${1}")"
+    # DEBUG "$(pull_run_glue xxd -g 1 -s -256 "/media/temp/${1}")"
     ERROR "解压元数据失败！"
     exit 1
 
@@ -2022,6 +2022,11 @@ function __unzip_metadata() {
                     __unzip_metadata_debug "${1}"
                 fi
             fi
+        fi
+
+        if [ "$(cat "${DDSREM_CONFIG_DIR}/auto_clean_metadata_mp4_file.txt")" == "true" ]; then
+            INFO "自动清理 ${1} 文件中..."
+            rm -f "${MEDIA_DIR}/temp/${1}"
         fi
 
     }
@@ -4036,6 +4041,106 @@ function uninstall_xiaoya_all_emby() {
 
 }
 
+function auto_clean_metadata_mp4_files() {
+
+    __auto_clean_metadata_mp4_file=$(cat "${DDSREM_CONFIG_DIR}/auto_clean_metadata_mp4_file.txt")
+    if [ "${__auto_clean_metadata_mp4_file}" == "true" ]; then
+        _auto_clean_metadata_mp4_file="${Green}开启${Font}"
+    elif [ "${__auto_clean_metadata_mp4_file}" == "false" ]; then
+        _auto_clean_metadata_mp4_file="${Red}关闭${Font}"
+    else
+        _auto_clean_metadata_mp4_file="${Red}错误${Font}"
+    fi
+
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    echo -e "${Blue}元数据压缩文件清理${Font}\n"
+    echo -e "1、开启/关闭 解压成功后自动清理 mp4 元数据文件    当前状态：${_auto_clean_metadata_mp4_file}"
+    echo -e "2、一键清理当前所有 mp4 元数据文件"
+    echo -e "0、返回上级"
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    read -erp "请输入数字 [0-2]:" num
+    case "$num" in
+    1)
+        if [ "${__auto_clean_metadata_mp4_file}" == "false" ]; then
+            echo 'true' > ${DDSREM_CONFIG_DIR}/auto_clean_metadata_mp4_file.txt
+        else
+            echo 'false' > ${DDSREM_CONFIG_DIR}/auto_clean_metadata_mp4_file.txt
+        fi
+        clear
+        auto_clean_metadata_mp4_files
+        ;;
+    2)
+        clear
+        get_media_dir
+        WARN "将清理以下所有文件："
+        find "${MEDIA_DIR}/temp" -type f -name "*.mp4"
+        local OPERATE
+        while true; do
+            INFO "是否继续操作 [Y/n]（默认 Y）"
+            read -erp "OPERATE:" OPERATE
+            [[ -z "${OPERATE}" ]] && OPERATE="y"
+            if [[ ${OPERATE} == [YyNn] ]]; then
+                break
+            else
+                ERROR "非法输入，请输入 [Y/n]"
+            fi
+        done
+        if [[ "${OPERATE}" == [Nn] ]]; then
+            exit 0
+        fi
+        for i in $(seq -w 3 -1 0); do
+            echo -en "即将开始清理${Blue} $i ${Font}\r"
+            sleep 1
+        done
+        find "${MEDIA_DIR}/temp" -type f -name "*.mp4" -delete
+        INFO "清理完成！"
+        return_menu "auto_clean_metadata_mp4_files"
+        ;;
+    0)
+        clear
+        main_xiaoya_all_emby_other_features
+        ;;
+    *)
+        clear
+        ERROR '请输入正确数字 [0-2]'
+        auto_clean_metadata_mp4_files
+        ;;
+    esac
+
+}
+
+function main_xiaoya_all_emby_other_features() {
+
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    echo -e "${Blue}小雅Emby全家桶其他功能${Font}\n"
+    echo -e "1、自动清理 mp4 元数据文件"
+    echo -e "2、关闭 Emby 6908 端口访问"
+    echo -e "0、返回上级"
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    read -erp "请输入数字 [0-2]:" num
+    case "$num" in
+    1)
+        clear
+        auto_clean_metadata_mp4_files
+        ;;
+    2)
+        clear
+        emby_close_6908_port
+        return_menu "main_xiaoya_all_emby_other_features"
+        ;;
+    0)
+        clear
+        main_xiaoya_all_emby
+        ;;
+    *)
+        clear
+        ERROR '请输入正确数字 [0-2]'
+        main_xiaoya_all_emby_other_features
+        ;;
+    esac
+
+}
+
 function main_xiaoya_all_emby() {
 
     local show_main_xiaoya_all_emby
@@ -4068,12 +4173,12 @@ function main_xiaoya_all_emby() {
 5、安装/更新/卸载 小雅元数据定时爬虫          当前状态：$(judgment_container xiaoya-emd)
 6、一键升级 Emby 容器（可选择镜像版本）
 7、卸载 Emby 全家桶
-8、关闭 Emby 6908 端口访问"
+101、其他功能"
     fi
     echo -e "0、返回上级          "
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     if [ "${show_main_xiaoya_all_emby}" == "true" ]; then
-        read -erp "请输入数字 [0-8]:" num
+        read -erp "请输入数字 [0-7, 101]:" num
     else
         read -erp "请输入数字 [0]:" num
     fi
@@ -4137,10 +4242,9 @@ function main_xiaoya_all_emby() {
         clear
         uninstall_xiaoya_all_emby
         ;;
-    8)
+    101)
         clear
-        emby_close_6908_port
-        return_menu "main_xiaoya_all_emby"
+        main_xiaoya_all_emby_other_features
         ;;
     0)
         clear
@@ -4148,7 +4252,7 @@ function main_xiaoya_all_emby() {
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-8]'
+        ERROR '请输入正确数字 [0-7, 101]'
         main_xiaoya_all_emby
         ;;
     esac
@@ -5662,6 +5766,10 @@ function first_init() {
 
     if [ ! -f "${DDSREM_CONFIG_DIR}/use_host_7z_command.txt" ]; then
         echo 'false' > "${DDSREM_CONFIG_DIR}/use_host_7z_command.txt"
+    fi
+
+    if [ ! -f "${DDSREM_CONFIG_DIR}/auto_clean_metadata_mp4_file.txt" ]; then
+        echo 'false' > "${DDSREM_CONFIG_DIR}/auto_clean_metadata_mp4_file.txt"
     fi
 
     if [ ! -d "${DDSREM_CONFIG_DIR}/data_crep" ]; then
