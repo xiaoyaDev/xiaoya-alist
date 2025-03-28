@@ -99,6 +99,8 @@ GLOBAL_UA_2="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
 QUARK_UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) quark-cloud-drive/2.5.20 Chrome/100.0.4896.160 Electron/18.3.5.4-b478491100 Safari/537.36 Channel/pckk_other_ch"
 UC_UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) uc-cloud-drive/2.5.20 Chrome/100.0.4896.160 Electron/18.3.5.4-b478491100 Safari/537.36 Channel/pckk_other_ch"
 
+ALL_METADATA_FILES=("all.mp4" "config.mp4" "115.mp4")
+
 function get_default_network() {
 
     _default_network=$(cat "${DDSREM_CONFIG_DIR}/default_network.txt")
@@ -1875,17 +1877,27 @@ function get_emby_version() {
 
 }
 
-function set_emby_server_infuse_api_key() {
+function set_emby_server() {
 
     get_docker0_url
-
-    echo "http://$docker0:6908" > "${CONFIG_DIR}"/emby_server.txt
-    auto_chown "${CONFIG_DIR}/emby_server.txt"
-
-    if [ ! -f "${CONFIG_DIR}"/infuse_api_key.txt ]; then
-        echo "e825ed6f7f8f44ffa0563cddaddce14d" > "${CONFIG_DIR}"/infuse_api_key.txt
-        auto_chown "${CONFIG_DIR}/infuse_api_key.txt"
+    if [[ "${OSNAME}" = "macos" ]]; then
+        local_ip=$(ifconfig "$(route -n get default | grep interface | awk -F ':' '{print$2}' | awk '{$1=$1};1')" | grep 'inet ' | awk '{print$2}')
+    else
+        local_ip=$(ip address | grep inet | grep -v 172.17 | grep -v 127.0.0.1 | grep -v inet6 | awk '{print $2}' | sed 's/addr://' | head -n1 | cut -f1 -d"/")
     fi
+
+    if docker exec -i "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" curl -I -s "http://127.0.0.1:6908" | grep -m1 "^HTTP/" | grep -q "302"; then
+        INFO "使用 127.0.0.1 IP 配置 emby_server.txt"
+        echo "http://127.0.0.1:6908" > "${CONFIG_DIR}"/emby_server.txt
+    elif docker exec -i "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" curl -I -s "http://$docker0:6908" | grep -m1 "^HTTP/" | grep -q "302"; then
+        INFO "使用 $docker0 IP 配置 emby_server.txt"
+        echo "http://$docker0:6908" > "${CONFIG_DIR}"/emby_server.txt
+    else
+        INFO "使用 $local_ip IP 配置 emby_server.txt"
+        echo "http://$local_ip:6908" > "${CONFIG_DIR}"/emby_server.txt
+    fi
+
+    auto_chown "${CONFIG_DIR}/emby_server.txt"
 
 }
 
@@ -2034,8 +2046,7 @@ function __unzip_metadata() {
     start_time1=$(date +%s)
 
     if [ "${1}" == "all_metadata" ]; then
-        local files=("all.mp4" "config.mp4" "115.mp4")
-        for file in "${files[@]}"; do
+        for file in "${ALL_METADATA_FILES[@]}"; do
             metadata_unziper "${file}"
         done
         INFO "设置目录权限..."
@@ -2126,8 +2137,7 @@ function __download_metadata() {
     }
 
     if [ "${1}" == "all_metadata" ]; then
-        local files=("all.mp4" "config.mp4" "115.mp4")
-        for file in "${files[@]}"; do
+        for file in "${ALL_METADATA_FILES[@]}"; do
             metadata_downloader "${file}"
         done
 
@@ -2168,8 +2178,6 @@ function unzip_xiaoya_all_emby() {
     INFO "开始解压..."
 
     __unzip_metadata "all_metadata"
-
-    set_emby_server_infuse_api_key
 
     INFO "解压完成！"
 
@@ -2409,8 +2417,7 @@ function download_unzip_xiaoya_all_emby() {
     auto_chown "${MEDIA_DIR}/temp"
     chmod 777 "${MEDIA_DIR}"
 
-    local files=("all.mp4" "config.mp4" "115.mp4")
-    for file in "${files[@]}"; do
+    for file in "${ALL_METADATA_FILES[@]}"; do
         if [ -f "${MEDIA_DIR}/temp/${file}.aria2" ]; then
             rm -rf "${MEDIA_DIR}/temp/${file}.aria2"
         fi
@@ -2421,8 +2428,6 @@ function download_unzip_xiaoya_all_emby() {
     __download_metadata "all_metadata"
 
     __unzip_metadata "all_metadata"
-
-    set_emby_server_infuse_api_key
 
     INFO "刮削数据已经下载解压完成！"
 
@@ -3245,13 +3250,18 @@ function install_emby_xiaoya_all_emby() {
 
     fi
 
-    set_emby_server_infuse_api_key
+    if [ ! -f "${CONFIG_DIR}"/infuse_api_key.txt ]; then
+        echo "e825ed6f7f8f44ffa0563cddaddce14d" > "${CONFIG_DIR}"/infuse_api_key.txt
+        auto_chown "${CONFIG_DIR}/infuse_api_key.txt"
+    fi
 
     wait_emby_start
 
     sleep 2
 
-    if ! curl -I -s http://$docker0:2345/ | grep -q "302"; then
+    set_emby_server
+
+    if ! docker exec -i "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" curl -I -s http://127.0.0.1:2345/ | grep -q "302"; then
         INFO "重启小雅容器中..."
         docker restart "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"
         wait_xiaoya_start
