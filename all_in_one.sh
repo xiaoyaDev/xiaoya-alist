@@ -2034,7 +2034,7 @@ function __unzip_metadata() {
     start_time1=$(date +%s)
 
     if [ "${1}" == "all_metadata" ]; then
-        local files=("all.mp4" "config.mp4" "115.mp4" "pikpak.mp4")
+        local files=("all.mp4" "config.mp4" "115.mp4")
         for file in "${files[@]}"; do
             metadata_unziper "${file}"
         done
@@ -2126,7 +2126,7 @@ function __download_metadata() {
     }
 
     if [ "${1}" == "all_metadata" ]; then
-        local files=("all.mp4" "config.mp4" "115.mp4" "pikpak.mp4")
+        local files=("all.mp4" "config.mp4" "115.mp4")
         for file in "${files[@]}"; do
             metadata_downloader "${file}"
         done
@@ -2409,7 +2409,7 @@ function download_unzip_xiaoya_all_emby() {
     auto_chown "${MEDIA_DIR}/temp"
     chmod 777 "${MEDIA_DIR}"
 
-    local files=("all.mp4" "config.mp4" "115.mp4" "pikpak.mp4")
+    local files=("all.mp4" "config.mp4" "115.mp4")
     for file in "${files[@]}"; do
         if [ -f "${MEDIA_DIR}/temp/${file}.aria2" ]; then
             rm -rf "${MEDIA_DIR}/temp/${file}.aria2"
