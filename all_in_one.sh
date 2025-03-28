@@ -468,7 +468,7 @@ function qrcode_mode_choose() {
         if [ -z "${local_ip}" ]; then
             local_ip="小雅服务器IP"
         fi
-        INFO "请浏览器访问 http://${local_ip}:34256 并使用阿里云盘APP扫描二维码！"
+        INFO "请浏览器访问 http://${local_ip}:34256 并使用手机APP扫描二维码！"
         # shellcheck disable=SC2046
         docker run -i --rm \
             -v "${1}:/data" \
@@ -2650,7 +2650,7 @@ function main_download_unzip_xiaoya_emby() {
             clear
             download_unzip_xiaoya_emby_new_config
             __next_operate=return_menu
-        elif [ $num == 15 ]; then
+        elif [ $num == 17 ]; then
             if [ "${__data_downloader}" == "wget" ]; then
                 echo 'aria2' > ${DDSREM_CONFIG_DIR}/data_downloader.txt
             elif [ "${__data_downloader}" == "aria2" ]; then
