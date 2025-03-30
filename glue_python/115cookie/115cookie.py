@@ -189,15 +189,19 @@ def index():
     """
     网页扫码首页
     """
-    _qrcode_token = get_qrcode_token()["data"]
-    uid = _qrcode_token["uid"]
-    qrcode_image_io = get_qrcode(uid)
-    qrcode_image = Image.open(qrcode_image_io)
-    buffered = BytesIO()
-    qrcode_image.save(buffered, format="PNG")
-    qrcode_image_b64_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    threading.Thread(target=poll_qrcode_status, args=(_qrcode_token, flask_app.config["QRCODE_APP"])).start()
-    return render_template("index.html", qrcode_image_b64_str=qrcode_image_b64_str)
+    try:
+        _qrcode_token = get_qrcode_token()["data"]
+        uid = _qrcode_token["uid"]
+        qrcode_image_io = get_qrcode(uid)
+        qrcode_image = Image.open(qrcode_image_io)
+        buffered = BytesIO()
+        qrcode_image.save(buffered, format="PNG")
+        qrcode_image_b64_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+        threading.Thread(target=poll_qrcode_status, args=(_qrcode_token, flask_app.config["QRCODE_APP"])).start()
+        return render_template("index.html", qrcode_image_b64_str=qrcode_image_b64_str)
+    except Exception as e:  # pylint: disable=W0718
+        logging.error("错误：%s", e)
+        sys.exit(1)
 
 
 @flask_app.route("/status")
@@ -230,22 +234,26 @@ if __name__ == "__main__":
         flask_app.config["QRCODE_APP"] = args.qrcode_app
         flask_app.run(host="0.0.0.0", port=34256)
     elif args.qrcode_mode == "shell":
-        qrcode_token = get_qrcode_token()["data"]
-        threading.Thread(
-            target=poll_qrcode_status,
-            args=(
-                qrcode_token,
-                args.qrcode_app,
-            ),
-        ).start()
-        qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=5, border=4)
-        qr.add_data(qrcode_token_url(qrcode_token["uid"]))
-        qr.make(fit=True)
-        logging.info("请打开 115网盘 扫描此二维码！")
-        qr.print_ascii(invert=True, tty=sys.stdout.isatty())
-        while LAST_STATUS not in [1, 2]:
-            time.sleep(1)
-        os._exit(0)
+        try:
+            qrcode_token = get_qrcode_token()["data"]
+            threading.Thread(
+                target=poll_qrcode_status,
+                args=(
+                    qrcode_token,
+                    args.qrcode_app,
+                ),
+            ).start()
+            qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=5, border=4)
+            qr.add_data(qrcode_token_url(qrcode_token["uid"]))
+            qr.make(fit=True)
+            logging.info("请打开 115网盘 扫描此二维码！")
+            qr.print_ascii(invert=True, tty=sys.stdout.isatty())
+            while LAST_STATUS not in [1, 2]:
+                time.sleep(1)
+            os._exit(0)
+        except Exception as e:  # pylint: disable=W0718
+            logging.error("错误：%s", e)
+            sys.exit(1)
     else:
         logging.error("未知的扫码模式")
         os._exit(1)

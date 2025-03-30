@@ -31,14 +31,20 @@ class AliyunPanTvToken:
     """
 
     def __init__(self):
-        self.timestamp = str(requests.get("http://api.extscreen.com/timestamp", timeout=10).json()["data"]["timestamp"])
-        self.unique_id = uuid.uuid4().hex
-        self.wifimac = str(random.randint(10**11, 10**12 - 1))
-        self.headers = {
-            "token": "6733b42e28cdba32",
-            "User-Agent": "Mozilla/5.0 (Linux; U; Android 9; zh-cn; SM-S908E Build/TP1A.220624.014) AppleWebKit/533.1 (KHTML, like Gecko) Mobile Safari/533.1",  # noqa: E501
-            "Host": "api.extscreen.com",
-        }
+        try:
+            self.timestamp = str(
+                requests.get("http://api.extscreen.com/timestamp", timeout=10).json()["data"]["timestamp"]
+            )
+            self.unique_id = uuid.uuid4().hex
+            self.wifimac = str(random.randint(10**11, 10**12 - 1))
+            self.headers = {
+                "token": "6733b42e28cdba32",
+                "User-Agent": "Mozilla/5.0 (Linux; U; Android 9; zh-cn; SM-S908E Build/TP1A.220624.014) AppleWebKit/533.1 (KHTML, like Gecko) Mobile Safari/533.1",  # noqa: E501
+                "Host": "api.extscreen.com",
+            }
+        except Exception as e:  # pylint: disable=W0718
+            logging.error("错误：%s", e)
+            sys.exit(1)
 
     def h(self, char_array, modifier):
         unique_chars = list(dict.fromkeys(char_array))
@@ -48,7 +54,6 @@ class AliyunPanTvToken:
                 chr(
                     abs(ord(c) - (numeric_modifier % 127) - 1) + 33
                     if abs(ord(c) - (numeric_modifier % 127) - 1) < 33
-                    # noqa: E501
                     else abs(ord(c) - (numeric_modifier % 127) - 1)
                 )
                 for c in unique_chars
@@ -86,42 +91,54 @@ class AliyunPanTvToken:
             return dec
         except Exception as error:
             logging.error("Decryption failed %s", error)
-            raise error
+            sys.exit(1)
 
     def get_headers(self):
         return {**self.get_params(), **self.headers}
 
     def get_token(self, data):
-        token_data = requests.post(
-            "http://api.extscreen.com/aliyundrive/v3/token", data=data, headers=self.get_headers(), timeout=10
-        ).json()["data"]
-        return self.decrypt(token_data["ciphertext"], token_data["iv"])
+        try:
+            token_data = requests.post(
+                "http://api.extscreen.com/aliyundrive/v3/token", data=data, headers=self.get_headers(), timeout=10
+            ).json()["data"]
+            return self.decrypt(token_data["ciphertext"], token_data["iv"])
+        except Exception as e:  # pylint: disable=W0718
+            logging.error("错误：%s", e)
+            sys.exit(1)
 
     def get_qrcode_url(self):
-        data = requests.post(
-            "http://api.extscreen.com/aliyundrive/qrcode",
-            data={
-                "scopes": ",".join(["user:base", "file:all:read", "file:all:write"]),
-                "width": 500,
-                "height": 500,
-            },
-            headers=self.get_headers(),
-            timeout=10,
-        ).json()["data"]
-        qr_link = "https://www.aliyundrive.com/o/oauth/authorize?sid=" + data["sid"]
-        return {"qr_link": qr_link, "sid": data["sid"]}
+        try:
+            data = requests.post(
+                "http://api.extscreen.com/aliyundrive/qrcode",
+                data={
+                    "scopes": ",".join(["user:base", "file:all:read", "file:all:write"]),
+                    "width": 500,
+                    "height": 500,
+                },
+                headers=self.get_headers(),
+                timeout=10,
+            ).json()["data"]
+            qr_link = "https://www.aliyundrive.com/o/oauth/authorize?sid=" + data["sid"]
+            return {"qr_link": qr_link, "sid": data["sid"]}
+        except Exception as e:  # pylint: disable=W0718
+            logging.error("错误：%s", e)
+            sys.exit(1)
 
 
 def check_qrcode_status(sid):
-    status = "NotLoggedIn"
-    _auth_code = None
-    while status != "LoginSuccess":
-        time.sleep(3)
-        result = requests.get(f"https://openapi.alipan.com/oauth/qrcode/{sid}/status", timeout=10).json()
-        status = result["status"]
-        if status == "LoginSuccess":
-            _auth_code = result["authCode"]
-    return {"auth_code": _auth_code}
+    try:
+        status = "NotLoggedIn"
+        _auth_code = None
+        while status != "LoginSuccess":
+            time.sleep(3)
+            result = requests.get(f"https://openapi.alipan.com/oauth/qrcode/{sid}/status", timeout=10).json()
+            status = result["status"]
+            if status == "LoginSuccess":
+                _auth_code = result["authCode"]
+        return {"auth_code": _auth_code}
+    except Exception as e:  # pylint: disable=W0718
+        logging.error("错误：%s", e)
+        sys.exit(1)
 
 
 def get_token(code):
