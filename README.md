@@ -128,14 +128,10 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 卸载 Xiaoya aliyuntvtoken_connector -> 5 5 3
 卸载 小雅Alist-TVBox -> 5 6 3
 卸载 CasaOS -> 5 8 2
-————————————————————————————————Docker Compose—————————————————————————————————————
-安装 小雅及全家桶 -> 5 10 1
-卸载 小雅及全家桶 -> 5 10 2
 ——————————————————————————————————————系统工具——————————————————————————————————————
 查看系统磁盘挂载 -> 5 7
 ———————————————————————————————————————其他———————————————————————————————————————
 一次性运行 小雅助手（xiaoyahelper）-> 3 2
-AI老G 安装脚本 -> 5 9
 账号管理 -> 1 4
 非内网IP访问次数查看 -> 1 5
 ```
@@ -265,6 +261,12 @@ Docker镜像源选择 -> 6 6
 
 ## 小雅周边工具集合
 
+- [AI老G 脚本推荐](https://b23.tv/3Zo0IvD)
+  - 小雅全家桶安装脚本（支持AI老G版小雅Alist安装，Jellyfin安装，快速Emby安装）:
+    ```shell
+    bash <(curl -sSLf https://xy.ggbond.org/xy/xy_install.sh)
+    ```
+  - TG 群组：https://t.me/ailg666
 - [Xiaoya-convert](https://github.com/ypq123456789/xiaoya-convert): 自动批量将阿里云盘分享链接转换为小雅`alishare_list.txt`中的格式
 - [Xiaoyahelper](https://github.com/xiaoyaDev/xiaoyahelper): 一劳永逸的小雅转存清理工具
 - [Alist-TVBox](https://hub.docker.com/r/haroldli/alist-tvbox): 一个基于`AList`和`xiaoya`的`TVBox`管理工具
@@ -273,15 +275,6 @@ Docker镜像源选择 -> 6 6
 - [xiaoya-sync](https://github.com/xiaoyaDev/xiaoya-sync): Java 编写的小雅元数据爬虫
 - [sjtuross/StrmAssistant](https://github.com/sjtuross/StrmAssistant): Strm Assistant for Emby
 - [suixing8/xiaoya-alist-search](https://github.com/suixing8/xiaoya-alist-search): 不安装Emby的情况下，在iOS Fileball上使用全局搜索和直接观看
-- [AI老G 脚本推荐](https://b23.tv/3Zo0IvD)
-  - 小雅全家桶安装脚本（支持AI老G版小雅Alist安装，Jellyfin安装，快速Emby安装）:
-    ```shell
-    bash <(curl -sSLf https://xy.ggbond.org/xy/xy_install.sh)
-    ```
-  - [玩客云刷casaos小雅emby全家桶](https://b23.tv/KTIHxyT):
-    ```shell
-    bash <(curl -sSLf https://xy.ggbond.org/xy/wky_xy_emby_ailg.sh)
-    ```
 
 ## 感谢
 

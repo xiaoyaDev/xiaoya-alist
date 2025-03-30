@@ -1559,7 +1559,7 @@ function show_xiaoya_non_intranet_ip() {
             if ! docker exec -it "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" cat /opt/alist/log/alist.log > /dev/null 2>&1; then
                 INFO "无非内网IP访问次数记录"
             else
-                output="$(docker exec -it "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" bash -c 'cat /opt/alist/log/alist.log | grep -o "([0-9]{1,3}\\.){3}[0-9]{1,3}" | grep -v "172\\.17|127\\.0|192\\.168" | sort | uniq -c | head -n10 | sed "s/^[ \t]*//"')"
+                output="$(docker exec -it "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" bash -c 'cat /opt/alist/log/alist.log | grep -v -i fail | grep -o "([0-9]{1,3}\\.){3}[0-9]{1,3}" | grep -v "172\\.17|127\\.0|192\\.168" | sort | uniq -c | head -n10 | sed "s/^[ \t]*//"')"
                 if [ -n "${output}" ]; then
                     INFO "非内网IP访问次数情况："
                     echo -e "${output}"
@@ -5167,67 +5167,6 @@ function main_xiaoya_aliyuntvtoken_connector() {
 
 }
 
-function main_docker_compose() {
-
-    echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    echo -e "${Blue}Docker Compose 小雅及全家桶${Font}\n"
-    echo -e "${Sky_Blue}Docker Compose 安装方式由 https://link.monlor.com/ 更新维护，在此表示感谢！"
-    echo -e "具体详细介绍请看项目README：https://github.com/monlor/docker-xiaoya${Font}\n"
-    echo -e "1、安装"
-    echo -e "2、卸载"
-    echo -e "0、返回上级"
-    echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-2]:" num
-    case "$num" in
-    1)
-        clear
-        while true; do
-            INFO "是否使用加速源 [Y/n]（默认 N）"
-            read -erp "USE_PROXY:" USE_PROXY
-            [[ -z "${USE_PROXY}" ]] && USE_PROXY="n"
-            if [[ ${USE_PROXY} == [YyNn] ]]; then
-                break
-            else
-                ERROR "非法输入，请输入 [Y/n]"
-            fi
-        done
-        if [[ ${USE_PROXY} == [Yy] ]]; then
-            export GH_PROXY=https://gh.monlor.com/ IMAGE_PROXY=ghcr.monlor.com
-        fi
-        bash -c "$(curl -fsSL ${GH_PROXY}https://raw.githubusercontent.com/monlor/docker-xiaoya/main/install.sh)"
-        return_menu "main_docker_compose"
-        ;;
-    2)
-        clear
-        while true; do
-            INFO "是否使用加速源 [Y/n]（默认 N）"
-            read -erp "USE_PROXY:" USE_PROXY
-            [[ -z "${USE_PROXY}" ]] && USE_PROXY="n"
-            if [[ ${USE_PROXY} == [YyNn] ]]; then
-                break
-            else
-                ERROR "非法输入，请输入 [Y/n]"
-            fi
-        done
-        if [[ ${USE_PROXY} == [Yy] ]]; then
-            export GH_PROXY=https://gh.monlor.com/ IMAGE_PROXY=ghcr.monlor.com
-        fi
-        bash -c "$(curl -fsSL ${GH_PROXY}https://raw.githubusercontent.com/monlor/docker-xiaoya/main/uninstall.sh)"
-        return_menu "main_docker_compose"
-        ;;
-    0)
-        clear
-        main_other_tools
-        ;;
-    *)
-        clear
-        ERROR '请输入正确数字 [0-2]'
-        main_docker_compose
-        ;;
-    esac
-
-}
-
 function init_container_name() {
 
     if [ ! -d ${DDSREM_CONFIG_DIR}/container_name ]; then
@@ -5556,11 +5495,9 @@ function main_other_tools() {
 6、安装/更新/卸载 小雅Alist-TVBox（非原版）       当前状态：$(judgment_container "${xiaoya_tvbox_name}")"
     echo -e "7、查看系统磁盘挂载"
     echo -e "8、安装/卸载 CasaOS"
-    echo -e "9、AI老G 安装脚本"
-    echo -e "10、Docker Compose 安装/卸载 小雅及全家桶（实验性功能）"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-10]:" num
+    read -erp "请输入数字 [0-8]:" num
     case "$num" in
     1)
         clear
@@ -5599,21 +5536,13 @@ function main_other_tools() {
         clear
         main_casaos
         ;;
-    9)
-        clear
-        bash <(curl -sSLf https://xy.ggbond.org/xy/xy_install.sh)
-        ;;
-    10)
-        clear
-        main_docker_compose
-        ;;
     0)
         clear
         main_return
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-10]'
+        ERROR '请输入正确数字 [0-8]'
         main_other_tools
         ;;
     esac
