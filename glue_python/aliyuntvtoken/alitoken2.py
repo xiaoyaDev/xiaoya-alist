@@ -91,7 +91,7 @@ class AliyunPanTvToken:
             return dec
         except Exception as error:
             logging.error("Decryption failed %s", error)
-            sys.exit(1)
+            raise error
 
     def get_headers(self):
         return {**self.get_params(), **self.headers}
