@@ -2795,8 +2795,8 @@ function install_lovechen_embyserver() {
         rm -rf ${MEDIA_DIR}/config/data/library.db-shm
     fi
     chmod 777 ${MEDIA_DIR}/config/data/library.org.db
-    curl -o ${MEDIA_DIR}/config/data/library.db https://cdn.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@latest/emby_lovechen/library.db
-    curl -o ${MEDIA_DIR}/temp.sql https://cdn.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@latest/emby_lovechen/temp.sql
+    curl -o ${MEDIA_DIR}/config/data/library.db https://git.aginouxy.top/AngelababyXYG/xiaoya-alist@latest/emby_lovechen/library.db
+    curl -o ${MEDIA_DIR}/temp.sql https://git.aginouxy.top/AngelababyXYG/xiaoya-alist@latest/emby_lovechen/temp.sql
     pull_run_glue sqlite3 /media/config/data/library.db ".read /media/temp.sql"
 
     INFO "数据库转换成功！"
@@ -4236,7 +4236,7 @@ function main_xiaoya_all_emby() {
     4)
         clear
         get_config_dir
-        bash -c "$(curl -sLk https://ddsrem.com/xiaoya/emby_config_editor.sh)" -s ${CONFIG_DIR}
+        bash -c "$(curl -sLk https://git.aginouxy.top/AngelababyXYG/xiaoya/emby_config_editor.sh)" -s ${CONFIG_DIR}
         main_xiaoya_all_emby
         ;;
     5)
@@ -5768,20 +5768,20 @@ function first_init() {
     if [ -f /tmp/xiaoya_alist ]; then
         rm -rf /tmp/xiaoya_alist
     fi
-    if ! curl -sL https://ddsrem.com/xiaoya/xiaoya_alist -o /tmp/xiaoya_alist; then
-        if ! curl -sL https://fastly.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@latest/xiaoya_alist -o /tmp/xiaoya_alist; then
-            curl -sL https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/xiaoya_alist -o /tmp/xiaoya_alist
+    if ! curl -sL https://git.aginouxy.top/AngelababyXYG/xiaoya/xiaoya_alist -o /tmp/xiaoya_alist; then
+        if ! curl -sL https://git.aginouxy.top/AngelababyXYG/xiaoya-alist@latest/xiaoya_alist -o /tmp/xiaoya_alist; then
+            curl -sL https://raw.githubusercontent.com/AngelababyXYG/xiaoya-alist/master/xiaoya_alist -o /tmp/xiaoya_alist
             if ! grep -q 'alias xiaoya' /etc/profile; then
-                echo -e "alias xiaoya='bash -c \"\$(curl -sLk https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/xiaoya_alist)\"'" >> /etc/profile
+                echo -e "alias xiaoya='bash -c \"\$(curl -sLk https://raw.githubusercontent.com/AngelababyXYG/xiaoya-alist/master/xiaoya_alist)\"'" >> /etc/profile
             fi
         else
             if ! grep -q 'alias xiaoya' /etc/profile; then
-                echo -e "alias xiaoya='bash -c \"\$(curl -sLk https://fastly.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@latest/xiaoya_alist)\"'" >> /etc/profile
+                echo -e "alias xiaoya='bash -c \"\$(curl -sLk https://git.aginouxy.top/AngelababyXYG/xiaoya-alist@latest/xiaoya_alist)\"'" >> /etc/profile
             fi
         fi
     else
         if ! grep -q 'alias xiaoya' /etc/profile; then
-            echo -e "alias xiaoya='bash -c \"\$(curl -sLk https://ddsrem.com/xiaoya_install.sh)\"'" >> /etc/profile
+            echo -e "alias xiaoya='bash -c \"\$(curl -sLk https://git.aginouxy.top/AngelababyXYG/xiaoya_install.sh)\"'" >> /etc/profile
         fi
     fi
     # 兼容仓库迁移
@@ -5837,9 +5837,9 @@ if [ "$(uname -s)" == "Darwin" ]; then
         if [ -f /tmp/run_xiaoya_install_user.txt ]; then
             rm -rf /tmp/run_xiaoya_install_user.txt
         fi
-        if ! curl -sL https://ddsrem.com/xiaoya/all_in_one.sh -o /tmp/xiaoya_install.sh; then
-            if ! curl -sL https://fastly.jsdelivr.net/gh/xiaoyaDev/xiaoya-alist@latest/all_in_one.sh -o /tmp/xiaoya_install.sh; then
-                if ! curl -sL https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/master/all_in_one.sh -o /tmp/xiaoya_install.sh; then
+        if ! curl -sL https://git.aginouxy.top/AngelababyXYG/xiaoya/all_in_one.sh -o /tmp/xiaoya_install.sh; then
+            if ! curl -sL https://git.aginouxy.top/AngelababyXYG/xiaoya-alist@latest/all_in_one.sh -o /tmp/xiaoya_install.sh; then
+                if ! curl -sL https://raw.githubusercontent.com/AngelababyXYG/xiaoya-alist/master/all_in_one.sh -o /tmp/xiaoya_install.sh; then
                     ERROR "脚本获取失败！"
                     exit 1
                 fi
