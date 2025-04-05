@@ -94,7 +94,9 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 单独 解压 蓝光原盘.mp4 -> 2 2 14
 单独 下载 json.mp4 -> 2 2 15
 单独 解压 json.mp4 -> 2 2 16
-选择 下载器【aria2/wget】-> 2 2 17
+单独 下载 music.mp4 -> 2 2 17
+单独 解压 music.mp4 -> 2 2 18
+选择 下载器【aria2/wget】-> 2 2 19
 单独 安装Emby（可选择版本，支持官方，amilys，lovechen）-> 2 3
 图形化编辑 emby_config.txt -> 2 4
 小雅爬虫 立刻爬取指定目录 -> 2 5 4
@@ -102,9 +104,9 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 小雅爬虫 清理爬虫进程锁 -> 2 5 6
 小雅爬虫 重置爬虫数据库 -> 2 5 7
 一键升级Emby容器（可选择镜像版本） -> 2 6
-开启/关闭 解压成功后自动清理 mp4 元数据文件 -> 2 101 1 1
-一键清理当前所有 mp4 元数据文件 -> 2 101 1 2
-关闭 Emby 6908 端口访问 -> 2 101 2
+开启/关闭 解压成功后自动清理 mp4 元数据文件 -> 2 8 1 1
+一键清理当前所有 mp4 元数据文件 -> 2 8 1 2
+关闭 Emby 6908 端口访问 -> 2 8 2
 ———————————————————————————————————————更新———————————————————————————————————————
 更新 小雅Alist -> 1 2
 更新 小雅元数据定时爬虫 -> 2 5 2

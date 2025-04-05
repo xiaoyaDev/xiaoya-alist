@@ -2559,31 +2559,56 @@ function main_download_unzip_xiaoya_emby() {
 
     __data_downloader=$(cat ${DDSREM_CONFIG_DIR}/data_downloader.txt)
 
-    echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    echo -e "${Blue}下载/解压 元数据${Font}\n"
-    echo -e "1、下载并解压 全部元数据"
-    echo -e "2、解压 全部元数据"
-    echo -e "3、下载 all.mp4"
-    echo -e "4、解压 all.mp4"
-    echo -e "5、解压 all.mp4 的指定元数据目录【非全部解压】"
-    echo -e "6、下载 config.mp4（4.9.0.42）"
-    echo -e "7、解压 config.mp4（4.9.0.42）"
-    echo -e "8、下载 pikpak.mp4"
-    echo -e "9、解压 pikpak.mp4"
-    echo -e "10、下载 115.mp4"
-    echo -e "11、解压 115.mp4"
-    echo -e "12、解压 115.mp4 的指定元数据目录【非全部解压】"
-    echo -e "13、下载 蓝光原盘.mp4"
-    echo -e "14、解压 蓝光原盘.mp4"
-    echo -e "15、下载 json.mp4"
-    echo -e "16、解压 json.mp4"
-    echo -e "17、当前下载器【aria2/wget】                  当前状态：${Green}${__data_downloader}${Font}"
-    # echo -e "101、下载并解压 config.new.mp4（4.9.0.42）"
-    echo -e "0、返回上级"
-    echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字（支持输入多个数字，空格分离，按输入顺序执行）[0-17]:" -a nums
+    function main_download_unzip_xiaoya_emby_page1() {
+
+        echo -e "——————————————————————————————————————————————————————————————————————————————————"
+        echo -e "${Blue}下载/解压 元数据${Font}\n"
+        echo -e "1、下载并解压 全部元数据"
+        echo -e "2、解压 全部元数据"
+        echo -e "3、下载 all.mp4"
+        echo -e "4、解压 all.mp4"
+        echo -e "5、解压 all.mp4 的指定元数据目录【非全部解压】"
+        echo -e "6、下载 config.mp4（4.9.0.42）"
+        echo -e "7、解压 config.mp4（4.9.0.42）"
+        echo -e "8、下载 pikpak.mp4"
+        echo -e "9、解压 pikpak.mp4"
+        echo -e "10、下载 115.mp4"
+        echo -e "11、解压 115.mp4"
+        echo -e "n、下一页"
+        echo -e "0、返回上级"
+        echo -e "——————————————————————————————————————————————————————————————————————————————————"
+
+    }
+
+    function main_download_unzip_xiaoya_emby_page2() {
+
+        echo -e "——————————————————————————————————————————————————————————————————————————————————"
+        echo -e "${Blue}下载/解压 元数据${Font}\n"
+        echo -e "12、解压 115.mp4 的指定元数据目录【非全部解压】"
+        echo -e "13、下载 蓝光原盘.mp4"
+        echo -e "14、解压 蓝光原盘.mp4"
+        echo -e "15、下载 json.mp4"
+        echo -e "16、解压 json.mp4"
+        echo -e "17、下载 music.mp4"
+        echo -e "18、解压 music.mp4"
+        echo -e "19、当前下载器【aria2/wget】                  当前状态：${Green}${__data_downloader}${Font}"
+        # echo -e "101、下载并解压 config.new.mp4（4.9.0.42）"
+        echo -e "p、上一页"
+        echo -e "——————————————————————————————————————————————————————————————————————————————————"
+
+    }
+
+    __next_operate=
+    local page next_page next_page_choose
+    if [ -z "${1}" ]; then
+        page=1
+    else
+        page="${1}"
+    fi
+    "main_download_unzip_xiaoya_emby_page${page}"
+    read -erp "请输入数字（支持输入多个数字，空格分离，按输入顺序执行）[0-19]:" -a nums
     for num in "${nums[@]}"; do
-        if [ $num -ge 1 ] && [ $num -le 16 ]; then
+        if [ $num -ge 1 ] && [ $num -le 18 ]; then
             case "$num" in
             1)
                 clear
@@ -2649,13 +2674,21 @@ function main_download_unzip_xiaoya_emby() {
                 clear
                 unzip_xiaoya_emby "json.mp4"
                 ;;
+            17)
+                clear
+                download_xiaoya_emby "music.mp4"
+                ;;
+            18)
+                clear
+                unzip_xiaoya_emby "music.mp4"
+                ;;
             esac
             __next_operate=return_menu
         elif [ $num == 101 ]; then
             clear
             download_unzip_xiaoya_emby_new_config
             __next_operate=return_menu
-        elif [ $num == 17 ]; then
+        elif [ $num == 19 ]; then
             if [ "${__data_downloader}" == "wget" ]; then
                 echo 'aria2' > ${DDSREM_CONFIG_DIR}/data_downloader.txt
             elif [ "${__data_downloader}" == "aria2" ]; then
@@ -2670,19 +2703,48 @@ function main_download_unzip_xiaoya_emby() {
             clear
             __next_operate=main_xiaoya_all_emby
             break
+        elif [ $num == "n" ]; then
+            clear
+            next_page=$((page + 1))
+            next_page_choose=n
+            __next_operate=next_page
+            break
+        elif [ $num == "p" ]; then
+            clear
+            next_page=$((page - 1))
+            next_page_choose=p
+            __next_operate=next_page
+            break
         else
             clear
-            ERROR '请输入正确数字 [0-17]'
+            ERROR '请输入正确数字 [0-19]'
             __next_operate=main_download_unzip_xiaoya_emby
             break
         fi
     done
+    if [ -z ${__next_operate} ]; then
+        clear
+        ERROR '请输入正确数字 [0-19]'
+        __next_operate=main_download_unzip_xiaoya_emby
+    fi
     if [ "${__next_operate}" == "return_menu" ]; then
         return_menu "main_download_unzip_xiaoya_emby"
     elif [ "${__next_operate}" == "main_download_unzip_xiaoya_emby" ]; then
-        main_download_unzip_xiaoya_emby
+        main_download_unzip_xiaoya_emby "${page}"
     elif [ "${__next_operate}" == "main_xiaoya_all_emby" ]; then
         main_xiaoya_all_emby
+    elif [ "${__next_operate}" == "next_page" ]; then
+        if [ $next_page -ge 1 ] && [ $next_page -le 2 ]; then
+            main_download_unzip_xiaoya_emby "${next_page}"
+        else
+            clear
+            if [ "${next_page_choose}" == "n" ]; then
+                ERROR '当前页面为最后一页，无法前往下一页'
+            else
+                ERROR '当前页面为第一页，无法前往前一页'
+            fi
+            main_download_unzip_xiaoya_emby "${page}"
+        fi
     fi
 
 }
@@ -4183,12 +4245,12 @@ function main_xiaoya_all_emby() {
 5、安装/更新/卸载 小雅元数据定时爬虫          当前状态：$(judgment_container xiaoya-emd)
 6、一键升级 Emby 容器（可选择镜像版本）
 7、卸载 Emby 全家桶
-101、其他功能"
+8、其他功能"
     fi
     echo -e "0、返回上级          "
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     if [ "${show_main_xiaoya_all_emby}" == "true" ]; then
-        read -erp "请输入数字 [0-7, 101]:" num
+        read -erp "请输入数字 [0-8]:" num
     else
         read -erp "请输入数字 [0]:" num
     fi
@@ -4224,7 +4286,7 @@ function main_xiaoya_all_emby() {
         ;;
     2)
         clear
-        main_download_unzip_xiaoya_emby
+        main_download_unzip_xiaoya_emby "1"
         ;;
     3)
         clear
@@ -4252,7 +4314,7 @@ function main_xiaoya_all_emby() {
         clear
         uninstall_xiaoya_all_emby
         ;;
-    101)
+    8)
         clear
         main_xiaoya_all_emby_other_features
         ;;
@@ -4262,7 +4324,7 @@ function main_xiaoya_all_emby() {
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-7, 101]'
+        ERROR '请输入正确数字 [0-8]'
         main_xiaoya_all_emby
         ;;
     esac
