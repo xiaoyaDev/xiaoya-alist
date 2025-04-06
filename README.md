@@ -76,6 +76,7 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 安装 Xiaoya Proxy -> 5 4 1
 安装 Xiaoya aliyuntvtoken_connector -> 5 5 1
 安装 小雅Alist-TVBox -> 5 6 1
+安装 LrcAPI -> 5 7 1
 安装 CasaOS -> 5 8 1
 ——————————————————————————————Emby手动全家桶配置————————————————————————————————————
 单独 下载并解压 全部元数据 -> 2 2 1
@@ -117,6 +118,7 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 更新 Xiaoya Proxy -> 5 4 2
 更新 Xiaoya aliyuntvtoken_connector -> 5 5 2
 更新 小雅Alist-TVBox -> 5 6 2
+更新 LrcAPI -> 5 7 2
 ———————————————————————————————————————卸载———————————————————————————————————————
 卸载 小雅Alist -> 1 3
 卸载 小雅元数据定时爬虫 -> 2 5 3
@@ -129,9 +131,10 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 卸载 Xiaoya Proxy -> 5 4 3
 卸载 Xiaoya aliyuntvtoken_connector -> 5 5 3
 卸载 小雅Alist-TVBox -> 5 6 3
-卸载 CasaOS -> 5 8 2
+卸载 LrcAPI -> 5 7 3
+卸载 CasaOS -> 5 9 2
 ——————————————————————————————————————系统工具——————————————————————————————————————
-查看系统磁盘挂载 -> 5 7
+查看系统磁盘挂载 -> 5 8
 ———————————————————————————————————————其他———————————————————————————————————————
 一次性运行 小雅助手（xiaoyahelper）-> 3 2
 账号管理 -> 1 4

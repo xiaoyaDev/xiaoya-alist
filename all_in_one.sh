@@ -5229,6 +5229,87 @@ function main_xiaoya_aliyuntvtoken_connector() {
 
 }
 
+function install_lrcapi() {
+
+    INFO "开始安装 LrcAPI"
+    if ! check_port "28883"; then
+        ERROR "28883 端口被占用，请关闭占用此端口的程序！"
+        exit 1
+    fi
+    docker_pull "hisatri/lrcapi:latest"
+    docker run -d \
+        -p 28883:28883 \
+        --name=lrcapi \
+        -e "API_AUTH=1234" \
+        hisatri/lrcapi:latest
+    INFO "安装完成！"
+    INFO "LrcAPI API地址：${Sky_Blue}http://ip:28883${Font}"
+    INFO "LrcAPI API密码：${Sky_Blue}1234${Font}"
+
+}
+
+function update_lrcapi() {
+
+    for i in $(seq -w 3 -1 0); do
+        echo -en "即将开始更新 LrcAPI${Blue} $i ${Font}\r"
+        sleep 1
+    done
+    container_update lrcapi
+
+}
+
+function uninstall_lrcapi() {
+
+    for i in $(seq -w 3 -1 0); do
+        echo -en "即将开始卸载 LrcAPI${Blue} $i ${Font}\r"
+        sleep 1
+    done
+    docker stop lrcapi
+    docker rm lrcapi
+    docker rmi hisatri/lrcapi:latest
+    INFO "LrcAPI 卸载成功！"
+
+}
+
+function main_lrcapi() {
+
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    echo -e "${Blue}LrcAPI${Font}\n"
+    echo -e "1、安装"
+    echo -e "2、更新"
+    echo -e "3、卸载"
+    echo -e "0、返回上级"
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    read -erp "请输入数字 [0-3]:" num
+    case "$num" in
+    1)
+        clear
+        install_lrcapi
+        return_menu "main_lrcapi"
+        ;;
+    2)
+        clear
+        update_lrcapi
+        return_menu "main_lrcapi"
+        ;;
+    3)
+        clear
+        uninstall_lrcapi
+        return_menu "main_lrcapi"
+        ;;
+    0)
+        clear
+        main_other_tools
+        ;;
+    *)
+        clear
+        ERROR '请输入正确数字 [0-3]'
+        main_lrcapi
+        ;;
+    esac
+
+}
+
 function init_container_name() {
 
     if [ ! -d ${DDSREM_CONFIG_DIR}/container_name ]; then
@@ -5554,12 +5635,13 @@ function main_other_tools() {
 3、安装/更新/卸载 Onelist                         当前状态：$(judgment_container "${xiaoya_onelist_name}")
 4、安装/更新/卸载 Xiaoya Proxy                    当前状态：$(judgment_container xiaoya-proxy)
 5、安装/更新/卸载 Xiaoya aliyuntvtoken_connector  当前状态：$(judgment_container xiaoya-aliyuntvtoken_connector)
-6、安装/更新/卸载 小雅Alist-TVBox（非原版）       当前状态：$(judgment_container "${xiaoya_tvbox_name}")"
-    echo -e "7、查看系统磁盘挂载"
-    echo -e "8、安装/卸载 CasaOS"
+6、安装/更新/卸载 小雅Alist-TVBox（非原版）       当前状态：$(judgment_container "${xiaoya_tvbox_name}")
+7、安装/更新/卸载 LrcAPI                          当前状态：$(judgment_container "${xiaoya_tvbox_name}")"
+    echo -e "8、查看系统磁盘挂载"
+    echo -e "9、安装/卸载 CasaOS"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-8]:" num
+    read -erp "请输入数字 [0-9]:" num
     case "$num" in
     1)
         clear
@@ -5587,6 +5669,10 @@ function main_other_tools() {
         ;;
     7)
         clear
+        main_lrcapi
+        ;;
+    8)
+        clear
         INFO "系统磁盘挂载情况:"
         show_disk_mount
         INFO "按任意键返回菜单"
@@ -5594,7 +5680,7 @@ function main_other_tools() {
         clear
         main_other_tools
         ;;
-    8)
+    9)
         clear
         main_casaos
         ;;
@@ -5604,7 +5690,7 @@ function main_other_tools() {
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-8]'
+        ERROR '请输入正确数字 [0-9]'
         main_other_tools
         ;;
     esac
