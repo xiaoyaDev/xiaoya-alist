@@ -1,54 +1,61 @@
 name: embyserver latest version
 
 on:
-    workflow_dispatch:
-    push:
-        branches:
-            - master
-        paths:
-            - ".github/workflows/embyserver_latest_version.yml"
+  workflow_dispatch:
+    inputs:
+      memory_limit: # 添加输入参数
+        description: "Emby 容器的内存限制 (例如：1g, 512m)"
+        required: false # 设置为 false，以便在未提供时使用默认值
+        default: "1g" # 默认值为 1GB
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/embyserver_latest_version.yml"
 
 jobs:
   get:
     runs-on: ubuntu-latest
     steps:
-      - 
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
-      -
-        name: Get Latest Version Amilys
+      - name: Get Latest Version Amilys
         run: |
-            docker run --memory=1g --entrypoint cp -v ${PWD}/emby:/data amilys/embyserver:latest /system/EmbyServer.deps.json /data
-            LATEST_VERSION=$(grep "EmbyServer" emby/EmbyServer.deps.json | head -n 1 | sed -n 's|.*EmbyServer/\(.*\)":.*|\1|p')
-            sed -i "1,40s|amilys_embyserver_latest_version=.*|amilys_embyserver_latest_version=${LATEST_VERSION}|" all_in_one.sh
+          # 使用输入参数，如果未提供，则使用默认值
+          MEMORY_LIMIT=${{ github.event.inputs.memory_limit || '1g' }}
+          docker run --memory=${MEMORY_LIMIT} --entrypoint cp -v ${PWD}/emby:/data amilys/embyserver:latest /system/EmbyServer.deps.json /data
+          LATEST_VERSION=$(grep "EmbyServer" emby/EmbyServer.deps.json | head -n 1 | sed -n 's|.*EmbyServer/\(.*\)":.*|\1|p')
+          sed -i "1,40s|amilys_embyserver_latest_version=.*|amilys_embyserver_latest_version=${LATEST_VERSION}|" all_in_one.sh
 
-      -
-        name: Get Latest Version Emby
+      - name: Get Latest Version Emby
         run: |
-            docker run --memory=1g --entrypoint cp -v ${PWD}/emby:/data emby/embyserver:latest /system/EmbyServer.deps.json /data
-            LATEST_VERSION=$(grep "EmbyServer" emby/EmbyServer.deps.json | head -n 1 | sed -n 's|.*EmbyServer/\(.*\)":.*|\1|p')
-            sed -i "1,40s|emby_embyserver_latest_version=.*|emby_embyserver_latest_version=${LATEST_VERSION}|" all_in_one.sh
+          # 使用输入参数
+          MEMORY_LIMIT=${{ github.event.inputs.memory_limit || '1g' }}
+          docker run --memory=${MEMORY_LIMIT} --entrypoint cp -v ${PWD}/emby:/data emby/embyserver:latest /system/EmbyServer.deps.json /data
+          LATEST_VERSION=$(grep "EmbyServer" emby/EmbyServer.deps.json | head -n 1 | sed -n 's|.*EmbyServer/\(.*\)":.*|\1|p')
+          sed -i "1,40s|emby_embyserver_latest_version=.*|emby_embyserver_latest_version=${LATEST_VERSION}|" all_in_one.sh
 
-      -
-        name: Get Beta Version Amilys
+      - name: Get Beta Version Amilys
         run: |
-            docker run --memory=1g --entrypoint cp -v ${PWD}/emby:/data amilys/embyserver:beta /system/EmbyServer.deps.json /data
-            LATEST_VERSION=$(grep "EmbyServer" emby/EmbyServer.deps.json | head -n 1 | sed -n 's|.*EmbyServer/\(.*\)":.*|\1|p')
-            sed -i "1,40s|amilys_embyserver_beta_version=.*|amilys_embyserver_beta_version=${LATEST_VERSION}|" all_in_one.sh
+          # 使用输入参数
+          MEMORY_LIMIT=${{ github.event.inputs.memory_limit || '1g' }}
+          docker run --memory=${MEMORY_LIMIT} --entrypoint cp -v ${PWD}/emby:/data amilys/embyserver:beta /system/EmbyServer.deps.json /data
+          LATEST_VERSION=$(grep "EmbyServer" emby/EmbyServer.deps.json | head -n 1 | sed -n 's|.*EmbyServer/\(.*\)":.*|\1|p')
+          sed -i "1,40s|amilys_embyserver_beta_version=.*|amilys_embyserver_beta_version=${LATEST_VERSION}|" all_in_one.sh
 
-      -
-        name: Get Beta Version Emby
+      - name: Get Beta Version Emby
         run: |
-            docker run --memory=1g --entrypoint cp -v ${PWD}/emby:/data emby/embyserver:beta /system/EmbyServer.deps.json /data
-            LATEST_VERSION=$(grep "EmbyServer" emby/EmbyServer.deps.json | head -n 1 | sed -n 's|.*EmbyServer/\(.*\)":.*|\1|p')
-            sed -i "1,40s|emby_embyserver_beta_version=.*|emby_embyserver_beta_version=${LATEST_VERSION}|" all_in_one.sh
+          # 使用输入参数
+          MEMORY_LIMIT=${{ github.event.inputs.memory_limit || '1g' }}
+          docker run --memory=${MEMORY_LIMIT} --entrypoint cp -v ${PWD}/emby:/data emby/embyserver:beta /system/EmbyServer.deps.json /data
+          LATEST_VERSION=$(grep "EmbyServer" emby/EmbyServer.deps.json | head -n 1 | sed -n 's|.*EmbyServer/\(.*\)":.*|\1|p')
+          sed -i "1,40s|emby_embyserver_beta_version=.*|emby_embyserver_beta_version=${LATEST_VERSION}|" all_in_one.sh
 
-      - 
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-            commit_message: 'chore: update embyserver latest version'
-            branch: master
-            file_pattern: 'all_in_one.sh'
+          commit_message: 'chore: update embyserver latest version'
+          branch: master
+          file_pattern: 'all_in_one.sh'
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
