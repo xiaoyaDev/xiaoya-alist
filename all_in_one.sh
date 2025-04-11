@@ -3630,7 +3630,7 @@ function xiaoya_emd_pathlib() {
     if [ "${1}" == "install" ]; then
         PATHLIB_DIR="${2}/pathlib.txt"
         if [ ! -f "${PATHLIB_DIR}" ]; then
-            echo -e "115/\n每日更新/\n纪录片（已刮削）/\n综艺/\n音乐/\n" > "${PATHLIB_DIR}"
+            echo -e "每日更新/\n纪录片（已刮削）/\n综艺/\n音乐/\n" > "${PATHLIB_DIR}"
         fi
     elif [ "${1}" == "once" ]; then
         PATHLIB_DIR="${2}/once_pathlib.txt"
@@ -3639,7 +3639,7 @@ function xiaoya_emd_pathlib() {
     sedsh '/^[[:space:]]*$/d' "${PATHLIB_DIR}"
     while true; do
         clear
-        emd_all_paths=('115/' 'ISO/' 'PikPak/' '动漫/' '每日更新/' '电影/' '电视剧/' '纪录片/' '纪录片（已刮削）/' '综艺/' '音乐/' 'json/' '测试/' '📺画质演示测试（4K，8K，HDR，Dolby）/')
+        emd_all_paths=('动漫/' '每日更新/' '电影/' '电视剧/' '纪录片/' '纪录片（已刮削）/' '综艺/' '音乐/' '测试/' '📺画质演示测试（4K，8K，HDR，Dolby）/')
         interface=
         file_array=()
         while IFS= read -r line; do
@@ -3664,7 +3664,7 @@ function xiaoya_emd_pathlib() {
             else
                 CONTENT="${Red}未选中${Font}"
             fi
-            if ((i + 1 <= 14)); then
+            if ((i + 1 <= 10)); then
                 interface+="$((i + 1))、${emd_all_paths[$i]}（${CONTENT}）\n"
             else
                 interface+="$((i + 1))、${emd_all_paths[$i]}（${Sky_Blue}用户自定义${Font}）（${CONTENT}）\n"
@@ -3688,7 +3688,7 @@ function xiaoya_emd_pathlib() {
                 break
             fi
             if [ "${user_paths}" == 101 ] && [ "${1}" == "install" ]; then
-                echo -e "115/\n每日更新/\n纪录片（已刮削）/\n综艺/\n音乐/\n" > "${PATHLIB_DIR}"
+                echo -e "每日更新/\n纪录片（已刮削）/\n综艺/\n音乐/\n" > "${PATHLIB_DIR}"
                 clear
             fi
             eval "user_path_array=($user_paths)"
