@@ -3630,7 +3630,7 @@ function xiaoya_emd_pathlib() {
     if [ "${1}" == "install" ]; then
         PATHLIB_DIR="${2}/pathlib.txt"
         if [ ! -f "${PATHLIB_DIR}" ]; then
-            echo -e "每日更新/\n纪录片（已刮削）/\n综艺/\n音乐/\n" > "${PATHLIB_DIR}"
+            echo -e "每日更新/\n纪录片（已刮削）/\n" > "${PATHLIB_DIR}"
         fi
     elif [ "${1}" == "once" ]; then
         PATHLIB_DIR="${2}/once_pathlib.txt"
@@ -3688,7 +3688,7 @@ function xiaoya_emd_pathlib() {
                 break
             fi
             if [ "${user_paths}" == 101 ] && [ "${1}" == "install" ]; then
-                echo -e "每日更新/\n纪录片（已刮削）/\n综艺/\n音乐/\n" > "${PATHLIB_DIR}"
+                echo -e "每日更新/\n纪录片（已刮削）/\n" > "${PATHLIB_DIR}"
                 clear
             fi
             eval "user_path_array=($user_paths)"
