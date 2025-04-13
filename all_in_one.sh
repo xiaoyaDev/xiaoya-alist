@@ -26,8 +26,8 @@ DATE_VERSION="v1.8.3-2025_01_28_16_08"
 # ——————————————————————————————————————————————————————————————————————————————————
 amilys_embyserver_latest_version=4.8.11.0
 emby_embyserver_latest_version=4.8.11.0
-amilys_embyserver_beta_version=4.9.0.43
-emby_embyserver_beta_version=4.9.0.43
+amilys_embyserver_beta_version=4.9.0.46
+emby_embyserver_beta_version=4.9.0.47
 # ——————————————————————————————————————————————————————————————————————————————————
 
 Sky_Blue="\033[36m"
@@ -2559,31 +2559,56 @@ function main_download_unzip_xiaoya_emby() {
 
     __data_downloader=$(cat ${DDSREM_CONFIG_DIR}/data_downloader.txt)
 
-    echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    echo -e "${Blue}下载/解压 元数据${Font}\n"
-    echo -e "1、下载并解压 全部元数据"
-    echo -e "2、解压 全部元数据"
-    echo -e "3、下载 all.mp4"
-    echo -e "4、解压 all.mp4"
-    echo -e "5、解压 all.mp4 的指定元数据目录【非全部解压】"
-    echo -e "6、下载 config.mp4（4.9.0.42）"
-    echo -e "7、解压 config.mp4（4.9.0.42）"
-    echo -e "8、下载 pikpak.mp4"
-    echo -e "9、解压 pikpak.mp4"
-    echo -e "10、下载 115.mp4"
-    echo -e "11、解压 115.mp4"
-    echo -e "12、解压 115.mp4 的指定元数据目录【非全部解压】"
-    echo -e "13、下载 蓝光原盘.mp4"
-    echo -e "14、解压 蓝光原盘.mp4"
-    echo -e "15、下载 json.mp4"
-    echo -e "16、解压 json.mp4"
-    echo -e "17、当前下载器【aria2/wget】                  当前状态：${Green}${__data_downloader}${Font}"
-    # echo -e "101、下载并解压 config.new.mp4（4.9.0.42）"
-    echo -e "0、返回上级"
-    echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字（支持输入多个数字，空格分离，按输入顺序执行）[0-17]:" -a nums
+    function main_download_unzip_xiaoya_emby_page1() {
+
+        echo -e "——————————————————————————————————————————————————————————————————————————————————"
+        echo -e "${Blue}下载/解压 元数据${Font}\n"
+        echo -e "1、下载并解压 全部元数据"
+        echo -e "2、解压 全部元数据"
+        echo -e "3、下载 all.mp4"
+        echo -e "4、解压 all.mp4"
+        echo -e "5、解压 all.mp4 的指定元数据目录【非全部解压】"
+        echo -e "6、下载 config.mp4（4.9.0.42）"
+        echo -e "7、解压 config.mp4（4.9.0.42）"
+        echo -e "8、下载 pikpak.mp4"
+        echo -e "9、解压 pikpak.mp4"
+        echo -e "10、下载 115.mp4"
+        echo -e "11、解压 115.mp4"
+        echo -e "n、下一页"
+        echo -e "0、返回上级"
+        echo -e "——————————————————————————————————————————————————————————————————————————————————"
+
+    }
+
+    function main_download_unzip_xiaoya_emby_page2() {
+
+        echo -e "——————————————————————————————————————————————————————————————————————————————————"
+        echo -e "${Blue}下载/解压 元数据${Font}\n"
+        echo -e "12、解压 115.mp4 的指定元数据目录【非全部解压】"
+        echo -e "13、下载 蓝光原盘.mp4"
+        echo -e "14、解压 蓝光原盘.mp4"
+        echo -e "15、下载 json.mp4"
+        echo -e "16、解压 json.mp4"
+        echo -e "17、下载 music.mp4"
+        echo -e "18、解压 music.mp4"
+        echo -e "19、当前下载器【aria2/wget】                  当前状态：${Green}${__data_downloader}${Font}"
+        # echo -e "101、下载并解压 config.new.mp4（4.9.0.42）"
+        echo -e "p、上一页"
+        echo -e "——————————————————————————————————————————————————————————————————————————————————"
+
+    }
+
+    __next_operate=
+    local page next_page next_page_choose
+    if [ -z "${1}" ]; then
+        page=1
+    else
+        page="${1}"
+    fi
+    "main_download_unzip_xiaoya_emby_page${page}"
+    read -erp "请输入数字（支持输入多个数字，空格分离，按输入顺序执行）[0-19]:" -a nums
     for num in "${nums[@]}"; do
-        if [ $num -ge 1 ] && [ $num -le 16 ]; then
+        if [ $num -ge 1 ] && [ $num -le 18 ]; then
             case "$num" in
             1)
                 clear
@@ -2649,13 +2674,21 @@ function main_download_unzip_xiaoya_emby() {
                 clear
                 unzip_xiaoya_emby "json.mp4"
                 ;;
+            17)
+                clear
+                download_xiaoya_emby "music.mp4"
+                ;;
+            18)
+                clear
+                unzip_xiaoya_emby "music.mp4"
+                ;;
             esac
             __next_operate=return_menu
         elif [ $num == 101 ]; then
             clear
             download_unzip_xiaoya_emby_new_config
             __next_operate=return_menu
-        elif [ $num == 17 ]; then
+        elif [ $num == 19 ]; then
             if [ "${__data_downloader}" == "wget" ]; then
                 echo 'aria2' > ${DDSREM_CONFIG_DIR}/data_downloader.txt
             elif [ "${__data_downloader}" == "aria2" ]; then
@@ -2670,19 +2703,48 @@ function main_download_unzip_xiaoya_emby() {
             clear
             __next_operate=main_xiaoya_all_emby
             break
+        elif [ $num == "n" ]; then
+            clear
+            next_page=$((page + 1))
+            next_page_choose=n
+            __next_operate=next_page
+            break
+        elif [ $num == "p" ]; then
+            clear
+            next_page=$((page - 1))
+            next_page_choose=p
+            __next_operate=next_page
+            break
         else
             clear
-            ERROR '请输入正确数字 [0-17]'
+            ERROR '请输入正确数字 [0-19]'
             __next_operate=main_download_unzip_xiaoya_emby
             break
         fi
     done
+    if [ -z ${__next_operate} ]; then
+        clear
+        ERROR '请输入正确数字 [0-19]'
+        __next_operate=main_download_unzip_xiaoya_emby
+    fi
     if [ "${__next_operate}" == "return_menu" ]; then
         return_menu "main_download_unzip_xiaoya_emby"
     elif [ "${__next_operate}" == "main_download_unzip_xiaoya_emby" ]; then
-        main_download_unzip_xiaoya_emby
+        main_download_unzip_xiaoya_emby "${page}"
     elif [ "${__next_operate}" == "main_xiaoya_all_emby" ]; then
         main_xiaoya_all_emby
+    elif [ "${__next_operate}" == "next_page" ]; then
+        if [ $next_page -ge 1 ] && [ $next_page -le 2 ]; then
+            main_download_unzip_xiaoya_emby "${next_page}"
+        else
+            clear
+            if [ "${next_page_choose}" == "n" ]; then
+                ERROR '当前页面为最后一页，无法前往下一页'
+            else
+                ERROR '当前页面为第一页，无法前往前一页'
+            fi
+            main_download_unzip_xiaoya_emby "${page}"
+        fi
     fi
 
 }
@@ -3568,7 +3630,7 @@ function xiaoya_emd_pathlib() {
     if [ "${1}" == "install" ]; then
         PATHLIB_DIR="${2}/pathlib.txt"
         if [ ! -f "${PATHLIB_DIR}" ]; then
-            echo -e "115/\n每日更新/\n纪录片（已刮削）/\n综艺/\n音乐/\n" > "${PATHLIB_DIR}"
+            echo -e "每日更新/\n纪录片（已刮削）/\n" > "${PATHLIB_DIR}"
         fi
     elif [ "${1}" == "once" ]; then
         PATHLIB_DIR="${2}/once_pathlib.txt"
@@ -3577,7 +3639,7 @@ function xiaoya_emd_pathlib() {
     sedsh '/^[[:space:]]*$/d' "${PATHLIB_DIR}"
     while true; do
         clear
-        emd_all_paths=('115/' 'ISO/' 'PikPak/' '动漫/' '每日更新/' '电影/' '电视剧/' '纪录片/' '纪录片（已刮削）/' '综艺/' '音乐/' 'json/' '测试/' '📺画质演示测试（4K，8K，HDR，Dolby）/')
+        emd_all_paths=('动漫/' '每日更新/' '电影/' '电视剧/' '纪录片/' '纪录片（已刮削）/' '综艺/' '音乐/' '测试/' '📺画质演示测试（4K，8K，HDR，Dolby）/')
         interface=
         file_array=()
         while IFS= read -r line; do
@@ -3602,7 +3664,7 @@ function xiaoya_emd_pathlib() {
             else
                 CONTENT="${Red}未选中${Font}"
             fi
-            if ((i + 1 <= 14)); then
+            if ((i + 1 <= 10)); then
                 interface+="$((i + 1))、${emd_all_paths[$i]}（${CONTENT}）\n"
             else
                 interface+="$((i + 1))、${emd_all_paths[$i]}（${Sky_Blue}用户自定义${Font}）（${CONTENT}）\n"
@@ -3626,7 +3688,7 @@ function xiaoya_emd_pathlib() {
                 break
             fi
             if [ "${user_paths}" == 101 ] && [ "${1}" == "install" ]; then
-                echo -e "115/\n每日更新/\n纪录片（已刮削）/\n综艺/\n音乐/\n" > "${PATHLIB_DIR}"
+                echo -e "每日更新/\n纪录片（已刮削）/\n" > "${PATHLIB_DIR}"
                 clear
             fi
             eval "user_path_array=($user_paths)"
@@ -4158,7 +4220,7 @@ function main_xiaoya_all_emby() {
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     echo -e "${Blue}小雅Emby全家桶${Font}\n"
     echo -e "${Yellow}注意：当前 Emby 全家桶要求 Emby 容器版本不低于 4.9.0.42${Font}"
-    echo -e "${Yellow}如果您的版本低于 4.9.0.42 请使用 菜单2-10 一键升级版本${Font}"
+    echo -e "${Yellow}如果您的版本低于 4.9.0.42 请使用 菜单2-6 一键升级版本${Font}"
     if docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" > /dev/null 2>&1; then
         local container_status
         container_status=$(docker inspect --format='{{.State.Status}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)")
@@ -4183,12 +4245,12 @@ function main_xiaoya_all_emby() {
 5、安装/更新/卸载 小雅元数据定时爬虫          当前状态：$(judgment_container xiaoya-emd)
 6、一键升级 Emby 容器（可选择镜像版本）
 7、卸载 Emby 全家桶
-101、其他功能"
+8、其他功能"
     fi
     echo -e "0、返回上级          "
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     if [ "${show_main_xiaoya_all_emby}" == "true" ]; then
-        read -erp "请输入数字 [0-7, 101]:" num
+        read -erp "请输入数字 [0-8]:" num
     else
         read -erp "请输入数字 [0]:" num
     fi
@@ -4224,7 +4286,7 @@ function main_xiaoya_all_emby() {
         ;;
     2)
         clear
-        main_download_unzip_xiaoya_emby
+        main_download_unzip_xiaoya_emby "1"
         ;;
     3)
         clear
@@ -4252,7 +4314,7 @@ function main_xiaoya_all_emby() {
         clear
         uninstall_xiaoya_all_emby
         ;;
-    101)
+    8)
         clear
         main_xiaoya_all_emby_other_features
         ;;
@@ -4262,7 +4324,7 @@ function main_xiaoya_all_emby() {
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-7, 101]'
+        ERROR '请输入正确数字 [0-8]'
         main_xiaoya_all_emby
         ;;
     esac
@@ -5167,6 +5229,87 @@ function main_xiaoya_aliyuntvtoken_connector() {
 
 }
 
+function install_lrcapi() {
+
+    INFO "开始安装 LrcAPI"
+    if ! check_port "28883"; then
+        ERROR "28883 端口被占用，请关闭占用此端口的程序！"
+        exit 1
+    fi
+    docker_pull "hisatri/lrcapi:latest"
+    docker run -d \
+        -p 28883:28883 \
+        --name=lrcapi \
+        -e "API_AUTH=1234" \
+        hisatri/lrcapi:latest
+    INFO "安装完成！"
+    INFO "LrcAPI API地址：${Sky_Blue}http://ip:28883${Font}"
+    INFO "LrcAPI API密码：${Sky_Blue}1234${Font}"
+
+}
+
+function update_lrcapi() {
+
+    for i in $(seq -w 3 -1 0); do
+        echo -en "即将开始更新 LrcAPI${Blue} $i ${Font}\r"
+        sleep 1
+    done
+    container_update lrcapi
+
+}
+
+function uninstall_lrcapi() {
+
+    for i in $(seq -w 3 -1 0); do
+        echo -en "即将开始卸载 LrcAPI${Blue} $i ${Font}\r"
+        sleep 1
+    done
+    docker stop lrcapi
+    docker rm lrcapi
+    docker rmi hisatri/lrcapi:latest
+    INFO "LrcAPI 卸载成功！"
+
+}
+
+function main_lrcapi() {
+
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    echo -e "${Blue}LrcAPI${Font}\n"
+    echo -e "1、安装"
+    echo -e "2、更新"
+    echo -e "3、卸载"
+    echo -e "0、返回上级"
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    read -erp "请输入数字 [0-3]:" num
+    case "$num" in
+    1)
+        clear
+        install_lrcapi
+        return_menu "main_lrcapi"
+        ;;
+    2)
+        clear
+        update_lrcapi
+        return_menu "main_lrcapi"
+        ;;
+    3)
+        clear
+        uninstall_lrcapi
+        return_menu "main_lrcapi"
+        ;;
+    0)
+        clear
+        main_other_tools
+        ;;
+    *)
+        clear
+        ERROR '请输入正确数字 [0-3]'
+        main_lrcapi
+        ;;
+    esac
+
+}
+
 function init_container_name() {
 
     if [ ! -d ${DDSREM_CONFIG_DIR}/container_name ]; then
@@ -5492,12 +5635,13 @@ function main_other_tools() {
 3、安装/更新/卸载 Onelist                         当前状态：$(judgment_container "${xiaoya_onelist_name}")
 4、安装/更新/卸载 Xiaoya Proxy                    当前状态：$(judgment_container xiaoya-proxy)
 5、安装/更新/卸载 Xiaoya aliyuntvtoken_connector  当前状态：$(judgment_container xiaoya-aliyuntvtoken_connector)
-6、安装/更新/卸载 小雅Alist-TVBox（非原版）       当前状态：$(judgment_container "${xiaoya_tvbox_name}")"
-    echo -e "7、查看系统磁盘挂载"
-    echo -e "8、安装/卸载 CasaOS"
+6、安装/更新/卸载 小雅Alist-TVBox（非原版）       当前状态：$(judgment_container "${xiaoya_tvbox_name}")
+7、安装/更新/卸载 LrcAPI                          当前状态：$(judgment_container "${xiaoya_tvbox_name}")"
+    echo -e "8、查看系统磁盘挂载"
+    echo -e "9、安装/卸载 CasaOS"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-8]:" num
+    read -erp "请输入数字 [0-9]:" num
     case "$num" in
     1)
         clear
@@ -5525,6 +5669,10 @@ function main_other_tools() {
         ;;
     7)
         clear
+        main_lrcapi
+        ;;
+    8)
+        clear
         INFO "系统磁盘挂载情况:"
         show_disk_mount
         INFO "按任意键返回菜单"
@@ -5532,7 +5680,7 @@ function main_other_tools() {
         clear
         main_other_tools
         ;;
-    8)
+    9)
         clear
         main_casaos
         ;;
@@ -5542,7 +5690,7 @@ function main_other_tools() {
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-8]'
+        ERROR '请输入正确数字 [0-9]'
         main_other_tools
         ;;
     esac
