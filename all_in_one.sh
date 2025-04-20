@@ -4073,6 +4073,138 @@ function main_xiaoya_emd() {
 
 }
 
+function install_xiaoya_emd_go() {
+
+    local web_port
+
+    get_media_dir
+
+    while true; do
+        INFO "请输入后台管理端口（默认 9801 ）"
+        read -erp "Web Port:" web_port
+        [[ -z "${web_port}" ]] && web_port="9801"
+        if check_port "${web_port}"; then
+            break
+        else
+            ERROR "${web_port} 此端口被占用，请输入其他端口！"
+        fi
+    done
+
+    while true; do
+        INFO "是否自动配置系统 inotify watches & instances 的数值 [Y/n]（默认 Y）"
+        read -erp "inotify:" inotify_set
+        [[ -z "${inotify_set}" ]] && inotify_set="y"
+        if [[ ${inotify_set} == [YyNn] ]]; then
+            break
+        else
+            ERROR "非法输入，请输入 [Y/n]"
+        fi
+    done
+    if [[ ${inotify_set} == [Yy] ]]; then
+        if ! grep -q "fs.inotify.max_user_watches=524288" /etc/sysctl.conf; then
+            echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf
+        else
+            INFO "系统 inotify watches 数值已存在！"
+        fi
+        if ! grep -q "fs.inotify.max_user_instances=524288" /etc/sysctl.conf; then
+            echo fs.inotify.max_user_instances=524288 | tee -a /etc/sysctl.conf
+        else
+            INFO "系统 inotify instances 数值已存在！"
+        fi
+        # 清除多余的inotify设置
+        awk \
+            '!seen[$0]++ || !/^(fs\.inotify\.max_user_instances|fs\.inotify\.max_user_watches)/' /etc/sysctl.conf > \
+            /tmp/sysctl.conf.tmp && mv /tmp/sysctl.conf.tmp /etc/sysctl.conf
+        sysctl -p
+        if docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)" > /dev/null 2>&1; then
+            case "$(docker inspect --format='{{.State.Status}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)")" in
+            "running")
+                INFO "重启 Emby 容器中..."
+                docker restart "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)"
+                ;;
+            esac
+        fi
+        INFO "系统 inotify watches & instances 数值配置成功！"
+    fi
+
+    docker_pull "ddsderek/xiaoya-emd-go:latest"
+
+    docker run -d \
+        --name=xiaoya-emd-go \
+        --restart=always \
+        -p "${web_port}":8080 \
+        -v "${MEDIA_DIR}/xiaoya:/media" \
+        ddsderek/xiaoya-emd-go:latest
+
+    INFO "安装完成！"
+
+}
+
+function update_xiaoya_emd_go() {
+
+    for i in $(seq -w 3 -1 0); do
+        echo -en "即将开始更新小雅元数据爬虫（Web 版本）${Blue} $i ${Font}\r"
+        sleep 1
+    done
+    container_update xiaoya-emd-go
+
+}
+
+function unisntall_xiaoya_emd_go() {
+
+    for i in $(seq -w 3 -1 0); do
+        echo -en "即将开始卸载小雅元数据爬虫（Web 版本）${Blue} $i ${Font}\r"
+        sleep 1
+    done
+
+    docker stop xiaoya-emd-go
+    docker rm xiaoya-emd-go
+    docker rmi ddsderek/xiaoya-emd-go:latest
+
+    INFO "小雅元数据爬虫（Web 版本）卸载成功！"
+
+}
+
+function main_xiaoya_emd_go() {
+
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    echo -e "${Blue}小雅元数据爬虫（Web 版本）${Font}\n"
+    echo -e "${Red}警告：此功能目前处于公测状态，请自行甄别使用风险${Font}\n"
+    echo -e "1、安装"
+    echo -e "2、更新"
+    echo -e "3、卸载"
+    echo -e "0、返回上级"
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    read -erp "请输入数字 [0-3]:" num
+    case "$num" in
+    1)
+        clear
+        install_xiaoya_emd_go
+        return_menu "main_xiaoya_emd_go"
+        ;;
+    2)
+        clear
+        update_xiaoya_emd_go
+        return_menu "main_xiaoya_emd_go"
+        ;;
+    3)
+        clear
+        unisntall_xiaoya_emd_go
+        return_menu "main_xiaoya_emd_go"
+        ;;
+    0)
+        clear
+        main_xiaoya_all_emby
+        ;;
+    *)
+        clear
+        ERROR '请输入正确数字 [0-7]'
+        main_xiaoya_emd_go
+        ;;
+    esac
+
+}
+
 function uninstall_xiaoya_all_emby() {
 
     while true; do
@@ -4243,14 +4375,15 @@ function main_xiaoya_all_emby() {
 3、安装 Emby（可选择版本）
 4、图形化编辑 emby_config.txt
 5、安装/更新/卸载 小雅元数据定时爬虫          当前状态：$(judgment_container xiaoya-emd)
-6、一键升级 Emby 容器（可选择镜像版本）
-7、卸载 Emby 全家桶
-8、其他功能"
+6、安装/更新/卸载 小雅元数据爬虫（Web 版本）  当前状态：$(judgment_container xiaoya-emd-go)
+7、一键升级 Emby 容器（可选择镜像版本）
+8、卸载 Emby 全家桶
+9、其他功能"
     fi
     echo -e "0、返回上级          "
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     if [ "${show_main_xiaoya_all_emby}" == "true" ]; then
-        read -erp "请输入数字 [0-8]:" num
+        read -erp "请输入数字 [0-9]:" num
     else
         read -erp "请输入数字 [0]:" num
     fi
@@ -4307,14 +4440,18 @@ function main_xiaoya_all_emby() {
         ;;
     6)
         clear
-        oneclick_upgrade_emby
-        return_menu "main_xiaoya_all_emby"
+        main_xiaoya_emd_go
         ;;
     7)
         clear
-        uninstall_xiaoya_all_emby
+        oneclick_upgrade_emby
+        return_menu "main_xiaoya_all_emby"
         ;;
     8)
+        clear
+        uninstall_xiaoya_all_emby
+        ;;
+    9)
         clear
         main_xiaoya_all_emby_other_features
         ;;
@@ -4324,7 +4461,7 @@ function main_xiaoya_all_emby() {
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-8]'
+        ERROR '请输入正确数字 [0-9]'
         main_xiaoya_all_emby
         ;;
     esac
