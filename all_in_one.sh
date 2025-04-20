@@ -4137,6 +4137,7 @@ function install_xiaoya_emd_go() {
         ddsderek/xiaoya-emd-go:latest
 
     INFO "安装完成！"
+    INFO "浏览器访问 爬虫后台：${Sky_Blue}http://ip:${web_port}${Font}"
 
 }
 
@@ -4878,6 +4879,7 @@ function install_xiaoya_115_cleaner() {
         INFO "1：标准模式，清空 /我的接收 下面的文件并同时清理回收站的对应文件"
         INFO "2：只清空 115云盘 回收站文件，不会清理其他地方的文件"
         INFO "3：清空 /我的接收 下面的文件并同时清空回收站"
+        INFO "4：只清空 /我的接收 下面的文件，不清理回收站"
         read -erp "CHOOSE_RUN_MODE:" CHOOSE_RUN_MODE
         [[ -z "${CHOOSE_RUN_MODE}" ]] && CHOOSE_RUN_MODE="1"
         if [ -f "${config_dir}/115_cleaner_all_recyclebin.txt" ]; then
@@ -4885,6 +4887,9 @@ function install_xiaoya_115_cleaner() {
         fi
         if [ -f "${config_dir}/115_cleaner_only_recyclebin.txt" ]; then
             rm -rf "${config_dir}/115_cleaner_only_recyclebin.txt"
+        fi
+        if [ -f "${config_dir}/115_cleaner_only_receive.txt" ]; then
+            rm -rf "${config_dir}/115_cleaner_only_receive.txt"
         fi
         case ${CHOOSE_RUN_MODE} in
         1)
@@ -4896,6 +4901,10 @@ function install_xiaoya_115_cleaner() {
             ;;
         3)
             touch "${config_dir}/115_cleaner_all_recyclebin.txt"
+            break
+            ;;
+        4)
+            touch "${config_dir}/115_cleaner_only_receive.txt"
             break
             ;;
         *)
