@@ -98,7 +98,9 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 单独 解压 json.mp4 -> 2 2 16
 单独 下载 music.mp4 -> 2 2 17
 单独 解压 music.mp4 -> 2 2 18
-选择 下载器【aria2/wget】-> 2 2 19
+单独 下载 短剧.mp4 -> 2 2 19
+单独 解压 短剧.mp4 -> 2 2 20
+选择 下载器【aria2/wget】-> 2 2 21
 单独 安装Emby（可选择版本，支持官方，amilys，lovechen）-> 2 3
 图形化编辑 emby_config.txt -> 2 4
 小雅爬虫 立刻爬取指定目录 -> 2 5 4

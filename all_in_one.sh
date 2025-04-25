@@ -2591,7 +2591,9 @@ function main_download_unzip_xiaoya_emby() {
         echo -e "16、解压 json.mp4"
         echo -e "17、下载 music.mp4"
         echo -e "18、解压 music.mp4"
-        echo -e "19、当前下载器【aria2/wget】                  当前状态：${Green}${__data_downloader}${Font}"
+        echo -e "19、下载 短剧.mp4"
+        echo -e "20、解压 短剧.mp4"
+        echo -e "21、当前下载器【aria2/wget】                  当前状态：${Green}${__data_downloader}${Font}"
         # echo -e "101、下载并解压 config.new.mp4（4.9.0.42）"
         echo -e "p、上一页"
         echo -e "——————————————————————————————————————————————————————————————————————————————————"
@@ -2606,9 +2608,9 @@ function main_download_unzip_xiaoya_emby() {
         page="${1}"
     fi
     "main_download_unzip_xiaoya_emby_page${page}"
-    read -erp "请输入数字（支持输入多个数字，空格分离，按输入顺序执行）[0-19]:" -a nums
+    read -erp "请输入数字（支持输入多个数字，空格分离，按输入顺序执行）[0-21]:" -a nums
     for num in "${nums[@]}"; do
-        if [ $num -ge 1 ] && [ $num -le 18 ]; then
+        if [ $num -ge 1 ] && [ $num -le 20 ]; then
             case "$num" in
             1)
                 clear
@@ -2682,13 +2684,21 @@ function main_download_unzip_xiaoya_emby() {
                 clear
                 unzip_xiaoya_emby "music.mp4"
                 ;;
+            19)
+                clear
+                download_xiaoya_emby "短剧.mp4"
+                ;;
+            20)
+                clear
+                unzip_xiaoya_emby "短剧.mp4"
+                ;;
             esac
             __next_operate=return_menu
         elif [ $num == 101 ]; then
             clear
             download_unzip_xiaoya_emby_new_config
             __next_operate=return_menu
-        elif [ $num == 19 ]; then
+        elif [ $num == 21 ]; then
             if [ "${__data_downloader}" == "wget" ]; then
                 echo 'aria2' > ${DDSREM_CONFIG_DIR}/data_downloader.txt
             elif [ "${__data_downloader}" == "aria2" ]; then
@@ -2717,14 +2727,14 @@ function main_download_unzip_xiaoya_emby() {
             break
         else
             clear
-            ERROR '请输入正确数字 [0-19]'
+            ERROR '请输入正确数字 [0-21]'
             __next_operate=main_download_unzip_xiaoya_emby
             break
         fi
     done
     if [ -z ${__next_operate} ]; then
         clear
-        ERROR '请输入正确数字 [0-19]'
+        ERROR '请输入正确数字 [0-21]'
         __next_operate=main_download_unzip_xiaoya_emby
     fi
     if [ "${__next_operate}" == "return_menu" ]; then
