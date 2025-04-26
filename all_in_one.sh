@@ -3731,6 +3731,11 @@ function xiaoya_emd_pathlib() {
 
 function install_xiaoya_emd() {
 
+    if docker container inspect xiaoya-emd-go > /dev/null 2>&1; then
+        WARN "当前已安装 小雅元数据爬虫（Web 版本），无法同时安装多个爬虫"
+        return 1
+    fi
+
     get_media_dir
 
     while true; do
@@ -4084,6 +4089,11 @@ function main_xiaoya_emd() {
 }
 
 function install_xiaoya_emd_go() {
+
+    if docker container inspect xiaoya-emd > /dev/null 2>&1; then
+        WARN "当前已安装 小雅元数据定时爬虫，无法同时安装多个爬虫"
+        return 1
+    fi
 
     local web_port
 
