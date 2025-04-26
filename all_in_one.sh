@@ -4152,9 +4152,10 @@ function install_xiaoya_emd_go() {
     docker run -d \
         --name=xiaoya-emd-go \
         --restart=always \
-        -p "${web_port}":8080 \
+        --net=host \
         -v "${MEDIA_DIR}/xiaoya:/media" \
-        ddsderek/xiaoya-emd-go:latest
+        ddsderek/xiaoya-emd-go:latest \
+        --media=/media --port="${web_port}"
 
     INFO "安装完成！"
     INFO "浏览器访问 爬虫后台：${Sky_Blue}http://ip:${web_port}${Font}"
