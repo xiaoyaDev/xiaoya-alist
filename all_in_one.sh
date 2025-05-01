@@ -5803,7 +5803,7 @@ function main_other_tools() {
 4、安装/更新/卸载 Xiaoya Proxy                    当前状态：$(judgment_container xiaoya-proxy)
 5、安装/更新/卸载 Xiaoya aliyuntvtoken_connector  当前状态：$(judgment_container xiaoya-aliyuntvtoken_connector)
 6、安装/更新/卸载 小雅Alist-TVBox（非原版）       当前状态：$(judgment_container "${xiaoya_tvbox_name}")
-7、安装/更新/卸载 LrcAPI                          当前状态：$(judgment_container "${xiaoya_tvbox_name}")"
+7、安装/更新/卸载 LrcAPI                          当前状态：$(judgment_container lrcapi)"
     echo -e "8、查看系统磁盘挂载"
     echo -e "9、安装/卸载 CasaOS"
     echo -e "0、返回上级"
