@@ -3251,24 +3251,23 @@ function install_emby_xiaoya_all_emby() {
                     IMAGE_VERSION=latest
                     break
                 else
-                    INFO "请选择 Emby 镜像版本 [ 1；4.8.9.0 | 2: 4.9.0.42 | 3；latest（${amilys_embyserver_latest_version}） ]（默认 2）"
+                    INFO "请选择 Emby 镜像版本 [ 1: 4.9.0.42 | 2；latest（${amilys_embyserver_latest_version}） ]（默认 1）"
                     read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
-                    [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="2"
+                    [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="1"
                     case ${CHOOSE_IMAGE_VERSION} in
                     1)
-                        IMAGE_VERSION=4.8.9.0
-                        break
-                        ;;
-                    2)
                         IMAGE_VERSION=4.9.0.42
                         if [ "${IMAGE_VERSION}" == "${amilys_embyserver_beta_version}" ]; then
                             IMAGE_VERSION=beta
                         fi
                         break
                         ;;
-                    3)
-                        IMAGE_VERSION=latest
-                        break
+                    2)
+                        # IMAGE_VERSION=latest
+                        # break
+                        WARN "小雅 Emby 全家桶目前不支持 latest 镜像！"
+                        INFO "按任意键重新配置"
+                        read -rs -n 1 -p ""
                         ;;
                     *)
                         ERROR "输入无效，请重新选择"
@@ -3282,21 +3281,20 @@ function install_emby_xiaoya_all_emby() {
                 break
                 ;;
             "emby_embyserver")
-                INFO "请选择 Emby 镜像版本 [ 1；4.8.9.0 | 2；4.9.0.42 | 3；latest（${emby_embyserver_latest_version}） ]（默认 2）"
+                INFO "请选择 Emby 镜像版本 [ 1；4.9.0.42 | 2；latest（${emby_embyserver_latest_version}） ]（默认 1）"
                 read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
-                [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="2"
+                [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="1"
                 case ${CHOOSE_IMAGE_VERSION} in
                 1)
-                    IMAGE_VERSION=4.8.9.0
-                    break
-                    ;;
-                2)
                     IMAGE_VERSION=4.9.0.42
                     break
                     ;;
-                3)
-                    IMAGE_VERSION=latest
-                    break
+                2)
+                    # IMAGE_VERSION=latest
+                    # break
+                    WARN "小雅 Emby 全家桶目前不支持 latest 镜像！"
+                    INFO "按任意键重新配置"
+                    read -rs -n 1 -p ""
                     ;;
                 *)
                     ERROR "输入无效，请重新选择"
@@ -3376,15 +3374,11 @@ function oneclick_upgrade_emby() {
                 IMAGE_VERSION=latest
                 break
             else
-                INFO "请选择 Emby 镜像版本 [ 1；4.8.9.0 | 2；4.9.0.42 | 3；latest（${amilys_embyserver_latest_version}）| 4；beta（${amilys_embyserver_beta_version}）]（默认 2）"
+                INFO "请选择 Emby 镜像版本 [ 1；4.9.0.42 | 2；latest（${amilys_embyserver_latest_version}）| 3；beta（${amilys_embyserver_beta_version}）]（默认 1）"
                 read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
-                [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="2"
+                [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="1"
                 case ${CHOOSE_IMAGE_VERSION} in
                 1)
-                    IMAGE_VERSION=4.8.9.0
-                    choose_emby_version="${IMAGE_VERSION}"
-                    ;;
-                2)
                     IMAGE_VERSION=4.9.0.42
                     if [ "${IMAGE_VERSION}" == "${amilys_embyserver_beta_version}" ]; then
                         IMAGE_VERSION=beta
@@ -3393,11 +3387,14 @@ function oneclick_upgrade_emby() {
                         choose_emby_version="${IMAGE_VERSION}"
                     fi
                     ;;
-                3)
-                    IMAGE_VERSION=latest
-                    choose_emby_version="${amilys_embyserver_latest_version}"
+                2)
+                    # IMAGE_VERSION=latest
+                    # choose_emby_version="${amilys_embyserver_latest_version}"
+                    WARN "小雅 Emby 全家桶目前不支持 latest 镜像！"
+                    INFO "按任意键继续配置"
+                    read -rs -n 1 -p ""
                     ;;
-                4)
+                3)
                     IMAGE_VERSION=beta
                     choose_emby_version="${amilys_embyserver_beta_version}"
                     ;;
@@ -3419,23 +3416,22 @@ function oneclick_upgrade_emby() {
             WARN "lovechen/embyserver 镜像无法更新！"
             exit 0
         elif [ "${old_image_name}" == "emby/embyserver" ] || [ "${old_image_name}" == "emby/embyserver_arm64v8" ]; then
-            INFO "请选择 Emby 镜像版本 [ 1；4.8.9.0 | 2；4.9.0.42 | 3；latest（${emby_embyserver_latest_version}） | 4；beta（${emby_embyserver_beta_version}）]（默认 2）"
+            INFO "请选择 Emby 镜像版本 [ 1；4.9.0.42 | 2；latest（${emby_embyserver_latest_version}） | 3；beta（${emby_embyserver_beta_version}）]（默认 1）"
             read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
-            [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="2"
+            [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="1"
             case ${CHOOSE_IMAGE_VERSION} in
             1)
-                IMAGE_VERSION=4.8.9.0
-                choose_emby_version="${IMAGE_VERSION}"
-                ;;
-            2)
                 IMAGE_VERSION=4.9.0.42
                 choose_emby_version="${IMAGE_VERSION}"
                 ;;
-            3)
-                IMAGE_VERSION=latest
-                choose_emby_version="${emby_embyserver_latest_version}"
+            2)
+                # IMAGE_VERSION=latest
+                # choose_emby_version="${emby_embyserver_latest_version}"
+                WARN "小雅 Emby 全家桶目前不支持 latest 镜像！"
+                INFO "按任意键继续配置"
+                read -rs -n 1 -p ""
                 ;;
-            4)
+            3)
                 IMAGE_VERSION=beta
                 choose_emby_version="${emby_embyserver_beta_version}"
                 ;;
