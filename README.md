@@ -220,6 +220,7 @@ Docker镜像源选择 -> 6 6
 |       小雅Alist-TVBox        |        ✅         |         ✅         |        ❌        |
 |           Onelist            |        ✅         |         ✅         |        ✅        |
 | 小雅元数据爬虫（xiaoya-emd） |        ✅         |         ✅         |        ✅        |
+| 小雅元数据爬虫（Web 版本） |        ✅         |         ✅         |        ✅        |
 | 小雅Cron容器（xiaoya-cron）  |        ✅         |         ✅         |        ✅        |
 | 小雅代理容器（xiaoya-proxy）  |        ✅         |         ✅         |        ✅        |
 | 115清理助手（xiaoya-115cleaner）  |        ✅         |         ✅         |        ✅        |
@@ -240,8 +241,14 @@ Docker镜像源选择 -> 6 6
 |  Ubuntu 18.04   |    ✅    |           ✅           | ✅ |
 |  Ubuntu 20.04   |    ✅    |           ✅           | ✅ |
 |  Ubuntu 22.04   |    ✅    |           ✅           | ✅ |
+|  Ubuntu 22.10   |    ✅    |           ✅           | ✅ |
+|  Ubuntu 23.04   |    ✅    |           ✅           | ✅ |
 |    Fedora 31    |    ✅    |           ✅           | ✅ |
 |    Fedora 32    |    ✅    |           ✅           | ✅ |
+|  Fedora 36-38   |    ✅    |           ✅           | ✅ |
+|    Fedora 40    |    ✅    |           ✅           | ✅ |
+|    Fedora 41    |    ✅    |           ✅           | ✅ |
+|    Fedora 42    |    ✅    |           ✅           | ✅ |
 |   AlmaLinux 9   |    ✅    |           ✅           | ✅ |
 | RockyLinux 8.6  |    ✅    |           ✅           | ✅ |
 |   Arch Linux    |    ✅    |           ✅           | ✅ |
