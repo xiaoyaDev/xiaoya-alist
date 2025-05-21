@@ -3598,6 +3598,7 @@ function emby_close_6908_port() {
         INFO "${emby_name} 容器 IP：${emby_ip}"
     else
         ERROR "获取 ${emby_name} 容器 IP 错误！"
+        exit 1
     fi
     INFO "配置 emby_server.txt 文件中"
     config_dir="$(docker inspect --format='{{range $v,$conf := .Mounts}}{{$conf.Source}}:{{$conf.Destination}}{{$conf.Type}}~{{end}}' "${xiaoya_name}" | tr '~' '\n' | grep bind | sed 's/bind//g' | grep ":/data$" | awk -F: '{print $1}')"
