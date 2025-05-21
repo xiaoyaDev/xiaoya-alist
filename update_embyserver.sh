@@ -58,6 +58,11 @@ else
     exit 1
 fi
 
+if [ "http://$emby_ip:6908" == "$(head -n1 "${config_dir}"/emby_server.txt)" ]; then
+    INFO "${EMBY_NAME} 容器 IP 与当前配置一致，无需更新！"
+    exit 0
+fi
+
 INFO "配置 emby_server.txt 文件中"
 config_dir="$(docker inspect --format='{{range $v,$conf := .Mounts}}{{$conf.Source}}:{{$conf.Destination}}{{$conf.Type}}~{{end}}' "${XIAOYA_NAME}" | tr '~' '\n' | grep bind | sed 's/bind//g' | grep ":/data$" | awk -F: '{print $1}')"
 if [ -z "${config_dir}" ]; then
