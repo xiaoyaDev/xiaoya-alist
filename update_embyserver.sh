@@ -43,10 +43,14 @@ function DEBUG() {
 
 if [ -z "${1}" ]; then
     EMBY_NAME=emby
+else
+    EMBY_NAME="${1}"
 fi
 
 if [ -z "${2}" ]; then
     XIAOYA_NAME=xiaoya
+else
+    XIAOYA_NAME="${2}"
 fi
 
 INFO "获取 ${EMBY_NAME} 容器 IP"
