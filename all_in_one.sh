@@ -3574,7 +3574,7 @@ function emby_close_6908_port() {
         "10.250.2.0/24"
         "10.251.0.0/24"
     )
-    if docker network inspect "$NETWORK_NAME" >/dev/null 2>&1; then
+    if docker network inspect "$NETWORK_NAME" > /dev/null 2>&1; then
         CONTAINERS=$(docker network inspect -f '{{range .Containers}}{{.Name}} {{end}}' "$NETWORK_NAME")
         if [ -n "$CONTAINERS" ]; then
             INFO "以下容器正在使用该网络，将被强制断开:"
