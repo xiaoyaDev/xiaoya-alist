@@ -1460,20 +1460,31 @@ function update_xiaoya_alist() {
         echo -en "即将开始更新小雅Alist${Blue} $i ${Font}\r"
         sleep 1
     done
+    xiaoya_name="$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"
     cat > "/tmp/container_update_xiaoya_alist_run.sh" <<- EOF
 #!/bin/bash
-if ! grep -q 'network=host' "/tmp/container_update_$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"; then
-    if ! grep -q '2347' "/tmp/container_update_$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"; then
-        sed -i '2s/^/-p 2347:2347 /' "/tmp/container_update_$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"
+if ! grep -q 'network=host' "/tmp/container_update_${xiaoya_name}"; then
+    if ! grep -q '2347' "/tmp/container_update_${xiaoya_name}"; then
+        sed -i '2s/^/-p 2347:2347 /' "/tmp/container_update_${xiaoya_name}"
     fi
 fi
-if ! grep -q 'privileged' "/tmp/container_update_$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"; then
-    sed -i '2s/^/--privileged /' "/tmp/container_update_$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"
+if ! grep -q 'privileged' "/tmp/container_update_${xiaoya_name}"; then
+    sed -i '2s/^/--privileged /' "/tmp/container_update_${xiaoya_name}"
 fi
 EOF
     container_update_extra_command="bash /tmp/container_update_xiaoya_alist_run.sh"
-    container_update "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"
+    container_update "${xiaoya_name}"
     rm -f /tmp/container_update_xiaoya_alist_run.sh
+
+    if docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)" > /dev/null 2>&1; then
+        if [[ "$(docker inspect -f '{{range $key, $value := .NetworkSettings.Networks}}{{$key}} {{end}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)")" == *"only_for_emby"* ]]; then
+            if [[ "$(docker inspect -f '{{range $key, $value := .NetworkSettings.Networks}}{{$key}} {{end}}' "${xiaoya_name}")" == *"bridge"* ]]; then
+                INFO "Emby 为屏蔽 6908 端口模式，自动加入网络中..."
+                docker network connect only_for_emby "${xiaoya_name}"
+                INFO "加入 only_for_emby 网络成功！"
+            fi
+        fi
+    fi
 
 }
 
@@ -3343,7 +3354,7 @@ function install_emby_xiaoya_all_emby() {
 
 function oneclick_upgrade_emby() {
 
-    local emby_name emby_config_dir
+    local emby_name emby_config_dir emby_ip
     emby_name=$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)
     if docker inspect ddsderek/runlike:latest > /dev/null 2>&1; then
         local_sha=$(docker inspect --format='{{index .RepoDigests 0}}' ddsderek/runlike:latest 2> /dev/null | cut -f2 -d:)
@@ -3360,6 +3371,11 @@ function oneclick_upgrade_emby() {
     old_image=$(docker container inspect -f '{{.Config.Image}}' "${emby_name}")
     old_image_name="$(echo "${old_image}" | cut -d':' -f1)"
     emby_config_dir="$(docker inspect --format='{{range $v,$conf := .Mounts}}{{$conf.Source}}:{{$conf.Destination}}{{$conf.Type}}~{{end}}' "${emby_name}" | tr '~' '\n' | grep bind | sed 's/bind//g' | grep ":/config$" | awk -F: '{print $1}')"
+    if [[ "$(docker inspect -f '{{range $key, $value := .NetworkSettings.Networks}}{{$key}} {{end}}' "${emby_name}")" == *"only_for_emby"* ]]; then
+        emby_ip="$(docker inspect -f "{{ (index .NetworkSettings.Networks \"only_for_emby\").IPAddress }}" "${emby_name}")"
+    else
+        emby_ip=""
+    fi
     INFO "获取 Emby 版本中..."
     if get_emby_version; then
         INFO "当前 Emby 版本：${emby_version}"
@@ -3509,8 +3525,15 @@ function oneclick_upgrade_emby() {
             docker tag "${IMAGE_MIRROR}/${run_image}" "${run_image}" > /dev/null 2>&1
             docker rmi "${IMAGE_MIRROR}/${run_image}" > /dev/null 2>&1
         fi
+        if [ -n "${emby_ip}" ]; then
+            sedsh "s/network=only_for_emby/network=only_for_emby --ip=${emby_ip}/" "/tmp/container_update_${emby_name}"
+        fi
         if bash "/tmp/container_update_${emby_name}"; then
             rm -f "/tmp/container_update_${emby_name}"
+            if [ -n "${emby_ip}" ]; then
+                INFO "${emby_name} 重新加入 bridge 网络"
+                docker network connect bridge "${emby_name}"
+            fi
             wait_emby_start
             INFO "${emby_name} 更新成功"
             return 0
@@ -3543,7 +3566,64 @@ function emby_close_6908_port() {
         exit 0
     fi
 
-    local emby_name emby_ip config_dir xiaoya_name
+    local CONTAINERS NETWORK_NAME SUBNET_CANDIDATES AVAILABLE_SUBNET ENBY_IP
+    NETWORK_NAME="only_for_emby"
+    SUBNET_CANDIDATES=(
+        "10.250.0.0/24"
+        "10.250.1.0/24"
+        "10.250.2.0/24"
+        "10.251.0.0/24"
+    )
+    if docker network inspect "$NETWORK_NAME" >/dev/null 2>&1; then
+        CONTAINERS=$(docker network inspect -f '{{range .Containers}}{{.Name}} {{end}}' "$NETWORK_NAME")
+        if [ -n "$CONTAINERS" ]; then
+            INFO "以下容器正在使用该网络，将被强制断开:"
+            INFO "$CONTAINERS"
+            for container in $CONTAINERS; do
+                INFO "正在断开容器 $container ..."
+                docker network disconnect -f "$NETWORK_NAME" "$container"
+            done
+        fi
+        docker network rm "$NETWORK_NAME"
+        INFO "旧 ${NETWORK_NAME} 网络已删除"
+    fi
+
+    function find_available_subnet() {
+        for subnet in "${SUBNET_CANDIDATES[@]}"; do
+            local conflict=0
+            local existing_networks config
+            existing_networks=$(docker network ls --quiet)
+            for net_id in $existing_networks; do
+                config=$(docker network inspect "$net_id" --format '{{range .IPAM.Config}}{{.Subnet}}{{end}}')
+                if [ "$config" = "$subnet" ]; then
+                    conflict=1
+                    break
+                fi
+            done
+            if [ "$conflict" -eq 0 ]; then
+                echo "$subnet"
+                return 0
+            fi
+        done
+        echo ""
+        return 1
+    }
+    AVAILABLE_SUBNET=$(find_available_subnet)
+    if [ -z "$AVAILABLE_SUBNET" ]; then
+        ERROR "所有候选子网均已被占用，请手动删除冲突的子网"
+        exit 1
+    fi
+    GATEWAY="${AVAILABLE_SUBNET//0\/24/1}"
+    ENBY_IP="${AVAILABLE_SUBNET//0\/24/100}"
+    INFO "正在创建网络 $NETWORK_NAME，使用子网 $AVAILABLE_SUBNET，网关 $GATEWAY..."
+    docker network create \
+        --driver bridge \
+        --subnet "$AVAILABLE_SUBNET" \
+        --gateway "$GATEWAY" \
+        "$NETWORK_NAME"
+    INFO "网络 $NETWORK_NAME 创建成功！"
+
+    local emby_name config_dir xiaoya_name
     xiaoya_name="$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"
     emby_name="$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)"
     if docker inspect ddsderek/runlike:latest > /dev/null 2>&1; then
@@ -3558,10 +3638,18 @@ function emby_close_6908_port() {
     fi
     INFO "获取 ${emby_name} 容器信息中..."
     docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /tmp:/tmp ddsderek/runlike -p "${emby_name}" > "/tmp/container_update_${emby_name}"
-    INFO "更改 Emby 为桥接模式并取消端口映射中..."
+    INFO "更改 Emby 为 only_for_emby 模式并取消端口映射中..."
     if grep -q 'network=host' "/tmp/container_update_${emby_name}"; then
-        INFO "更改网络模式为桥接模式"
-        sedsh 's/network=host/network=bridge/' "/tmp/container_update_${emby_name}"
+        INFO "更改 host 网络模式为 only_for_emby 模式"
+        sedsh "s/network=host/network=only_for_emby --ip=${ENBY_IP}/" "/tmp/container_update_${emby_name}"
+    fi
+    if grep -q 'network=bridge' "/tmp/container_update_${emby_name}"; then
+        INFO "更改 bridge 网络模式为 only_for_emby 模式"
+        sedsh "s/network=bridge/network=only_for_emby --ip=${ENBY_IP}/" "/tmp/container_update_${emby_name}"
+    fi
+    if grep -q 'network=only_for_emby' "/tmp/container_update_${emby_name}"; then
+        INFO "重新配置 only_for_emby 网络模式"
+        sedsh "s/network=bridge/network=only_for_emby --ip=${ENBY_IP}/" "/tmp/container_update_${emby_name}"
     fi
     if grep -q '6908:6908' "/tmp/container_update_${emby_name}"; then
         INFO "关闭 6908 端口映射"
@@ -3592,13 +3680,10 @@ function emby_close_6908_port() {
         ERROR "创建 ${emby_name} 容器失败！"
         exit 1
     fi
-    INFO "获取 ${emby_name} 容器 IP"
-    emby_ip="$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${emby_name}")"
-    if [ -n "${emby_ip}" ]; then
-        INFO "${emby_name} 容器 IP：${emby_ip}"
-    else
-        ERROR "获取 ${emby_name} 容器 IP 错误！"
-        exit 1
+    docker network connect bridge "${emby_name}"
+    if [[ "$(docker inspect -f '{{range $key, $value := .NetworkSettings.Networks}}{{$key}} {{end}}' "${xiaoya_name}")" == *"bridge"* ]]; then
+        INFO "小雅容器自动加入 only_for_emby 网络中..."
+        docker network connect only_for_emby "${xiaoya_name}"
     fi
     INFO "配置 emby_server.txt 文件中"
     config_dir="$(docker inspect --format='{{range $v,$conf := .Mounts}}{{$conf.Source}}:{{$conf.Destination}}{{$conf.Type}}~{{end}}' "${xiaoya_name}" | tr '~' '\n' | grep bind | sed 's/bind//g' | grep ":/data$" | awk -F: '{print $1}')"
@@ -3607,7 +3692,7 @@ function emby_close_6908_port() {
         get_config_dir
         config_dir=${CONFIG_DIR}
     fi
-    echo "http://$emby_ip:6908" > "${config_dir}"/emby_server.txt
+    echo "http://$ENBY_IP:6908" > "${config_dir}"/emby_server.txt
     auto_chown "${config_dir}/emby_server.txt"
     INFO "重启小雅容器"
     docker restart "${xiaoya_name}"
