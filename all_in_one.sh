@@ -1390,6 +1390,50 @@ function install_xiaoya_alist() {
 
     settings_ali2115 "${CONFIG_DIR}"
 
+    if [ ! -f "${CONFIG_DIR}/guestlogin.txt" ] || [ ! -f "${CONFIG_DIR}/guestpass.txt" ]; then
+        while true; do
+            INFO "是否开启强制登入 [Y/n]（默认 y）"
+            WARN "不开启强制登入可能造成以下风险："
+            WARN "1. 暴露到公网可能被坏人扫描到并无限制使用"
+            WARN "2. 多人异地访问可能触发网盘风控甚至封禁账号"
+            read -erp "force_login:" force_login
+            [[ -z "${force_login}" ]] && force_login="y"
+            if [[ ${force_login} == [YyNn] ]]; then
+                break
+            else
+                ERROR "非法输入，请输入 [Y/n]"
+            fi
+        done
+        if [[ ${force_login} == [Yy] ]]; then
+            while true; do
+                while true; do
+                    INFO "请配置强制登入密码"
+                    WARN "注意：输入的密码不会在终端显示"
+                    read -ersp "PassWord: " password1
+                    echo ""
+                    if [[ -z "$password1" ]]; then
+                        echo "错误：密码不能为空"
+                    else
+                        break
+                    fi
+                done
+                INFO "请再次输入密码进行验证"
+                read -ersp "PassWord: " password2
+                echo ""
+                if [[ "$password1" == "$password2" ]]; then
+                    INFO "密码设置成功"
+                    break
+                else
+                    ERROR "两次输入的密码不一致，请重新输入"
+                fi
+            done
+            touch "${CONFIG_DIR}/guestlogin.txt"
+            auto_chown "${CONFIG_DIR}/guestlogin.txt"
+            echo -e "${password1}" > "${CONFIG_DIR}/guestpass.txt"
+            auto_chown "${CONFIG_DIR}/guestpass.txt"
+        fi
+    fi
+
     if [[ "${OSNAME}" = "macos" ]]; then
         localip=$(ifconfig "$(route -n get default | grep interface | awk -F ':' '{print$2}' | awk '{$1=$1};1')" | grep 'inet ' | awk '{print$2}')
     else
