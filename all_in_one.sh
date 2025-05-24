@@ -1405,6 +1405,7 @@ function install_xiaoya_alist() {
             fi
         done
         if [[ ${force_login} == [Yy] ]]; then
+            INFO "强制登入用户名：dav（无法修改）"
             while true; do
                 while true; do
                     INFO "请配置强制登入密码"
