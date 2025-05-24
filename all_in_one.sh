@@ -3571,7 +3571,19 @@ function oneclick_upgrade_emby() {
             docker rmi "${IMAGE_MIRROR}/${run_image}" > /dev/null 2>&1
         fi
         if [ -n "${emby_ip}" ]; then
-            sedsh "s/network=only_for_emby/network=only_for_emby --ip=${emby_ip}/" "/tmp/container_update_${emby_name}"
+            if grep -q 'network=host' "/tmp/container_update_${emby_name}"; then
+                INFO "更改 host 网络模式为 only_for_emby 模式"
+                sedsh "s/network=host/network=only_for_emby --ip=${emby_ip}/" "/tmp/container_update_${emby_name}"
+            elif grep -q 'network=bridge' "/tmp/container_update_${emby_name}"; then
+                INFO "更改 bridge 网络模式为 only_for_emby 模式"
+                sedsh "s/network=bridge/network=only_for_emby --ip=${emby_ip}/" "/tmp/container_update_${emby_name}"
+            elif grep -q 'network=only_for_emby' "/tmp/container_update_${emby_name}"; then
+                INFO "重新配置 only_for_emby 网络模式"
+                sedsh "s/network=bridge/network=only_for_emby --ip=${emby_ip}/" "/tmp/container_update_${emby_name}"
+            else
+                INFO "添加 only_for_emby 网络模式"
+                sedsh "s/name=${emby_name}/name=${emby_name} --network=only_for_emby --ip=${emby_ip}/" "/tmp/container_update_${emby_name}"
+            fi
         fi
         if bash "/tmp/container_update_${emby_name}"; then
             rm -f "/tmp/container_update_${emby_name}"
@@ -3687,14 +3699,15 @@ function emby_close_6908_port() {
     if grep -q 'network=host' "/tmp/container_update_${emby_name}"; then
         INFO "更改 host 网络模式为 only_for_emby 模式"
         sedsh "s/network=host/network=only_for_emby --ip=${ENBY_IP}/" "/tmp/container_update_${emby_name}"
-    fi
-    if grep -q 'network=bridge' "/tmp/container_update_${emby_name}"; then
+    elif grep -q 'network=bridge' "/tmp/container_update_${emby_name}"; then
         INFO "更改 bridge 网络模式为 only_for_emby 模式"
         sedsh "s/network=bridge/network=only_for_emby --ip=${ENBY_IP}/" "/tmp/container_update_${emby_name}"
-    fi
-    if grep -q 'network=only_for_emby' "/tmp/container_update_${emby_name}"; then
+    elif grep -q 'network=only_for_emby' "/tmp/container_update_${emby_name}"; then
         INFO "重新配置 only_for_emby 网络模式"
         sedsh "s/network=bridge/network=only_for_emby --ip=${ENBY_IP}/" "/tmp/container_update_${emby_name}"
+    else
+        INFO "添加 only_for_emby 网络模式"
+        sedsh "s/name=${emby_name}/name=${emby_name} --network=only_for_emby --ip=${ENBY_IP}/" "/tmp/container_update_${emby_name}"
     fi
     if grep -q '6908:6908' "/tmp/container_update_${emby_name}"; then
         INFO "关闭 6908 端口映射"
