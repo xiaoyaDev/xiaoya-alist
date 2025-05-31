@@ -1721,7 +1721,7 @@ function get_docker0_url() {
 function get_sign() {
 
     if [ ! -f "${1}"/nosign.txt ] && [ -f "${1}"/guestpass.txt ] && [ -f "${1}"/guestlogin.txt ]; then
-        sign="?sign=$(docker exec -it "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" bash -c "cat /data/guestpass.txt | tr -d '\r\n' | md5sum | awk '{print \$1}'")"
+        sign="?sign=$(docker exec -i "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" bash -c "cat /data/guestpass.txt | tr -d '\r\n' | md5sum | awk '{print \$1}'")"
         echo "${sign}"
     fi
 
