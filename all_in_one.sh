@@ -6315,14 +6315,15 @@ if [ ! -d "/tmp/xiaoya_alist_tmp" ]; then
 fi
 for file in "base" "image_mirror" "auto_symlink" "jellyfin" "portainer" "onelist" "casaos" "deprecation"; do
     if ! curl -sSLf "https://gitee.com/ddsrem/xiaoya-alist-base/raw/master/${file}.sh" -o "/tmp/xiaoya_alist_tmp/${file}.sh"; then
-        ERROR "${file} 基础库获取失败！"
-        ERROR "请检查是否能访问 gitee.com！"
-        exit 1
-    else
-        source "/tmp/xiaoya_alist_tmp/${file}.sh"
-        rm -f "/tmp/xiaoya_alist_tmp/${file}.sh"
-        INFO "${file} 基础库加载成功！"
+        if ! curl -sSLf "https://raw.githubusercontent.com/xiaoyaDev/xiaoya-alist/refs/heads/master/base/${file}.sh" -o "/tmp/xiaoya_alist_tmp/${file}.sh"; then
+            ERROR "${file} 基础库获取失败！"
+            ERROR "请检查是否能访问 gitee.com 或 github.com！"
+            exit 1
+        fi
     fi
+    source "/tmp/xiaoya_alist_tmp/${file}.sh"
+    rm -f "/tmp/xiaoya_alist_tmp/${file}.sh"
+    INFO "${file} 基础库加载成功！"
 done
 rm -rf /tmp/xiaoya_alist_tmp
 first_init
