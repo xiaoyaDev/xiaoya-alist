@@ -1718,19 +1718,28 @@ function get_docker0_url() {
 
 }
 
+function get_sign() {
+
+    if [ ! -f "${1}"/nosign.txt ] && [ -f "${1}"/guestpass.txt ] && [ -f "${1}"/guestlogin.txt ]; then
+        sign="?sign=$(docker exec -it "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" bash -c "cat /data/guestpass.txt | tr -d '\r\n' | md5sum | awk '{print \$1}'")"
+        echo "${sign}"
+    fi
+
+}
+
 function test_xiaoya_status() {
 
     get_docker0_url
 
     INFO "测试xiaoya的联通性..."
-    if curl -siL -m 10 http://127.0.0.1:5678/d/README.md | grep -e "x-oss-" -e "x-115-request-id"; then
+    if curl -siL -m 10 "http://127.0.0.1:5678/d/README.md$(get_sign "${CONFIG_DIR}")" | grep -e "x-oss-" -e "x-115-request-id"; then
         xiaoya_addr="http://127.0.0.1:5678"
-    elif curl -siL -m 10 http://${docker0}:5678/d/README.md | grep -e "x-oss-" -e "x-115-request-id"; then
+    elif curl -siL -m 10 "http://${docker0}:5678/d/README.md$(get_sign "${CONFIG_DIR}")" | grep -e "x-oss-" -e "x-115-request-id"; then
         xiaoya_addr="http://${docker0}:5678"
     else
         if [ -s ${CONFIG_DIR}/docker_address.txt ]; then
             docker_address=$(head -n1 ${CONFIG_DIR}/docker_address.txt)
-            if curl -siL -m 10 ${docker_address}/d/README.md | grep -e "x-oss-" -e "x-115-request-id"; then
+            if curl -siL -m 10 "${docker_address}/d/README.md$(get_sign "${CONFIG_DIR}")" | grep -e "x-oss-" -e "x-115-request-id"; then
                 xiaoya_addr=${docker_address}
             else
                 __xiaoya_connectivity_detection=$(cat ${DDSREM_CONFIG_DIR}/xiaoya_connectivity_detection.txt)
@@ -2001,7 +2010,7 @@ function check_metadata_size() {
     if [ -z "${xiaoya_addr}" ]; then
         test_xiaoya_status
     fi
-    pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "User-Agent: ${GLOBAL_UA}"
+    pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}$(get_sign "${CONFIG_DIR}")" "User-Agent: ${GLOBAL_UA}"
     remote_metadata_size=$(grep 'Content-Length' "${MEDIA_DIR}/headers.log" | awk '{print $2}')
     rm -f "${MEDIA_DIR}/headers.log"
 
@@ -2144,14 +2153,14 @@ function __download_metadata() {
 
         if [ "${__data_downloader}" == "wget" ]; then
             # wget 下载模式下只能单线程下载
-            if ! pull_run_glue wget -c --show-progress "${xiaoya_addr}/d/元数据/${1}" -U "${GLOBAL_UA}"; then
+            if ! pull_run_glue wget -c --show-progress "${xiaoya_addr}/d/元数据/${1}$(get_sign "${CONFIG_DIR}")" -U "${GLOBAL_UA}"; then
                 DEBUG "${OSNAME} $(uname -a)"
                 ERROR "${1} 下载失败！"
                 exit 1
             fi
         else
             local download_threads
-            pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "User-Agent: ${GLOBAL_UA}"
+            pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}$(get_sign "${CONFIG_DIR}")" "User-Agent: ${GLOBAL_UA}"
             if [ -f "${MEDIA_DIR}/headers.log" ]; then
                 # 115网盘下载链接：返回为 X-115-Request-Id，并且存在 ali2115.txt 文件
                 if grep "X-115-Request-Id" "${MEDIA_DIR}/headers.log" && [ -f "${CONFIG_DIR}/ali2115.txt" ]; then
@@ -2176,7 +2185,7 @@ function __download_metadata() {
             else
                 INFO "多线程下载，线程数：${download_threads}"
             fi
-            if pull_run_glue aria2c -o "${1}" --header="User-Agent: ${GLOBAL_UA}" --allow-overwrite=true --auto-file-renaming=false --enable-color=false --file-allocation=none -c "-x${download_threads}" "${xiaoya_addr}/d/元数据/${1}"; then
+            if pull_run_glue aria2c -o "${1}" --header="User-Agent: ${GLOBAL_UA}" --allow-overwrite=true --auto-file-renaming=false --enable-color=false --file-allocation=none -c "-x${download_threads}" "${xiaoya_addr}/d/元数据/${1}$(get_sign "${CONFIG_DIR}")"; then
                 if [ -f "${MEDIA_DIR}/temp/${1}.aria2" ]; then
                     ERROR "存在 ${MEDIA_DIR}/temp/${1}.aria2 文件，下载不完整！"
                     exit 1
@@ -2495,7 +2504,7 @@ function download_unzip_xiaoya_emby_new_config() {
 
         local REMOTE_METADATA_SIZE LOCAL_METADATA_SIZE
 
-        pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}" "User-Agent: ${GLOBAL_UA}"
+        pull_run_glue_xh xh --headers --follow --timeout=10 -o /media/headers.log "${xiaoya_addr}/d/元数据/${1}$(get_sign "${CONFIG_DIR}")" "User-Agent: ${GLOBAL_UA}"
         REMOTE_METADATA_SIZE=$(cat ${MEDIA_DIR}/headers.log | grep 'Content-Length' | awk '{print $2}')
         rm -f ${MEDIA_DIR}/headers.log
 
