@@ -2153,7 +2153,7 @@ function __download_metadata() {
 
         if [ "${__data_downloader}" == "wget" ]; then
             # wget 下载模式下只能单线程下载
-            if ! pull_run_glue wget -c --show-progress "${xiaoya_addr}/d/元数据/${1}$(get_sign "${CONFIG_DIR}")" -U "${GLOBAL_UA}"; then
+            if ! pull_run_glue wget -c --show-progress "${xiaoya_addr}/d/元数据/${1}$(get_sign "${CONFIG_DIR}")" -U "${GLOBAL_UA}" -O "${1}"; then
                 DEBUG "${OSNAME} $(uname -a)"
                 ERROR "${1} 下载失败！"
                 exit 1
