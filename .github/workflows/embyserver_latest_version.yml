@@ -45,7 +45,7 @@ jobs:
             sed -i "1,40s|emby_embyserver_beta_version=.*|emby_embyserver_beta_version=${LATEST_VERSION}|" all_in_one.sh
 
       - 
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         with:
             commit_message: 'chore: update embyserver latest version'
             branch: master
