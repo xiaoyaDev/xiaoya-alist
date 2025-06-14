@@ -520,15 +520,9 @@ function qrcode_mode_choose() {
             INFO "使用 api-cf.nn.ci 地址"
         fi
     elif [ "${2}" == "/aliyuntoken/aliyuntoken.py" ]; then
-        if curl -Is https://api.xhofe.top/alist/ali/qr | head -n 1 | grep -q '200'; then
-            extra_parameters="--api_url=api.xhofe.top"
-            INFO "使用 api.xhofe.top 地址"
-        elif curl -Is https://api.nn.ci/alist/ali/qr | head -n 1 | grep -q '200'; then
-            extra_parameters="--api_url=api.nn.ci"
-            INFO "使用 api.nn.ci 地址"
-        elif curl -Is https://api-cf.nn.ci/alist/ali/qr | head -n 1 | grep -q '200'; then
-            extra_parameters="--api_url=api-cf.nn.ci"
-            INFO "使用 api-cf.nn.ci 地址"
+        if curl -Is "https://passport.aliyundrive.com/newlogin/qrcode/generate.do" | head -n 1 | grep -q '200'; then
+            extra_parameters="--api_url=base"
+            INFO "使用内置获取模块"
         else
             extra_parameters="--api_url=aliyuntoken.vercel.app"
             INFO "使用 aliyuntoken.vercel.app 地址"

@@ -2,6 +2,8 @@ FROM python:3.12-alpine3.21
 
 COPY --chmod=755 . /
 
+COPY --from=ddsderek/xiaoya-glue:aliyuntoken-builder /* /aliyuntoken/
+
 RUN apk add --no-cache curl bash jq && \
     pip install --no-cache --upgrade pip && \
     pip install --no-cache -r /requirements.txt && \

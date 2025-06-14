@@ -1,6 +1,6 @@
 # Aliyun Refresh Token
 
-- api-cf.nn.ci
-- api.nn.ci
-- api.xhofe.top
+> 为保证安全性本脚本加密，无法公开源代码
+
+- passport.aliyundrive.com
 - aliyuntoken.vercel.app
