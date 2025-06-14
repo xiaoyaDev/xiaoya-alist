@@ -21,42 +21,6 @@ if sys.platform.startswith("win32"):
     QRCODE_DIR = "qrcode.png"
 else:
     QRCODE_DIR = "/aliyunopentoken/qrcode.png"
-GLOBAL_UA = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
-)
-
-headers = {
-    "Accept": "*/*",
-    "Accept-Encoding": "gzip, deflate, br, zstd",
-    "Accept-Language": "zh-CN,zh;q=0.9",
-    "Content-Type": "application/json",
-    "Origin": "https://alist.nn.ci",
-    "Referer": "https://alist.nn.ci/",
-    "Sec-Ch-Ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-    "Sec-Ch-Ua-Mobile": "?0",
-    "Sec-Ch-Ua-Platform": '"Windows"',
-    "Sec-Fetch-Dest": "empty",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Site": "cross-site",
-    "User-Agent": GLOBAL_UA,
-}
-headers_2 = {
-    "Accept": "*/*",
-    "Accept-Encoding": "gzip, deflate, br, zstd",
-    "Accept-Language": "zh-CN,zh;q=0.9",
-    "Content-Length": "111",
-    "Content-Type": "application/json",
-    "Origin": "https://alist.nn.ci",
-    "Priority": "u=1, i",
-    "Referer": "https://alist.nn.ci/",
-    "Sec-CH-UA": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-    "Sec-CH-UA-Mobile": "?0",
-    "Sec-CH-UA-Platform": '"Windows"',
-    "Sec-Fetch-Dest": "empty",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Site": "cross-site",
-    "User-Agent": GLOBAL_UA,
-}
 
 
 # pylint: disable=W0603
@@ -71,18 +35,8 @@ def poll_qrcode_status(data, log_print, _api_url):
             if retry_times == 3:
                 LAST_STATUS = 2
                 break
-            if _api_url == "api.xhofe.top":
-                url = f"https://api.xhofe.top/proxy/https://open.aliyundrive.com/oauth/qrcode/{data}/status"
-                _re = requests.get(url, headers=headers, timeout=10)
-            elif _api_url == "api-cf.nn.ci":
-                url = f"https://api-cf.nn.ci/proxy/https://open.aliyundrive.com/oauth/qrcode/{data}/status"
-                _re = requests.get(url, timeout=10)
-            elif _api_url == "api.nn.ci":
-                url = f"https://api.nn.ci/proxy/https://open.aliyundrive.com/oauth/qrcode/{data}/status"
-                _re = requests.get(url, timeout=10)
-            else:
-                url = f"https://openapi.aliyundrive.com/oauth/qrcode/{data}/status"
-                _re = requests.get(url, timeout=10)
+            url = f"https://openapi.aliyundrive.com/oauth/qrcode/{data}/status"
+            _re = requests.get(url, timeout=10)
             if _re.status_code == 200:
                 _re_data = json.loads(_re.text)
                 if _re_data["status"] == "LoginSuccess":
@@ -93,14 +47,8 @@ def poll_qrcode_status(data, log_print, _api_url):
                         "client_id": "",
                         "client_secret": "",
                     }
-                    if _api_url == "api.xhofe.top":
-                        _re = requests.post(
-                            "https://api.xhofe.top/alist/ali_open/code", json=data_2, headers=headers_2, timeout=10
-                        )
-                    elif _api_url == "api-cf.nn.ci":
-                        _re = requests.post("https://api-cf.nn.ci/alist/ali_open/code", json=data_2, timeout=10)
-                    elif _api_url == "api.nn.ci":
-                        _re = requests.post("https://api.nn.ci/alist/ali_open/code", json=data_2, timeout=10)
+                    if _api_url == "auth.xiaoya.pro":
+                        _re = requests.post("http://auth.xiaoya.pro/api/ali_open/refresh", json=data_2, timeout=10)
                     else:
                         _re = requests.post(
                             "https://aliyundrive-oauth.messense.me/oauth/access_token",
@@ -122,10 +70,6 @@ def poll_qrcode_status(data, log_print, _api_url):
                         logging.info("扫码成功, opentoken 已写入文件！")
                         LAST_STATUS = 1
                         break
-                    else:
-                        if json.loads(_re.text)["code"] == "Too Many Requests":
-                            logging.warning("Too Many Requests 请一小时后重试！")
-                            break
                 else:
                     if log_print:
                         logging.info("等待用户扫码...")
@@ -192,12 +136,8 @@ if __name__ == "__main__":
             if RE_COUNT == 3:
                 logging.error("二维码生成失败，退出进程")
                 os._exit(1)
-            if args.api_url == "api.xhofe.top":
-                re = requests.get("https://api.xhofe.top/alist/ali_open/qr", headers=headers, timeout=10)
-            elif args.api_url == "api-cf.nn.ci":
-                re = requests.get("https://api-cf.nn.ci/alist/ali_open/qr", timeout=10)
-            elif args.api_url == "api.nn.ci":
-                re = requests.get("https://api.nn.ci/alist/ali_open/qr", timeout=10)
+            if args.api_url == "auth.xiaoya.pro":
+                re = requests.get("http://auth.xiaoya.pro/api/ali_open/qr", timeout=10)
             else:
                 re = requests.post(
                     "https://aliyundrive-oauth.messense.me/oauth/authorize/qrcode",
@@ -221,10 +161,6 @@ if __name__ == "__main__":
                 if os.path.isfile(QRCODE_DIR):
                     logging.info("二维码生成完成！")
                     break
-            else:
-                if json.loads(re.text)["code"] == "Too Many Requests":
-                    logging.warning("Too Many Requests 请一小时后重试！")
-                    os._exit(0)
             time.sleep(1)
             RE_COUNT += 1
         except Exception as e:  # pylint: disable=W0718

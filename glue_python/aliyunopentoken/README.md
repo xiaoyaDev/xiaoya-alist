@@ -1,14 +1,12 @@
 # Aliyun Open Token
 
-- api-cf.nn.ci
-- api.nn.ci
-- api.xhofe.top
+- auth.xiaoya.pro
 - aliyundrive-oauth.messense.me
 - openapi.aliyundrive.com
 
 ## Use
 
 ```shell
-Alist Open Token --> --api_url=api-cf.nn.ci/api.xhofe.top/api.nn.ci
+Xiaoya Open Token --> --api_url=auth.xiaoya.pro
 WebDav Open Token --> --api_url=aliyundrive-oauth.messense.me
 ```

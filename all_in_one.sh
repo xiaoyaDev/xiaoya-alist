@@ -407,7 +407,7 @@ function check_aliyunpan_opentoken() {
 
     }
 
-    local token code response refresh_token data_dir url_host
+    local token response refresh_token data_dir
     data_dir="${1}"
     if [ -n "${2}" ]; then
         token="${2}"
@@ -415,28 +415,16 @@ function check_aliyunpan_opentoken() {
         token=$(head -n1 "${data_dir}/myopentoken.txt")
     fi
     if cache_result "${data_dir}/myopentoken.txt" "${DDSREM_CONFIG_DIR}/cache_data/check_aliyunpan_opentoken.txt"; then
-        if curl -Is https://api.xhofe.top/alist/ali_open/qr | head -n 1 | grep -q '200'; then
-            url_host="api.xhofe.top"
-        elif curl -Is https://api.nn.ci/alist/ali_open/qr | head -n 1 | grep -q '200'; then
-            url_host="api.nn.ci"
-        else
-            url_host="api-cf.nn.ci"
-        fi
-        if ! response=$(curl -s "https://${url_host}/alist/ali_open/token" -X POST -H "User-Agent: $GLOBAL_UA" -H "Rererer: https://www.aliyundrive.com/" -H "Content-Type: application/json" -d '{"refresh_token":"'$token'", "grant_type": "refresh_token"}'); then
+        if ! response=$(curl -s "http://auth.xiaoya.pro/api/ali_open/refresh" -X POST -H "User-Agent: $GLOBAL_UA" -H "Rererer: https://www.aliyundrive.com/" -H "Content-Type: application/json" -d '{"refresh_token":"'$token'", "grant_type": "refresh_token"}'); then
             WARN "网络问题，无法检测 阿里云盘 Open Token 有效性"
             cache_update "${data_dir}/myopentoken.txt" "${DDSREM_CONFIG_DIR}/cache_data/check_aliyunpan_opentoken.txt" "false"
             return 0
         fi
-        code=$(echo "$response" | sed -n 's/.*"code":"\([^"]*\).*/\1/p')
         refresh_token=$(echo "$response" | sed 's/:\s*/:/g' | sed -n 's/.*"refresh_token":"\([^"]*\).*/\1/p')
         if [ -n "${refresh_token}" ]; then
             echo "${refresh_token}" > "${data_dir}/myopentoken.txt"
             INFO "有效 阿里云盘 Open Token"
             cache_update "${data_dir}/myopentoken.txt" "${DDSREM_CONFIG_DIR}/cache_data/check_aliyunpan_opentoken.txt" "true"
-            return 0
-        elif [ "${code}" == "Too Many Requests" ]; then
-            WARN "已被限流，无法检测 阿里云盘 Open Token 有效性"
-            cache_update "${data_dir}/myopentoken.txt" "${DDSREM_CONFIG_DIR}/cache_data/check_aliyunpan_opentoken.txt" "false"
             return 0
         else
             ERROR "无效 阿里云盘 Open Token"
@@ -509,16 +497,8 @@ function qrcode_mode_choose() {
         done
         extra_parameters="--qrcode_app=${qrcode_app}"
     elif [ "${2}" == "/aliyunopentoken/aliyunopentoken.py" ]; then
-        if curl -Is https://api.xhofe.top/alist/ali_open/qr | head -n 1 | grep -q '200'; then
-            extra_parameters="--api_url=api.xhofe.top"
-            INFO "使用 api.xhofe.top 地址"
-        elif curl -Is https://api.nn.ci/alist/ali_open/qr | head -n 1 | grep -q '200'; then
-            extra_parameters="--api_url=api.nn.ci"
-            INFO "使用 api.nn.ci 地址"
-        else
-            extra_parameters="--api_url=api-cf.nn.ci"
-            INFO "使用 api-cf.nn.ci 地址"
-        fi
+        extra_parameters="--api_url=auth.xiaoya.pro"
+        INFO "使用 auth.xiaoya.pro 地址"
     elif [ "${2}" == "/aliyuntoken/aliyuntoken.py" ]; then
         if curl -Is "https://passport.aliyundrive.com/newlogin/qrcode/generate.do" | head -n 1 | grep -q '200'; then
             extra_parameters="--api_url=base"
