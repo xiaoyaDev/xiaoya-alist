@@ -154,7 +154,7 @@ def get_token(code):
         file.write(refresh_token)
     logging.info("myopentoken.txt 文件更新成功！")
     with open(f"{file_path}open_tv_token_url.txt", "w", encoding="utf-8") as file:
-        file.write("https://alipan-tv-token.pages.dev/refresh")
+        file.write("https://i-tools.ilay.top/api/oauth/alipan/token")
     logging.info("open_tv_token_url.txt 文件更新成功！")
 
 

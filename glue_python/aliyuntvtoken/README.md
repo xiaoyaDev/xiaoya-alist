@@ -6,5 +6,5 @@
   - http://api.extscreen.com/aliyundrive/v3/token
 - openapi.alipan.com
   - https://openapi.alipan.com/oauth/qrcode/{sid}/status
-- alipan-tv-token.pages.dev
-  - https://alipan-tv-token.pages.dev/refresh
+- i-tools.ilay.top
+  - https://i-tools.ilay.top/api/oauth/alipan/token
