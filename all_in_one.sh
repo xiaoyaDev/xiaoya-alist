@@ -5989,9 +5989,10 @@ function main_other_tools() {
 
 function main_return() {
 
-    local out_tips
+    local out_tips config_dir
     cat /tmp/xiaoya_alist
     echo -ne "${INFO} 主界面加载中...${Font}\r"
+    out_tips=""
     if ! curl -s -o /dev/null -m 4 -w '%{time_total}' --head --request GET "$(cat "${DDSREM_CONFIG_DIR}/image_mirror.txt")" &> /dev/null; then
         if auto_choose_image_mirror; then
             out_tips="${Green}提示：已为您自动配置Docker镜像源地址为: $(cat "${DDSREM_CONFIG_DIR}/image_mirror.txt")${Font}\n"
@@ -5999,6 +6000,18 @@ function main_return() {
             out_tips="${Red}警告：当前环境无法访问Docker镜像仓库，请输入66进入Docker镜像源设置更改镜像源${Font}\n"
         fi
     fi
+
+    if docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" > /dev/null 2>&1; then
+        config_dir="$(docker inspect --format='{{range $v,$conf := .Mounts}}{{$conf.Source}}:{{$conf.Destination}}{{$conf.Type}}~{{end}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" | tr '~' '\n' | grep bind | sed 's/bind//g' | grep ":/data$" | awk -F: '{print $1}')"
+        if [ -n "${config_dir}" ]; then
+            if [ -f "${config_dir}/opentoken_url.txt" ]; then
+                if [[ "$(cat "${config_dir}/opentoken_url.txt")" == *"nn.ci"* ]] || [[ "$(cat "${config_dir}/opentoken_url.txt")" == *"xhofe.top"* ]]; then
+                    out_tips+="${Red}警告：请立即选择菜单1-4更换阿里云盘Token并更新最新版本小雅，否则可能导致隐私信息泄漏${Font}\n"
+                fi
+            fi
+        fi
+    fi
+
     # shellcheck disable=SC2154
     echo -e "${out_tips}1、安装/更新/卸载 小雅Alist & 账号管理        当前状态：$(judgment_container "${xiaoya_alist_name}")
 2、安装/更新/卸载 小雅Emby全家桶              当前状态：$(judgment_container "${xiaoya_emby_name}")
