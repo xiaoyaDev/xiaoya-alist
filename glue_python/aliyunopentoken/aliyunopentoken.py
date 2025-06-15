@@ -49,6 +49,7 @@ def poll_qrcode_status(data, log_print, _api_url):
                     }
                     if _api_url == "auth.xiaoya.pro":
                         _re = requests.post("http://auth.xiaoya.pro/api/ali_open/refresh", json=data_2, timeout=10)
+                        opentoken_url = "http://auth.xiaoya.pro/api/ali_open/refresh"
                     else:
                         _re = requests.post(
                             "https://aliyundrive-oauth.messense.me/oauth/access_token",
@@ -58,15 +59,20 @@ def poll_qrcode_status(data, log_print, _api_url):
                             },
                             timeout=10,
                         )
+                        opentoken_url = "https://aliyundrive-oauth.messense.me/oauth/access_token"
                     if _re.status_code == 200:
                         _re_data = json.loads(_re.text)
                         refresh_token = _re_data["refresh_token"]
                         if sys.platform.startswith("win32"):
                             with open("myopentoken.txt", "w", encoding="utf-8") as f:
                                 f.write(refresh_token)
+                            with open("opentoken_url.txt", "w", encoding="utf-8") as f:
+                                f.write(opentoken_url)
                         else:
                             with open("/data/myopentoken.txt", "w", encoding="utf-8") as f:
                                 f.write(refresh_token)
+                            with open("/data/opentoken_url.txt", "w", encoding="utf-8") as f:
+                                f.write(opentoken_url)
                         logging.info("扫码成功, opentoken 已写入文件！")
                         LAST_STATUS = 1
                         break
