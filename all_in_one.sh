@@ -1195,9 +1195,9 @@ function main_account_management() {
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     echo -e "${Blue}账号管理${Font}\n"
     echo -e "${Sky_Blue}小雅留言，会员购买指南：
-基础版：阿里非会员+115会员+夸克88vip
-升级版：阿里svip+115会员+夸克88vip（用TV token破解阿里svip的高速流量限制）
-豪华版：阿里svip+第三方权益包+115会员+夸克svip
+基础版：阿里非会员+115会员
+升级版：阿里svip+115会员（用TV token破解阿里svip的高速流量限制）
+豪华版：阿里svip+第三方权益包+115会员
 乞丐版：满足看emby画报但不要播放，播放用tvbox各种免费源${Font}\n"
     echo -ne "${INFO} 界面加载中...${Font}\r"
     echo -e "1、115 Cookie                        （当前：$(if [ -f "${config_dir}/115_cookie.txt" ]; then if CHECK_OUT=$(check_115_cookie "${config_dir}"); then echo -e "${Green}$(echo -e ${CHECK_OUT} | sed 's/\[.*\] //')${Font}"; else echo -e "${Red}错误${Font}"; fi; else echo -e "${Red}未配置${Font}"; fi)）
@@ -1465,7 +1465,11 @@ function install_xiaoya_alist() {
         INFO "安装完成！"
         INFO "服务已成功启动，您可以根据使用需求尝试访问以下的地址："
         INFO "alist: ${Sky_Blue}http://ip:5678${Font}"
-        INFO "webdav: ${Sky_Blue}http://ip:5678/dav${Font}, 默认用户密码: ${Sky_Blue}guest/guest_Api789${Font}"
+        if [[ ${force_login} == [Yy] ]]; then
+            INFO "webdav: ${Sky_Blue}http://ip:5678/dav${Font}, 用户密码: ${Sky_Blue}guest/${password1}${Font}"
+        else
+            INFO "webdav: ${Sky_Blue}http://ip:5678/dav${Font}, 默认用户密码: ${Sky_Blue}guest/guest_Api789${Font}"
+        fi
         INFO "tvbox: ${Sky_Blue}http://ip:5678/tvbox/my_ext.json${Font}"
     else
         ERROR "安装失败！"
