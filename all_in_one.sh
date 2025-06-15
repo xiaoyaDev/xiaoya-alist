@@ -1465,8 +1465,9 @@ function install_xiaoya_alist() {
         INFO "安装完成！"
         INFO "服务已成功启动，您可以根据使用需求尝试访问以下的地址："
         INFO "alist: ${Sky_Blue}http://ip:5678${Font}"
-        if [[ ${force_login} == [Yy] ]]; then
-            INFO "webdav: ${Sky_Blue}http://ip:5678/dav${Font}, 用户密码: ${Sky_Blue}guest/${password1}${Font}"
+        if [[ ${force_login} == [Yy] ]] || [[ -f "${CONFIG_DIR}/guestpass.txt" ]]; then
+            _password="$(head -n 1 "${CONFIG_DIR}/guestpass.txt")"
+            INFO "webdav: ${Sky_Blue}http://ip:5678/dav${Font}, 用户密码: ${Sky_Blue}guest/${_password}${Font}"
         else
             INFO "webdav: ${Sky_Blue}http://ip:5678/dav${Font}, 默认用户密码: ${Sky_Blue}guest/guest_Api789${Font}"
         fi
