@@ -428,6 +428,7 @@ function check_aliyunpan_opentoken() {
             return 0
         else
             ERROR "无效 阿里云盘 Open Token"
+            DEBUG "Response: ${response}"
             cache_update "${data_dir}/myopentoken.txt" "${DDSREM_CONFIG_DIR}/cache_data/check_aliyunpan_opentoken.txt" "false"
             return 1
         fi
