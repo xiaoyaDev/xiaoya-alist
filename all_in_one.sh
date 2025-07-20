@@ -5028,10 +5028,10 @@ function install_xiaoya_115_cleaner() {
 
     while true; do
         INFO "请选择 115 Cleaner 清理模式（默认 1）"
-        INFO "1：标准模式，清空 /我的接收 下面的文件并同时清理回收站的对应文件"
+        INFO "1：标准模式，清空 /最近接收 下面的文件并同时清理回收站的对应文件"
         INFO "2：只清空 115云盘 回收站文件，不会清理其他地方的文件"
-        INFO "3：清空 /我的接收 下面的文件并同时清空回收站"
-        INFO "4：只清空 /我的接收 下面的文件，不清理回收站"
+        INFO "3：清空 /最近接收 下面的文件并同时清空回收站"
+        INFO "4：只清空 /最近接收 下面的文件，不清理回收站"
         read -erp "CHOOSE_RUN_MODE:" CHOOSE_RUN_MODE
         [[ -z "${CHOOSE_RUN_MODE}" ]] && CHOOSE_RUN_MODE="1"
         if [ -f "${config_dir}/115_cleaner_all_recyclebin.txt" ]; then
