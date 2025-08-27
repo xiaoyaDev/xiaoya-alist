@@ -2100,6 +2100,7 @@ function __unzip_metadata() {
     elif [ "${1}" == "config.mp4" ] || [ "${1}" == "config.new.mp4" ]; then
         metadata_unziper "${1}"
         emby_fix_strmassistant "${MEDIA_DIR}/config"
+        emby_install_coverart "${MEDIA_DIR}/config"
         INFO "设置目录权限..."
         INFO "这可能需要一定时间，请耐心等待！"
         chmod -R 777 "${MEDIA_DIR}"/config
@@ -3220,6 +3221,25 @@ function emby_fix_strmassistant() {
 
 }
 
+function emby_install_coverart() {
+
+    if [ ! -f "${1}/config/plugins/CoverArt.dll" ]; then
+        INFO "开始安装 CoverArt ..."
+        clear_qrcode_container
+        pull_glue_python_ddsrem
+        # shellcheck disable=SC2046
+        docker run -it --rm \
+            -v "${1}:/media/config" \
+            -e LANG=C.UTF-8 \
+            $(auto_privileged) \
+            ddsderek/xiaoya-glue:python \
+            sh /coverart/install.sh
+    else
+        INFO "CoverArt 已安装，无需重复安装"
+    fi
+
+}
+
 function install_emby_xiaoya_all_emby() {
 
     get_docker0_url
@@ -3283,6 +3303,7 @@ function install_emby_xiaoya_all_emby() {
         fi
 
         emby_fix_strmassistant "${MEDIA_DIR}/config"
+        emby_install_coverart "${MEDIA_DIR}/config"
 
         # shellcheck disable=SC2154
         if [ "${image}" == "emby" ]; then
@@ -3415,6 +3436,7 @@ function install_emby_xiaoya_all_emby() {
         done
 
         emby_fix_strmassistant "${MEDIA_DIR}/config"
+        emby_install_coverart "${MEDIA_DIR}/config"
 
         case ${CHOOSE_EMBY} in
         emby_embyserver)
@@ -3583,6 +3605,7 @@ function oneclick_upgrade_emby() {
     fi
     if [ -n "${emby_config_dir}" ]; then
         emby_fix_strmassistant "${emby_config_dir}"
+        emby_install_coverart "${emby_config_dir}"
     fi
     run_image="$(echo "${old_image}" | cut -d':' -f1):${IMAGE_VERSION}"
     remove_image=$(docker images -q ${old_image})
