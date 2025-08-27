@@ -92,27 +92,42 @@ function set_mode() {
 
 }
 
-function set_image() {
+function main_set_image() {
 
-    if [ "${image}" == "emby" ]; then
-        new_image=amilys
-    elif [ "${image}" == "amilys" ]; then
-        new_image=emby
-    else
-        new_image=emby
-    fi
-
-    CPU_ARCH=$(uname -m)
-    case $CPU_ARCH in
-    "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
-        new_image=emby
-        WARN "arm64 只支持官方镜像！"
-        INFO "按任意键继续配置"
-        read -rs -n 1 -p ""
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    echo -e "${Blue}Emby镜像${Font}\n"
+    echo -e "1、emby/embyserver"
+    echo -e "2、amilys/embyserver"
+    echo -e "3、iceyheart/embycrk"
+    echo -e "0、返回上级"
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    read -erp "请输入数字 [0-3]:" num
+    case "$num" in
+    1)
+        sedsh "s/image=.*/image=emby/" "${config_dir}/emby_config.txt"
+        clear
+        main_return
+        ;;
+    2)
+        sedsh "s/image=.*/image=amilys/" "${config_dir}/emby_config.txt"
+        clear
+        main_return
+        ;;
+    3)
+        sedsh "s/image=.*/image=iceyheart/" "${config_dir}/emby_config.txt"
+        clear
+        main_return
+        ;;
+    0)
+        clear
+        main_return
+        ;;
+    *)
+        clear
+        ERROR '请输入正确数字 [0-3]'
+        main_set_image
         ;;
     esac
-
-    sedsh "s/image=.*/image=${new_image}/" "${config_dir}/emby_config.txt"
 
 }
 

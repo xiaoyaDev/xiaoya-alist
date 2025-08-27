@@ -2898,6 +2898,51 @@ function install_amilys_embyserver() {
 
 }
 
+function install_iceyheart_embyserver() {
+
+    INFO "开始安装Emby容器....."
+    if [ "${DOCKER_ARCH}" == "linux/amd64" ] || [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
+        image_name="iceyheart/embycrk"
+    else
+        ERROR "目前只支持amd64和arm64架构，你的架构是：$CPU_ARCH"
+        exit 1
+    fi
+    docker_pull "${image_name}:${IMAGE_VERSION}"
+    if [ -n "${extra_parameters}" ]; then
+        # shellcheck disable=SC2046
+        docker run -itd \
+            --name="$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)" \
+            -v "${MEDIA_DIR}/config:/config" \
+            -v "${MEDIA_DIR}/xiaoya:/media" \
+            -v ${NSSWITCH}:/etc/nsswitch.conf \
+            --add-host="xiaoya.host:$xiaoya_host" \
+            ${NET_MODE} \
+            ${extra_parameters} \
+            $(auto_privileged) \
+            -e UID=0 \
+            -e GID=0 \
+            -e TZ=Asia/Shanghai \
+            --restart=always \
+            "${image_name}:${IMAGE_VERSION}"
+    else
+        # shellcheck disable=SC2046
+        docker run -itd \
+            --name="$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)" \
+            -v "${MEDIA_DIR}/config:/config" \
+            -v "${MEDIA_DIR}/xiaoya:/media" \
+            -v ${NSSWITCH}:/etc/nsswitch.conf \
+            --add-host="xiaoya.host:$xiaoya_host" \
+            ${NET_MODE} \
+            $(auto_privileged) \
+            -e UID=0 \
+            -e GID=0 \
+            -e TZ=Asia/Shanghai \
+            --restart=always \
+            "${image_name}:${IMAGE_VERSION}"
+    fi
+
+}
+
 function install_lovechen_embyserver() {
 
     INFO "开始安装Emby容器....."
@@ -2981,7 +3026,7 @@ function choose_emby_image() {
 
     INFO "您的架构是：$CPU_ARCH"
     if [ "${DOCKER_ARCH}" == "linux/amd64" ]; then
-        INFO "请选择使用的Emby镜像 [ 1:amilys/embyserver | 2:emby/embyserver ]（默认 2）"
+        INFO "请选择使用的Emby镜像 [ 1:amilys/embyserver | 2:emby/embyserver | 3:iceyheart/embycrk ]（默认 2）"
         read -erp "IMAGE:" IMAGE
         [[ -z "${IMAGE}" ]] && IMAGE="2"
         if [[ ${IMAGE} == [1] ]]; then
@@ -2989,6 +3034,8 @@ function choose_emby_image() {
         elif [[ ${IMAGE} == [2] ]]; then
             CHOOSE_EMBY=emby_embyserver
         elif [[ ${IMAGE} == [3] ]]; then
+            CHOOSE_EMBY=iceyheart_embycrk
+        elif [[ ${IMAGE} == [4] ]]; then
             CHOOSE_EMBY=lovechen_embyserver
         else
             ERROR "输入无效，请重新选择"
@@ -2996,11 +3043,13 @@ function choose_emby_image() {
         fi
     elif [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
         WARN "${DOCKER_ARCH} 只支持官方镜像！"
-        INFO "请选择使用的Emby镜像 [ 1:emby/embyserver ]（默认 1）"
+        INFO "请选择使用的Emby镜像 [ 1:emby/embyserver | 2:iceyheart/embycrk ]（默认 1）"
         read -erp "IMAGE:" IMAGE
         [[ -z "${IMAGE}" ]] && IMAGE="1"
         if [[ ${IMAGE} == [1] ]]; then
             CHOOSE_EMBY=amilys_embyserver
+        elif [[ ${IMAGE} == [2] ]]; then
+            CHOOSE_EMBY=iceyheart_embycrk
         else
             ERROR "输入无效，请重新选择"
             choose_emby_image
@@ -3238,6 +3287,8 @@ function install_emby_xiaoya_all_emby() {
         # shellcheck disable=SC2154
         if [ "${image}" == "emby" ]; then
             install_emby_embyserver
+        elif [ "${image}" == "iceyheart" ]; then
+            install_iceyheart_embyserver
         else
             if [ "${DOCKER_ARCH}" == "linux/amd64" ] || [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
                 if [ "${IMAGE_VERSION}" == "${amilys_embyserver_beta_version}" ]; then
@@ -3320,10 +3371,24 @@ function install_emby_xiaoya_all_emby() {
                     esac
                 fi
                 ;;
-            "install_lovechen_embyserver")
+            "lovechen_embyserver")
                 WARN "lovechen/embyserver 镜像无法指定版本号，默认拉取 4.7.14.0 镜像！"
                 IMAGE_VERSION=4.7.14.0
                 break
+                ;;
+            "iceyheart_embycrk")
+                INFO "请选择 Emby 镜像版本 [ 1；4.9.0.42 ]（默认 1）"
+                read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
+                [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="1"
+                case ${CHOOSE_IMAGE_VERSION} in
+                1)
+                    IMAGE_VERSION=4.9.0.42
+                    break
+                    ;;
+                *)
+                    ERROR "输入无效，请重新选择"
+                    ;;
+                esac
                 ;;
             "emby_embyserver")
                 INFO "请选择 Emby 镜像版本 [ 1；4.9.0.42 | 2；latest（${emby_embyserver_latest_version}） ]（默认 1）"
@@ -3360,6 +3425,9 @@ function install_emby_xiaoya_all_emby() {
             ;;
         amilys_embyserver)
             install_amilys_embyserver
+            ;;
+        iceyheart_embycrk)
+            install_iceyheart_embyserver
             ;;
         esac
 
