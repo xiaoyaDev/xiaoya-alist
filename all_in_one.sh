@@ -3566,6 +3566,9 @@ function oneclick_upgrade_emby() {
             elif [ "${check_emby_version_status}" == false ] && [ -n "${choose_emby_version}" ]; then
                 break
             fi
+        else
+            WARN "${old_image_name} 此镜像暂时不支持升级操作！"
+            exit 0
         fi
     done
     local config_dir
