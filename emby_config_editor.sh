@@ -266,9 +266,8 @@ function main_return() {
         main_return
         ;;
     3)
-        set_image
         clear
-        main_return
+        main_set_image
         ;;
     4)
         clear
