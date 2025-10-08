@@ -1,4 +1,4 @@
-FROM python:3.12-alpine3.21
+FROM python:3.14-alpine3.21
 
 ENV TZ=Asia/Shanghai
 
