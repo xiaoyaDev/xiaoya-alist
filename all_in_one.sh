@@ -4597,7 +4597,7 @@ function main_xiaoya_all_emby() {
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     echo -e "${Blue}小雅Emby全家桶${Font}\n"
     echo -e "${Yellow}注意：当前 Emby 全家桶要求 Emby 容器版本不低于 4.9.0.42${Font}"
-    echo -e "${Yellow}如果您的版本低于 4.9.0.42 请使用 菜单2-6 一键升级版本${Font}"
+    echo -e "${Yellow}如果您的版本低于 4.9.0.42 请使用 菜单2-7 一键升级版本${Font}"
     if docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" > /dev/null 2>&1; then
         local container_status
         container_status=$(docker inspect --format='{{.State.Status}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)")
