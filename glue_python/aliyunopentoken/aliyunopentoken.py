@@ -136,10 +136,10 @@ if __name__ == "__main__":
     parser.add_argument("--api_url", type=str, required=True, help="API 地址")
     args = parser.parse_args()
     logging.info("二维码生成中...")
-    RE_COUNT = 0
+    re_count = 0
     while True:
         try:
-            if RE_COUNT == 3:
+            if re_count == 3:
                 logging.error("二维码生成失败，退出进程")
                 os._exit(1)
             if args.api_url == "auth.xiaoya.pro":
@@ -168,10 +168,10 @@ if __name__ == "__main__":
                     logging.info("二维码生成完成！")
                     break
             time.sleep(1)
-            RE_COUNT += 1
+            re_count += 1
         except Exception as e:  # pylint: disable=W0718
             logging.error("错误：%s", e)
-            RE_COUNT += 1
+            re_count += 1
     if args.qrcode_mode == "web":
         threading.Thread(target=poll_qrcode_status, args=(sid, True, args.api_url)).start()
         app.run(host="0.0.0.0", port=34256)
