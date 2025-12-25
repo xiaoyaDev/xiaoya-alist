@@ -1459,6 +1459,15 @@ function install_xiaoya_alist() {
         proxy_url=$(head -n1 "${CONFIG_DIR}"/proxy.txt)
         docker_command+=("--env HTTP_PROXY=$proxy_url" "--env HTTPS_PROXY=$proxy_url" "--env no_proxy=*.aliyundrive.com")
     fi
+    if [[ -f ${CONFIG_DIR}/strm_dir.txt ]] && [[ -s ${CONFIG_DIR}/strm_dir.txt ]]; then
+        strm_dir=$(head -n1 "${CONFIG_DIR}"/strm_dir.txt | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+        if [[ -n "${strm_dir}" ]] && [[ -d "${strm_dir}" ]]; then
+            docker_command+=("-v ${strm_dir}:/strm")
+            INFO "检测到 strm_dir.txt 文件，将挂载 ${strm_dir} 到容器 /strm 目录"
+        else
+            WARN "strm_dir.txt 文件中的路径无效或不存在: ${strm_dir}"
+        fi
+    fi
     docker_command+=("-v ${CONFIG_DIR}:/data" "-v ${CONFIG_DIR}/data:/www/data" "--restart=always" "--name=$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" "$docker_image")
     docker_pull "$docker_image"
     if eval "${docker_command[*]}"; then
@@ -1486,6 +1495,10 @@ function update_xiaoya_alist() {
         sleep 1
     done
     xiaoya_name="$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"
+    local config_dir
+    if docker container inspect "${xiaoya_name}" > /dev/null 2>&1; then
+        config_dir="$(docker inspect --format='{{range $v,$conf := .Mounts}}{{$conf.Source}}:{{$conf.Destination}}{{$conf.Type}}~{{end}}' "${xiaoya_name}" | tr '~' '\n' | grep bind | sed 's/bind//g' | grep ":/data$" | awk -F: '{print $1}')"
+    fi
     cat > "/tmp/container_update_xiaoya_alist_run.sh" <<- EOF
 #!/bin/bash
 if ! grep -q 'network=host' "/tmp/container_update_${xiaoya_name}"; then
@@ -1497,6 +1510,17 @@ if ! grep -q 'privileged' "/tmp/container_update_${xiaoya_name}"; then
     sed -i '2s/^/--privileged /' "/tmp/container_update_${xiaoya_name}"
 fi
 EOF
+    if [[ -n "${config_dir}" ]] && [[ -f ${config_dir}/strm_dir.txt ]] && [[ -s ${config_dir}/strm_dir.txt ]]; then
+        strm_dir=$(head -n1 "${config_dir}"/strm_dir.txt | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+        if [[ -n "${strm_dir}" ]] && [[ -d "${strm_dir}" ]]; then
+            cat >> "/tmp/container_update_xiaoya_alist_run.sh" <<- EOF
+if ! grep -q ':/strm' "/tmp/container_update_${xiaoya_name}"; then
+    sed -i '2s|$| -v ${strm_dir}:/strm|' "/tmp/container_update_${xiaoya_name}"
+fi
+EOF
+            INFO "检测到 strm_dir.txt 文件，将在更新时添加 ${strm_dir} 到容器 /strm 目录挂载"
+        fi
+    fi
     container_update_extra_command="bash /tmp/container_update_xiaoya_alist_run.sh"
     container_update "${xiaoya_name}"
     rm -f /tmp/container_update_xiaoya_alist_run.sh
