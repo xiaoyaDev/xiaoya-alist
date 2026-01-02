@@ -6,9 +6,11 @@ RUN set -ex && \
     apk add --no-cache \
         bash \
         curl \
-        docker \
         s6-overlay \
         tzdata && \
+    apk add --no-cache \
+        --repository https://dl-cdn.alpinelinux.org/v3.21/community/ \
+        docker==27.3.1-r5 && \
     rm -rf \
         /var/cache/apk/* \
         /tmp/*
