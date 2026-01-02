@@ -1669,7 +1669,7 @@ function install_xiaoya_restart_cron() {
 
     local hour minu xiaoya_name
     xiaoya_name="$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"
-    
+
     if ! docker container inspect "${xiaoya_name}" > /dev/null 2>&1; then
         ERROR "小雅容器未安装，无法创建定时重启任务！"
         return 1
@@ -1725,7 +1725,7 @@ function install_xiaoya_restart_cron() {
 function uninstall_xiaoya_restart_cron() {
 
     if command -v crontab > /dev/null 2>&1; then
-        crontab -l > /tmp/cronjob.tmp 2>/dev/null || true
+        crontab -l > /tmp/cronjob.tmp 2> /dev/null || true
         sedsh '/xiaoya_restart_cron/d' /tmp/cronjob.tmp
         crontab /tmp/cronjob.tmp
         rm -f /tmp/cronjob.tmp
