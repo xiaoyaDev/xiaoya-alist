@@ -3218,9 +3218,21 @@ function emby_fix_strmassistant() {
         return 1
     }
 
-    if [ "${DOCKER_ARCH}" == "linux/amd64" ]; then
-        INFO "当前系统架构支持 Emby神医助手"
+    if [ "${DOCKER_ARCH}" == "linux/amd64" ] || [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
+        if [ "${DOCKER_ARCH}" == "linux/amd64" ]; then
+            INFO "当前系统架构支持 Emby神医助手"
+        elif [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
+            INFO "当前系统架构支持 Emby神医助手（v2.0.0.30+ 版本已支持 arm64）"
+        fi
+        
         if emby_test_exist_strmassistant "${1}"; then
+            INFO "是否安装/更新 Emby神医助手 [Y/n]（默认 Y）"
+        else
+            INFO "是否安装 Emby神医助手 [Y/n]（默认 Y）"
+        fi
+        read -erp "请选择:" install_strmassistant
+        [[ -z "${install_strmassistant}" ]] && install_strmassistant="Y"
+        if [[ ${install_strmassistant} == [Yy] ]]; then
             clear_qrcode_container
             pull_glue_python_ddsrem
             # shellcheck disable=SC2046
@@ -3230,14 +3242,13 @@ function emby_fix_strmassistant() {
                 $(auto_privileged) \
                 ddsderek/xiaoya-glue:python \
                 /strmassistanthelper/strmassistanthelper.py
+        else
+            if emby_test_exist_strmassistant "${1}"; then
+                INFO "跳过 Emby神医助手 安装/更新"
+            else
+                INFO "跳过 Emby神医助手 安装"
+            fi
         fi
-    elif [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
-        WARN "检测当前为 arm64 机器，自动卸载 Emby神医助手 中..."
-        if emby_test_exist_strmassistant "${1}"; then
-            rm -f "${1}/plugins/StrmAssistant.dll"
-            DEBUG "删除 ${1}/plugins/StrmAssistant.dll 文件成功！"
-        fi
-        INFO "卸载 Emby神医助手 完成！"
     else
         WARN "未知的系统架构，无法确认是否支持 Emby神医助手"
         emby_test_exist_strmassistant "${1}"
