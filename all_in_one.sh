@@ -1645,6 +1645,193 @@ function uninstall_xiaoya_alist_sync_data() {
 
 }
 
+function judgment_xiaoya_restart_cron_status() {
+
+    if command -v crontab > /dev/null 2>&1; then
+        if crontab -l | grep 'xiaoya_restart_cron' > /dev/null 2>&1; then
+            echo -e "${Green}已创建${Font}"
+        else
+            echo -e "${Red}未创建${Font}"
+        fi
+    elif [ -f /etc/synoinfo.conf ]; then
+        if grep 'xiaoya_restart_cron' /etc/crontab > /dev/null 2>&1; then
+            echo -e "${Green}已创建${Font}"
+        else
+            echo -e "${Red}未创建${Font}"
+        fi
+    else
+        echo -e "${Red}未知${Font}"
+    fi
+
+}
+
+function install_xiaoya_restart_cron() {
+
+    local hour minu xiaoya_name
+    xiaoya_name="$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"
+    
+    if ! docker container inspect "${xiaoya_name}" > /dev/null 2>&1; then
+        ERROR "小雅容器未安装，无法创建定时重启任务！"
+        return 1
+    fi
+
+    INFO "请输入定时重启的时间（24小时制）"
+    while true; do
+        read -erp "小时 [0-23]（默认 3）:" hour
+        [[ -z "${hour}" ]] && hour="3"
+        if [[ "${hour}" =~ ^[0-9]+$ ]] && [ "${hour}" -ge 0 ] && [ "${hour}" -le 23 ]; then
+            break
+        else
+            ERROR "请输入 0-23 之间的数字"
+        fi
+    done
+
+    while true; do
+        read -erp "分钟 [0-59]（默认 0）:" minu
+        [[ -z "${minu}" ]] && minu="0"
+        if [[ "${minu}" =~ ^[0-9]+$ ]] && [ "${minu}" -ge 0 ] && [ "${minu}" -le 59 ]; then
+            break
+        else
+            ERROR "请输入 0-59 之间的数字"
+        fi
+    done
+
+    CRON="${minu} ${hour} * * * docker restart \"${xiaoya_name}\" >> /tmp/xiaoya_restart_cron.log 2>&1 # xiaoya_restart_cron"
+
+    if command -v crontab > /dev/null 2>&1; then
+        crontab -l > /tmp/cronjob.tmp 2> /dev/null || true
+        sedsh '/xiaoya_restart_cron/d' /tmp/cronjob.tmp
+        echo -e "${CRON}" >> /tmp/cronjob.tmp
+        crontab /tmp/cronjob.tmp
+        INFO '已经添加下面的记录到crontab定时任务'
+        INFO "${CRON}"
+        rm -rf /tmp/cronjob.tmp
+    elif [ -f /etc/synoinfo.conf ]; then
+        cp /etc/crontab /etc/crontab.bak
+        INFO "已创建/etc/crontab.bak备份文件"
+        sedsh '/xiaoya_restart_cron/d' /etc/crontab
+        echo -e "${CRON}" >> /etc/crontab
+        INFO '已经添加下面的记录到crontab定时任务'
+        INFO "${CRON}"
+    else
+        ERROR "系统不支持 crontab，无法创建定时任务！"
+        return 1
+    fi
+
+    INFO "定时重启小雅任务创建成功！将在每天 ${hour}:${minu} 执行重启"
+
+}
+
+function uninstall_xiaoya_restart_cron() {
+
+    if command -v crontab > /dev/null 2>&1; then
+        crontab -l > /tmp/cronjob.tmp 2>/dev/null || true
+        sedsh '/xiaoya_restart_cron/d' /tmp/cronjob.tmp
+        crontab /tmp/cronjob.tmp
+        rm -f /tmp/cronjob.tmp
+        INFO "已删除定时重启小雅任务"
+    elif [ -f /etc/synoinfo.conf ]; then
+        sedsh '/xiaoya_restart_cron/d' /etc/crontab
+        INFO "已删除定时重启小雅任务"
+    else
+        ERROR "系统不支持 crontab，无法删除定时任务！"
+        return 1
+    fi
+
+}
+
+function main_xiaoya_restart_cron() {
+
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    echo -e "${Blue}定时重启小雅${Font}\n"
+    echo -e "1、创建定时重启任务"
+    echo -e "2、删除定时重启任务"
+    echo -e "0、返回上级"
+    echo -e "——————————————————————————————————————————————————————————————————————————————————"
+    read -erp "请输入数字 [0-2]:" num
+    case "$num" in
+    1)
+        clear
+        if command -v crontab > /dev/null 2>&1; then
+            if crontab -l | grep 'xiaoya_restart_cron' > /dev/null 2>&1; then
+                WARN "定时重启任务已存在，是否删除后重新创建？"
+                read -erp "请输入 [Y/n]:" confirm
+                if [[ "${confirm}" == [Yy] ]] || [[ -z "${confirm}" ]]; then
+                    uninstall_xiaoya_restart_cron
+                    sleep 1
+                else
+                    INFO "已取消操作"
+                    return_menu "main_xiaoya_restart_cron"
+                    return
+                fi
+            fi
+        elif [ -f /etc/synoinfo.conf ]; then
+            if grep 'xiaoya_restart_cron' /etc/crontab > /dev/null 2>&1; then
+                WARN "定时重启任务已存在，是否删除后重新创建？"
+                read -erp "请输入 [Y/n]:" confirm
+                if [[ "${confirm}" == [Yy] ]] || [[ -z "${confirm}" ]]; then
+                    uninstall_xiaoya_restart_cron
+                    sleep 1
+                else
+                    INFO "已取消操作"
+                    return_menu "main_xiaoya_restart_cron"
+                    return
+                fi
+            fi
+        fi
+        install_xiaoya_restart_cron
+        INFO "按任意键返回菜单"
+        read -rs -n 1 -p ""
+        clear
+        main_xiaoya_restart_cron
+        ;;
+    2)
+        clear
+        if command -v crontab > /dev/null 2>&1; then
+            if crontab -l | grep 'xiaoya_restart_cron' > /dev/null 2>&1; then
+                for i in $(seq -w 3 -1 0); do
+                    echo -en "即将删除定时重启小雅任务${Blue} $i ${Font}\r"
+                    sleep 1
+                done
+                uninstall_xiaoya_restart_cron
+                clear
+                INFO "已删除"
+            else
+                WARN "定时重启任务不存在！"
+            fi
+        elif [ -f /etc/synoinfo.conf ]; then
+            if grep 'xiaoya_restart_cron' /etc/crontab > /dev/null 2>&1; then
+                for i in $(seq -w 3 -1 0); do
+                    echo -en "即将删除定时重启小雅任务${Blue} $i ${Font}\r"
+                    sleep 1
+                done
+                uninstall_xiaoya_restart_cron
+                clear
+                INFO "已删除"
+            else
+                WARN "定时重启任务不存在！"
+            fi
+        else
+            ERROR "系统不支持 crontab，无法删除定时任务！"
+        fi
+        INFO "按任意键返回菜单"
+        read -rs -n 1 -p ""
+        clear
+        main_xiaoya_restart_cron
+        ;;
+    0)
+        clear
+        main_xiaoya_alist
+        ;;
+    *)
+        clear
+        ERROR '请输入正确数字 [0-2]'
+        main_xiaoya_restart_cron
+        ;;
+    esac
+
+}
+
 function main_xiaoya_alist() {
 
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
@@ -1654,9 +1841,10 @@ function main_xiaoya_alist() {
     echo -e "3、卸载"
     echo -e "4、账号管理"
     echo -e "5、非内网IP访问次数查看"
+    echo -e "6、定时重启小雅                          当前状态：$(judgment_xiaoya_restart_cron_status)"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
-    read -erp "请输入数字 [0-5]:" num
+    read -erp "请输入数字 [0-6]:" num
     case "$num" in
     1)
         clear
@@ -1687,13 +1875,17 @@ function main_xiaoya_alist() {
         clear
         main_xiaoya_alist
         ;;
+    6)
+        clear
+        main_xiaoya_restart_cron
+        ;;
     0)
         clear
         main_return
         ;;
     *)
         clear
-        ERROR '请输入正确数字 [0-5]'
+        ERROR '请输入正确数字 [0-6]'
         main_xiaoya_alist
         ;;
     esac

@@ -144,6 +144,7 @@ bash -c "$(curl --insecure -fsSL https://raw.githubusercontent.com/xiaoyaDev/xia
 一次性运行 小雅助手（xiaoyahelper）-> 3 2
 账号管理 -> 1 4
 非内网IP访问次数查看 -> 1 5
+定时重启小雅 -> 1 6
 ```
 
 **高级功能**
