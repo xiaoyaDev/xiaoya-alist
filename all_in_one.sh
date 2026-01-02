@@ -3224,7 +3224,7 @@ function emby_fix_strmassistant() {
         elif [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
             INFO "当前系统架构支持 Emby神医助手（v2.0.0.30+ 版本已支持 arm64）"
         fi
-        
+
         if emby_test_exist_strmassistant "${1}"; then
             INFO "是否安装/更新 Emby神医助手 [Y/n]（默认 Y）"
         else
