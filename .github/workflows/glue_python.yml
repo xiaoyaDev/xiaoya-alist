@@ -43,7 +43,7 @@ jobs:
 
       -
         name: Build Image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ./glue_python
           file: glue_python/Dockerfile
