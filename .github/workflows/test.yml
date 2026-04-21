@@ -32,7 +32,7 @@ jobs:
 
       - 
         name: Ruff
-        uses: astral-sh/ruff-action@v3
+        uses: astral-sh/ruff-action@v4.0.0
 
   pylint:
     runs-on: ubuntu-latest
