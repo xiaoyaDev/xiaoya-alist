@@ -318,7 +318,11 @@ if [ ! -d "${config_dir}" ]; then
     mkdir -p "${config_dir}"
 fi
 
-find "${config_dir}" -type f -name "*.txt" -exec sed -i "s/\r$//g" {} \;
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    find "${config_dir}" -type f -name "*.txt" -exec sed -i '' "s/\r$//g" {} \;
+else
+    find "${config_dir}" -type f -name "*.txt" -exec sed -i "s/\r$//g" {} \;
+fi
 
 if [ ! -s "${config_dir}/emby_config.txt" ]; then
     {
