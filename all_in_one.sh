@@ -883,30 +883,15 @@ function enter_ali2115() {
             ERROR "非法输入，请输入 [Y/n]"
         fi
     done
-    while true; do
-        INFO "是否自动删除阿里云盘转存文件 [Y/n]（默认 Y）"
-        read -erp "purge_ali_temp:" purge_ali_temp
-        [[ -z "${purge_ali_temp}" ]] && purge_ali_temp="y"
-        if [[ ${purge_ali_temp} == [YyNn] ]]; then
-            break
-        else
-            ERROR "非法输入，请输入 [Y/n]"
-        fi
-    done
-    INFO "输入你的 115 转存文件夹 id（默认 0）"
+    INFO "输入你的 115 转存文件夹 id（默认 auto）"
     read -erp "dir_id:" dir_id
-    [[ -z "${dir_id}" ]] && dir_id=0
+    [[ -z "${dir_id}" ]] && dir_id="auto"
     if [[ ${purge_pan115_temp} == [Yy] ]]; then
         purge_pan115_temp=true
     else
         purge_pan115_temp=false
     fi
-    if [[ ${purge_ali_temp} == [Yy] ]]; then
-        purge_ali_temp=true
-    else
-        purge_ali_temp=false
-    fi
-    echo -e "purge_ali_temp=${purge_ali_temp}\ncookie=\"${set_115_cookie}\"\npurge_pan115_temp=${purge_pan115_temp}\ndir_id=${dir_id}" > ${1}/ali2115.txt
+    echo -e "cookie=\"${set_115_cookie}\"\npurge_pan115_temp=${purge_pan115_temp}\ndir_id=${dir_id}" > ${1}/ali2115.txt
 
 }
 
