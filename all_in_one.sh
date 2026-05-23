@@ -379,7 +379,11 @@ function check_aliyunpan_opentoken() {
             current_hash=$(head -n 1 "$file_path")
         fi
         if [ -f "$cache_path" ] && [ "$(head -n 1 "$cache_path")" == "$current_hash" ]; then
-            last_modified=$(date -r "$cache_path" +%s)
+            if [[ "${OSNAME}" = "macos" ]]; then
+                last_modified=$(stat -f %m "$cache_path")
+            else
+                last_modified=$(date -r "$cache_path" +%s)
+            fi
             current_time=$(date +%s)
             difference=$(((current_time - last_modified) / 60))
             if [ "$difference" -lt 60 ]; then
@@ -1432,13 +1436,18 @@ function update_xiaoya_alist() {
     fi
     cat > "/tmp/container_update_xiaoya_alist_run.sh" <<- EOF
 #!/bin/bash
+if [[ "\$(uname -s)" == "Darwin" ]]; then
+    _sedsh() { sed -i '' "\$@"; }
+else
+    _sedsh() { sed -i "\$@"; }
+fi
 if ! grep -q 'network=host' "/tmp/container_update_${xiaoya_name}"; then
     if ! grep -q '2347' "/tmp/container_update_${xiaoya_name}"; then
-        sed -i '2s/^/-p 2347:2347 /' "/tmp/container_update_${xiaoya_name}"
+        _sedsh '2s/^/-p 2347:2347 /' "/tmp/container_update_${xiaoya_name}"
     fi
 fi
 if ! grep -q 'privileged' "/tmp/container_update_${xiaoya_name}"; then
-    sed -i '2s/^/--privileged /' "/tmp/container_update_${xiaoya_name}"
+    _sedsh '2s/^/--privileged /' "/tmp/container_update_${xiaoya_name}"
 fi
 EOF
     if [[ -n "${config_dir}" ]] && [[ -f ${config_dir}/local_dir.txt ]] && [[ -s ${config_dir}/local_dir.txt ]]; then
@@ -1446,7 +1455,7 @@ EOF
         if [[ -n "${strm_dir}" ]] && [[ -d "${strm_dir}" ]]; then
             cat >> "/tmp/container_update_xiaoya_alist_run.sh" <<- EOF
 if ! grep -q ':/strm' "/tmp/container_update_${xiaoya_name}"; then
-    sed -i '2s|$| -v ${strm_dir}:/strm|' "/tmp/container_update_${xiaoya_name}"
+    _sedsh '2s|$| -v ${strm_dir}:/strm|' "/tmp/container_update_${xiaoya_name}"
 fi
 EOF
             INFO "检测到 local_dir.txt 文件，将在更新时添加 ${strm_dir} 到容器 /strm 目录挂载"
