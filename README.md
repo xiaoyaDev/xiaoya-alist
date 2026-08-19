@@ -271,7 +271,7 @@ Docker镜像源选择 -> 6 6
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=xiaoyaDev/xiaoya-alist&type=Date)](https://star-history.com/#xiaoyaDev/xiaoya-alist)
+[![Star History Chart](https://star-history.dera.page/svg?repos=xiaoyaDev/xiaoya-alist&type=Date)](https://star-history.dera.page/#xiaoyaDev/xiaoya-alist)
 
 ## 小雅周边工具集合
 
