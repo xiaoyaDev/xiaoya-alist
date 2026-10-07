@@ -1227,6 +1227,12 @@ function install_xiaoya_alist() {
         auto_chown "${CONFIG_DIR}/data"
     fi
 
+    if ! mkdir -p "${CONFIG_DIR}/watch"; then
+        ERROR "创建 watch 目录失败，已取消安装！"
+        return 1
+    fi
+    auto_chown "${CONFIG_DIR}/watch"
+
     files=("mytoken.txt" "myopentoken.txt" "temp_transfer_folder_id.txt")
     for file in "${files[@]}"; do
         if [ ! -f "${CONFIG_DIR}/${file}" ]; then
@@ -1389,7 +1395,7 @@ function install_xiaoya_alist() {
             WARN "local_dir.txt 文件中的路径无效或不存在: ${strm_dir}"
         fi
     fi
-    docker_command+=("-v ${CONFIG_DIR}:/data" "-v ${CONFIG_DIR}/data:/www/data" "--restart=always" "--name=$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" "$docker_image")
+    docker_command+=("-v $(printf '%q' "${CONFIG_DIR}:/data")" "-v $(printf '%q' "${CONFIG_DIR}/data:/www/data")" "-v $(printf '%q' "${CONFIG_DIR}/watch:/index/watch")" "--restart=always" "--name=$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" "$docker_image")
     docker_pull "$docker_image"
     if eval "${docker_command[*]}"; then
         wait_xiaoya_start
@@ -1409,6 +1415,33 @@ function install_xiaoya_alist() {
 
 }
 
+function migrate_xiaoya_watch() {
+
+    local container_name="${1}" config_dir="${2}" migration_dir
+    if ! mkdir -p "${config_dir}/watch"; then
+        ERROR "创建 watch 目录失败，已取消更新！"
+        return 1
+    fi
+    migration_dir=$(mktemp -d "${config_dir}/.watch-migration.XXXXXX") || return 1
+    if docker cp "${container_name}:/index/watch/." "${migration_dir}/watch" 2> "${migration_dir}/error"; then
+        if ! cp -a "${config_dir}/watch/." "${migration_dir}/watch/" ||
+            ! cp -a "${migration_dir}/watch/." "${config_dir}/watch/"; then
+            ERROR "迁移 watch 目录失败，已取消更新！临时数据保留在 ${migration_dir}"
+            return 1
+        fi
+    elif grep -Eq 'Could not find the file /index/watch(/\.)? in container' "${migration_dir}/error"; then
+        INFO "旧容器没有 /index/watch 目录，将使用配置目录下的 watch 目录"
+    else
+        cat "${migration_dir}/error" >&2
+        rm -rf "${migration_dir}"
+        ERROR "读取旧容器 watch 目录失败，已取消更新以保留原容器！"
+        return 1
+    fi
+    rm -rf "${migration_dir}"
+    auto_chown "${config_dir}/watch"
+
+}
+
 function update_xiaoya_alist() {
 
     for i in $(seq -w 3 -1 0); do
@@ -1416,9 +1449,19 @@ function update_xiaoya_alist() {
         sleep 1
     done
     xiaoya_name="$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)"
-    local config_dir
+    local config_dir watch_mount watch_volume watch_sed update_status=0
+    local container_update_extra_command container_update_before_remove_command
     if docker container inspect "${xiaoya_name}" > /dev/null 2>&1; then
-        config_dir="$(docker inspect --format='{{range $v,$conf := .Mounts}}{{$conf.Source}}:{{$conf.Destination}}{{$conf.Type}}~{{end}}' "${xiaoya_name}" | tr '~' '\n' | grep bind | sed 's/bind//g' | grep ":/data$" | awk -F: '{print $1}')"
+        config_dir="$(docker inspect --format='{{range .Mounts}}{{if and (eq .Type "bind") (eq .Destination "/data")}}{{.Source}}{{end}}{{end}}' "${xiaoya_name}")" || return 1
+        watch_mount="$(docker inspect --format='{{range .Mounts}}{{if eq .Destination "/index/watch"}}{{.Destination}}{{end}}{{end}}' "${xiaoya_name}")" || return 1
+        if [ -z "${watch_mount}" ]; then
+            if [ -z "${config_dir}" ]; then
+                ERROR "无法获取小雅配置文件目录，已取消更新！"
+                return 1
+            fi
+            # shellcheck disable=SC2034
+            printf -v container_update_before_remove_command 'migrate_xiaoya_watch %q %q' "${xiaoya_name}" "${config_dir}"
+        fi
     fi
     cat > "/tmp/container_update_xiaoya_alist_run.sh" <<- EOF
 #!/bin/bash
@@ -1436,6 +1479,12 @@ if ! grep -q 'privileged' "/tmp/container_update_${xiaoya_name}"; then
     _sedsh '2s/^/--privileged /' "/tmp/container_update_${xiaoya_name}"
 fi
 EOF
+    if [ -n "${config_dir}" ] && [ -z "${watch_mount}" ]; then
+        printf -v watch_volume '%q' "${config_dir}/watch:/index/watch"
+        watch_sed=$(printf '%s' "${watch_volume}" | sed 's/[\\&|]/\\&/g')
+        printf '_sedsh %q %q\n' "2s|^|-v ${watch_sed} |" "/tmp/container_update_${xiaoya_name}" >> /tmp/container_update_xiaoya_alist_run.sh
+        INFO "将在更新时添加 ${config_dir}/watch 到容器 /index/watch 目录挂载"
+    fi
     if [[ -n "${config_dir}" ]] && [[ -f ${config_dir}/local_dir.txt ]] && [[ -s ${config_dir}/local_dir.txt ]]; then
         strm_dir=$(head -n1 "${config_dir}"/local_dir.txt | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
         if [[ -n "${strm_dir}" ]] && [[ -d "${strm_dir}" ]]; then
@@ -1448,8 +1497,11 @@ EOF
         fi
     fi
     container_update_extra_command="bash /tmp/container_update_xiaoya_alist_run.sh"
-    container_update "${xiaoya_name}"
+    container_update "${xiaoya_name}" || update_status=$?
     rm -f /tmp/container_update_xiaoya_alist_run.sh
+    if [ "${update_status}" -ne 0 ]; then
+        return "${update_status}"
+    fi
 
     if docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)" > /dev/null 2>&1; then
         if [[ "$(docker inspect -f '{{range $key, $value := .NetworkSettings.Networks}}{{$key}} {{end}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_emby_name.txt)")" == *"only_for_emby"* ]]; then

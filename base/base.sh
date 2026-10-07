@@ -433,7 +433,10 @@ function container_update() {
     INFO "获取 ${1} 容器信息中..."
     docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /tmp:/tmp ddsderek/runlike -p "${@}" > "/tmp/container_update_${*}"
     if [ -n "${container_update_extra_command}" ]; then
-        eval "${container_update_extra_command}"
+        if ! eval "${container_update_extra_command}"; then
+            ERROR "更新失败，修改 ${*} 容器启动参数失败！"
+            return 1
+        fi
     fi
     run_image=$(docker container inspect -f '{{.Config.Image}}' "${@}")
     remove_image=$(docker images -q ${run_image})
@@ -466,6 +469,12 @@ function container_update() {
             fi
         fi
         INFO "停止 ${*} 容器成功！"
+        if [ -n "${container_update_before_remove_command}" ]; then
+            if ! eval "${container_update_before_remove_command}"; then
+                ERROR "更新准备失败，已保留停止状态的 ${*} 容器！"
+                return 1
+            fi
+        fi
         if ! docker rm --force "${@}" > /dev/null 2>&1; then
             ERROR "更新失败，删除 ${*} 容器失败！"
             return 1
