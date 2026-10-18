@@ -27,7 +27,7 @@ DATE_VERSION="v1.8.4-2025_06_14_19_04"
 amilys_embyserver_latest_version=4.10.1.0
 emby_embyserver_latest_version=4.10.1.0
 amilys_embyserver_beta_version=4.10.0.22
-emby_embyserver_beta_version=4.11.0.8
+emby_embyserver_beta_version=4.11.0.9
 # ——————————————————————————————————————————————————————————————————————————————————
 
 Sky_Blue="\033[36m"
