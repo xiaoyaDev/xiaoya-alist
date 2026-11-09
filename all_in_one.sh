@@ -4048,7 +4048,25 @@ function xiaoya_emd_updated_tips() {
 
 }
 
+function xiaoya_emd_path_supported() {
+
+    local path="${1}"
+    shift
+    local base_path
+    for base_path in "$@"; do
+        if [[ "${path}" == "${base_path}"* ]]; then
+            return 0
+        fi
+    done
+    return 1
+
+}
+
 function xiaoya_emd_pathlib() {
+
+    # Keep these roots in sync with s_paths_all in xiaoyaDev/xiaoya_db/solid.py.
+    local emd_supported_paths=('动漫/' '每日更新/' '电影/' '电视剧/' '纪录片/' '纪录片（已刮削）/' '综艺/' '音乐/' '📺画质演示测试（4K，8K，HDR，Dolby）/' '115/' 'PikPak/')
+    local path_errors=
 
     if [ "${1}" == "install" ]; then
         PATHLIB_DIR="${2}/pathlib.txt"
@@ -4062,7 +4080,7 @@ function xiaoya_emd_pathlib() {
     sedsh '/^[[:space:]]*$/d' "${PATHLIB_DIR}"
     while true; do
         clear
-        emd_all_paths=('动漫/' '每日更新/' '电影/' '电视剧/' '纪录片/' '纪录片（已刮削）/' '综艺/' '音乐/' '测试/' '📺画质演示测试（4K，8K，HDR，Dolby）/')
+        emd_all_paths=("${emd_supported_paths[@]}")
         interface=
         file_array=()
         while IFS= read -r line; do
@@ -4087,7 +4105,10 @@ function xiaoya_emd_pathlib() {
             else
                 CONTENT="${Red}未选中${Font}"
             fi
-            if ((i + 1 <= 10)); then
+            if ! xiaoya_emd_path_supported "${emd_all_paths[$i]}" "${emd_supported_paths[@]}"; then
+                CONTENT="${Red}不受爬虫支持，请取消勾选${Font}"
+            fi
+            if ((i < ${#emd_supported_paths[@]})); then
                 interface+="$((i + 1))、${emd_all_paths[$i]}（${CONTENT}）\n"
             else
                 interface+="$((i + 1))、${emd_all_paths[$i]}（${Sky_Blue}用户自定义${Font}）（${CONTENT}）\n"
@@ -4097,6 +4118,7 @@ function xiaoya_emd_pathlib() {
         echo -e "${Blue}爬取目录选择${Font}\n"
         echo -e "${Sky_Blue}红色代表未选中，绿色代表已选中，输入对应选项数字可勾选或取消勾选"
         echo -e "支持输入多个数字，支持自定义爬取路径和现有选项一起输入，自定义爬取路径需要用''包裹"
+        echo -e "自定义路径必须位于上述支持的分类目录下"
         echo -e "示例：1 5 8 9 10 '电影/豆瓣 top 1000部/' '每日更新/动漫/'${Font}\n"
         echo -e "${interface}\c"
         if [ "${1}" == "install" ]; then
@@ -4104,9 +4126,27 @@ function xiaoya_emd_pathlib() {
         fi
         echo -e "0、保存退出"
         echo -e "——————————————————————————————————————————————————————————————————————————————————"
+        if [ -n "${path_errors}" ]; then
+            ERROR "${path_errors}"
+            path_errors=
+        fi
         read -erp "请输入数字或路径:" user_paths
         if [ -n "${user_paths}" ]; then
             if [ "${user_paths}" == 0 ]; then
+                local paths_valid=true
+                while IFS= read -r line; do
+                    if ! xiaoya_emd_path_supported "${line}" "${emd_supported_paths[@]}"; then
+                        path_errors+="爬虫不支持目录：${line}，请取消勾选后再保存。"$'\n'
+                        paths_valid=false
+                    fi
+                done < "${PATHLIB_DIR}"
+                if [ "${paths_valid}" == false ]; then
+                    continue
+                fi
+                if [ ! -s "${PATHLIB_DIR}" ]; then
+                    path_errors="请至少选择一个爬取目录后再保存。"
+                    continue
+                fi
                 clear
                 break
             fi
@@ -4131,6 +4171,8 @@ function xiaoya_emd_pathlib() {
                 else
                     if grep -q "^${user_path_array[$j]}$" "${PATHLIB_DIR}"; then
                         sedsh "\#${user_path_array[$j]}#d" "${PATHLIB_DIR}"
+                    elif ! xiaoya_emd_path_supported "${user_path_array[$j]}" "${emd_supported_paths[@]}"; then
+                        path_errors+="爬虫不支持目录：${user_path_array[$j]}，请选择支持的分类目录或其子目录。"$'\n'
                     else
                         echo "${user_path_array[$j]}" >> "${PATHLIB_DIR}"
                     fi
