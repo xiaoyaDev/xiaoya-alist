@@ -10,8 +10,6 @@ import unittest
 SCRIPT = Path(__file__).resolve().parents[1] / "all_in_one.sh"
 MENU_STUBS = r"""
 clear() { :; }
-ERROR() { printf '%s\n' "$1"; }
-WARN() { printf '%s\n' "$1"; }
 touch_chmod() { touch "$1"; }
 sedsh() {
     local temporary_file
@@ -24,15 +22,12 @@ sedsh() {
 
 
 class CrawlerPathMenuTests(unittest.TestCase):
-    """Test real menu input, including configurations saved by older installers."""
+    """Test default categories while preserving legacy and custom configuration."""
 
     @classmethod
     def setUpClass(cls):
         source = SCRIPT.read_text(encoding="utf-8")
         start = source.index("function xiaoya_emd_pathlib()")
-        helper_start = source.find("function xiaoya_emd_path_supported()")
-        if 0 <= helper_start < start:
-            start = helper_start
         end = source.index("function install_xiaoya_emd()", start)
         cls.menu_functions = source[start:end]
 
@@ -51,56 +46,45 @@ class CrawlerPathMenuTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
                 encoding="utf-8",
-                env={**os.environ, "LC_ALL": "C.UTF-8"},
+                env={**os.environ, "LC_ALL": "C"},
                 timeout=5,
                 check=True,
             )
             return config.read_text(encoding="utf-8").splitlines(), result.stdout
 
-    def test_default_choices_match_crawler_roots(self):
-        """Offer supported roots without the obsolete test category."""
+    def test_default_choices_omit_obsolete_test_category(self):
+        """Remove the old category while keeping the separate picture demo."""
         paths, output = self.run_menu("0\n")
         self.assertEqual(paths, ["每日更新/", "纪录片（已刮削）/"])
         self.assertNotIn("、测试/", output)
-        self.assertIn("、115/", output)
-        self.assertIn("、PikPak/", output)
+        self.assertIn("9、📺画质演示测试（4K，8K，HDR，Dolby）/（未选中）", output)
 
-    def test_legacy_invalid_path_must_be_deselected_before_saving(self):
-        """Do not silently save an old configuration that the crawler rejects."""
-        paths, output = self.run_menu("0\n12\n0\n", "每日更新/\n测试/\n")
+    def test_legacy_category_is_preserved_as_custom(self):
+        """Keep saved paths for users of other crawler versions or servers."""
+        paths, output = self.run_menu("0\n", "每日更新/\n测试/\n")
+        self.assertEqual(paths, ["每日更新/", "测试/"])
+        self.assertIn("10、测试/（用户自定义）（已选中）", output)
+
+    def test_legacy_category_can_be_deselected(self):
+        """Allow removing the legacy item from the appended custom choices."""
+        paths, _ = self.run_menu("10\n0\n", "每日更新/\n测试/\n")
         self.assertEqual(paths, ["每日更新/"])
-        self.assertIn("爬虫不支持目录：测试/", output)
 
-    def test_invalid_custom_root_is_not_written(self):
-        """Reject an unsupported category entered as a custom path."""
-        paths, output = self.run_menu("'测试/'\n0\n")
-        self.assertNotIn("测试/", paths)
-        self.assertIn("爬虫不支持目录：测试/", output)
-
-    def test_supported_custom_subdirectory_is_preserved(self):
-        """Keep nested paths and spaces beneath a supported category."""
+    def test_custom_subdirectory_is_preserved(self):
+        """Keep nested paths and spaces beneath a media category."""
         paths, _ = self.run_menu("'电影/豆瓣 top 1000部/'\n0\n")
         self.assertIn("电影/豆瓣 top 1000部/", paths)
 
-    def test_cloud_roots_are_builtin_choices(self):
-        """Recognize both cloud categories without marking them as custom."""
-        paths, output = self.run_menu("10 11\n0\n")
-        self.assertIn("115/", paths)
-        self.assertIn("PikPak/", paths)
-        self.assertNotIn("115/（已选中）（用户自定义）", output)
-        self.assertNotIn("PikPak/（已选中）（用户自定义）", output)
+    def test_custom_categories_are_not_globally_restricted(self):
+        """Do not impose one crawler version's allowlist on custom input."""
+        paths, _ = self.run_menu("'测试/' '115/' 'PikPak/'\n0\n")
+        for path in ("测试/", "115/", "PikPak/"):
+            self.assertIn(path, paths)
 
-    def test_empty_selection_cannot_be_saved(self):
-        """Require a selection and allow resetting to the default categories."""
-        paths, output = self.run_menu("2 6\n0\n101\n0\n")
-        self.assertEqual(paths, ["每日更新/", "纪录片（已刮削）/"])
-        self.assertIn("请至少选择一个爬取目录", output)
-
-    def test_once_menu_rejects_invalid_custom_root(self):
-        """Apply the same validation when configuring a one-off sync."""
-        paths, output = self.run_menu("'测试/' '电影/经典/'\n0\n", mode="once")
-        self.assertEqual(paths, ["电影/经典/"])
-        self.assertIn("爬虫不支持目录：测试/", output)
+    def test_once_menu_keeps_picture_demo_choice(self):
+        """Apply the same default categories to a one-off synchronization."""
+        paths, _ = self.run_menu("9\n0\n", mode="once")
+        self.assertEqual(paths, ["📺画质演示测试（4K，8K，HDR，Dolby）/"])
 
 
 if __name__ == "__main__":
