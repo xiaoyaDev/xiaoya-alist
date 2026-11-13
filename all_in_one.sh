@@ -2733,8 +2733,8 @@ function download_unzip_xiaoya_emby_new_config() {
             ERROR "当前 Emby 版本获取失败！"
             exit 1
         fi
-        if version_lt "${emby_version}" "4.9.0.42"; then
-            INFO "您的 Emby 版本过低，开始进入升级流程，请升级到 4.9.0.42 或更高版本！"
+        if version_lt "${emby_version}" "4.10.2.0"; then
+            INFO "您的 Emby 版本过低，开始进入升级流程，请升级到 4.10.2.0 或更高版本！"
             oneclick_upgrade_emby
         fi
 
@@ -2803,8 +2803,8 @@ function main_download_unzip_xiaoya_emby() {
         echo -e "3、下载 all.mp4"
         echo -e "4、解压 all.mp4"
         echo -e "5、解压 all.mp4 的指定元数据目录【非全部解压】"
-        echo -e "6、下载 config.mp4（4.9.0.42）"
-        echo -e "7、解压 config.mp4（4.9.0.42）"
+        echo -e "6、下载 config.mp4（4.10.2.0）"
+        echo -e "7、解压 config.mp4（4.10.2.0）"
         echo -e "8、下载 115.mp4"
         echo -e "9、解压 115.mp4"
         echo -e "n、下一页"
@@ -2827,7 +2827,7 @@ function main_download_unzip_xiaoya_emby() {
         echo -e "17、下载 短剧.mp4"
         echo -e "18、解压 短剧.mp4"
         echo -e "19、当前下载器【aria2/wget】                  当前状态：${Green}${__data_downloader}${Font}"
-        # echo -e "101、下载并解压 config.new.mp4（4.9.0.42）"
+        # echo -e "101、下载并解压 config.new.mp4（4.10.2.0）"
         echo -e "p、上一页"
         echo -e "——————————————————————————————————————————————————————————————————————————————————"
 
@@ -3489,7 +3489,7 @@ function install_emby_xiaoya_all_emby() {
         if [ -n "${version}" ]; then
             IMAGE_VERSION="${version}"
         else
-            IMAGE_VERSION=4.9.0.42
+            IMAGE_VERSION=4.10.2.0
         fi
 
         emby_fix_strmassistant "${MEDIA_DIR}/config"
@@ -3558,12 +3558,12 @@ function install_emby_xiaoya_all_emby() {
                     IMAGE_VERSION=latest
                     break
                 else
-                    INFO "请选择 Emby 镜像版本 [ 1: 4.9.0.42 | 2；latest（${amilys_embyserver_latest_version}） ]（默认 1）"
+                    INFO "请选择 Emby 镜像版本 [ 1: 4.10.2.0 | 2；latest（${amilys_embyserver_latest_version}） ]（默认 1）"
                     read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
                     [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="1"
                     case ${CHOOSE_IMAGE_VERSION} in
                     1)
-                        IMAGE_VERSION=4.9.0.42
+                        IMAGE_VERSION=4.10.2.0
                         if [ "${IMAGE_VERSION}" == "${amilys_embyserver_beta_version}" ]; then
                             IMAGE_VERSION=beta
                         fi
@@ -3588,12 +3588,12 @@ function install_emby_xiaoya_all_emby() {
                 break
                 ;;
             "iceyheart_embycrk")
-                INFO "请选择 Emby 镜像版本 [ 1；4.9.0.42 ]（默认 1）"
+                INFO "请选择 Emby 镜像版本 [ 1；4.10.2.0 ]（默认 1）"
                 read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
                 [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="1"
                 case ${CHOOSE_IMAGE_VERSION} in
                 1)
-                    IMAGE_VERSION=4.9.0.42
+                    IMAGE_VERSION=4.10.2.0
                     break
                     ;;
                 *)
@@ -3602,12 +3602,12 @@ function install_emby_xiaoya_all_emby() {
                 esac
                 ;;
             "emby_embyserver")
-                INFO "请选择 Emby 镜像版本 [ 1；4.9.0.42 | 2；latest（${emby_embyserver_latest_version}） ]（默认 1）"
+                INFO "请选择 Emby 镜像版本 [ 1；4.10.2.0 | 2；latest（${emby_embyserver_latest_version}） ]（默认 1）"
                 read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
                 [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="1"
                 case ${CHOOSE_IMAGE_VERSION} in
                 1)
-                    IMAGE_VERSION=4.9.0.42
+                    IMAGE_VERSION=4.10.2.0
                     break
                     ;;
                 2)
@@ -3704,12 +3704,12 @@ function oneclick_upgrade_emby() {
                 IMAGE_VERSION=latest
                 break
             else
-                INFO "请选择 Emby 镜像版本 [ 1；4.9.0.42 | 2；latest（${amilys_embyserver_latest_version}）| 3；beta（${amilys_embyserver_beta_version}）]（默认 1）"
+                INFO "请选择 Emby 镜像版本 [ 1；4.10.2.0 | 2；latest（${amilys_embyserver_latest_version}）| 3；beta（${amilys_embyserver_beta_version}）]（默认 1）"
                 read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
                 [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="1"
                 case ${CHOOSE_IMAGE_VERSION} in
                 1)
-                    IMAGE_VERSION=4.9.0.42
+                    IMAGE_VERSION=4.10.2.0
                     if [ "${IMAGE_VERSION}" == "${amilys_embyserver_beta_version}" ]; then
                         IMAGE_VERSION=beta
                         choose_emby_version="${amilys_embyserver_beta_version}"
@@ -3746,12 +3746,12 @@ function oneclick_upgrade_emby() {
             WARN "lovechen/embyserver 镜像无法更新！"
             exit 0
         elif [ "${old_image_name}" == "emby/embyserver" ] || [ "${old_image_name}" == "emby/embyserver_arm64v8" ]; then
-            INFO "请选择 Emby 镜像版本 [ 1；4.9.0.42 | 2；latest（${emby_embyserver_latest_version}） | 3；beta（${emby_embyserver_beta_version}）]（默认 1）"
+            INFO "请选择 Emby 镜像版本 [ 1；4.10.2.0 | 2；latest（${emby_embyserver_latest_version}） | 3；beta（${emby_embyserver_beta_version}）]（默认 1）"
             read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
             [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="1"
             case ${CHOOSE_IMAGE_VERSION} in
             1)
-                IMAGE_VERSION=4.9.0.42
+                IMAGE_VERSION=4.10.2.0
                 choose_emby_version="${IMAGE_VERSION}"
                 ;;
             2)
@@ -4786,8 +4786,8 @@ function main_xiaoya_all_emby() {
     show_main_xiaoya_all_emby=false
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     echo -e "${Blue}小雅Emby全家桶${Font}\n"
-    echo -e "${Yellow}注意：当前 Emby 全家桶要求 Emby 容器版本不低于 4.9.0.42${Font}"
-    echo -e "${Yellow}如果您的版本低于 4.9.0.42 请使用 菜单2-7 一键升级版本${Font}"
+    echo -e "${Yellow}注意：当前 Emby 全家桶要求 Emby 容器版本不低于 4.10.2.0${Font}"
+    echo -e "${Yellow}如果您的版本低于 4.10.2.0 请使用 菜单2-7 一键升级版本${Font}"
     if docker container inspect "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)" > /dev/null 2>&1; then
         local container_status
         container_status=$(docker inspect --format='{{.State.Status}}' "$(cat ${DDSREM_CONFIG_DIR}/container_name/xiaoya_alist_name.txt)")
