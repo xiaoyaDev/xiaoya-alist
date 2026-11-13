@@ -138,7 +138,7 @@ function main_set_version() {
 
     local versiom_list
     interface=
-    versiom_list=("latest" "4.9.0.42")
+    versiom_list=("latest" "4.10.2.0")
     for i in "${!versiom_list[@]}"; do
         if [ "${versiom_list[$i]}" == "${version}" ]; then
             interface+="$((i + 1))、${Green}${versiom_list[$i]}${Font}\n"
@@ -150,7 +150,7 @@ function main_set_version() {
     echo -e "${Blue}Emby镜像版本${Font}\n"
     echo -e "${Sky_Blue}绿色代表已选中，输入对应选项数字可勾选或取消勾选${Font}\n"
     echo -e "${interface}\c"
-    if [ "${version}" != "latest" ] && [ "${version}" != "4.9.0.42" ]; then
+    if [ "${version}" != "latest" ] && [ "${version}" != "4.10.2.0" ]; then
         echo -e "3、${Green}用户自定义：${version}${Font}"
     else
         echo -e "3、用户自定义：无"
@@ -168,7 +168,7 @@ function main_set_version() {
         main_set_version
         ;;
     2)
-        sedsh "s/version=.*/version=4.9.0.42/" "${config_dir}/emby_config.txt"
+        sedsh "s/version=.*/version=4.10.2.0/" "${config_dir}/emby_config.txt"
         clear
         main_set_version
         ;;
@@ -331,7 +331,7 @@ if [ ! -s "${config_dir}/emby_config.txt" ]; then
         echo "image=emby"
         echo "media_dir="
         echo "resilio=no"
-        echo "version=4.9.0.42"
+        echo "version=4.10.2.0"
     } >> "${config_dir}/emby_config.txt"
 else
     # shellcheck disable=SC1091
@@ -352,7 +352,7 @@ else
         echo "resilio=no" >> "${config_dir}/emby_config.txt"
     fi
     if [ -z "${version}" ]; then
-        echo "version=4.9.0.42" >> "${config_dir}/emby_config.txt"
+        echo "version=4.10.2.0" >> "${config_dir}/emby_config.txt"
     fi
 fi
 
