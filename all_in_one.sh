@@ -24,9 +24,7 @@ export PATH
 DATE_VERSION="v1.8.4-2025_06_14_19_04"
 #
 # ——————————————————————————————————————————————————————————————————————————————————
-amilys_embyserver_latest_version=4.10.2.0
 emby_embyserver_latest_version=4.10.2.0
-amilys_embyserver_beta_version=4.10.0.22
 emby_embyserver_beta_version=4.11.0.13
 # ——————————————————————————————————————————————————————————————————————————————————
 
@@ -2288,7 +2286,7 @@ function __unzip_metadata() {
         chmod -R 777 "${MEDIA_DIR}"
     elif [ "${1}" == "config.mp4" ] || [ "${1}" == "config.new.mp4" ]; then
         metadata_unziper "${1}"
-        emby_fix_strmassistant "${MEDIA_DIR}/config"
+        #emby_fix_strmassistant "${MEDIA_DIR}/config"
         emby_install_coverart "${MEDIA_DIR}/config"
         INFO "设置目录权限..."
         INFO "这可能需要一定时间，请耐心等待！"
@@ -3206,16 +3204,14 @@ function choose_emby_image() {
 
     INFO "您的架构是：$CPU_ARCH"
     if [ "${DOCKER_ARCH}" == "linux/amd64" ]; then
-        INFO "请选择使用的Emby镜像 [ 1:amilys/embyserver | 2:emby/embyserver | 3:iceyheart/embycrk ]（默认 2）"
+        INFO "请选择使用的Emby镜像 [ 1:emby/embyserver | 2:iceyheart/embycrk ]（默认 1）"
         read -erp "IMAGE:" IMAGE
-        [[ -z "${IMAGE}" ]] && IMAGE="2"
+        [[ -z "${IMAGE}" ]] && IMAGE="1"
         if [[ ${IMAGE} == [1] ]]; then
-            CHOOSE_EMBY=amilys_embyserver
-        elif [[ ${IMAGE} == [2] ]]; then
             CHOOSE_EMBY=emby_embyserver
-        elif [[ ${IMAGE} == [3] ]]; then
+        elif [[ ${IMAGE} == [2] ]]; then
             CHOOSE_EMBY=iceyheart_embycrk
-        elif [[ ${IMAGE} == [4] ]]; then
+        elif [[ ${IMAGE} == [3] ]]; then
             CHOOSE_EMBY=lovechen_embyserver
         else
             ERROR "输入无效，请重新选择"
@@ -3227,7 +3223,7 @@ function choose_emby_image() {
         read -erp "IMAGE:" IMAGE
         [[ -z "${IMAGE}" ]] && IMAGE="1"
         if [[ ${IMAGE} == [1] ]]; then
-            CHOOSE_EMBY=amilys_embyserver
+            CHOOSE_EMBY=emby_embyserver
         elif [[ ${IMAGE} == [2] ]]; then
             CHOOSE_EMBY=iceyheart_embycrk
         else
@@ -3492,28 +3488,14 @@ function install_emby_xiaoya_all_emby() {
             IMAGE_VERSION=4.10.2.0
         fi
 
-        emby_fix_strmassistant "${MEDIA_DIR}/config"
+        #emby_fix_strmassistant "${MEDIA_DIR}/config"
         emby_install_coverart "${MEDIA_DIR}/config"
 
         # shellcheck disable=SC2154
         if [ "${image}" == "emby" ]; then
             install_emby_embyserver
-        elif [ "${image}" == "iceyheart" ]; then
+        else [ "${image}" == "iceyheart" ]; then
             install_iceyheart_embyserver
-        else
-            if [ "${DOCKER_ARCH}" == "linux/amd64" ] || [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
-                if [ "${IMAGE_VERSION}" == "${amilys_embyserver_beta_version}" ]; then
-                    IMAGE_VERSION=beta
-                fi
-                if [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
-                    WARN "amilys/embyserver_arm64v8 镜像无法指定版本号，默认拉取 latest 镜像！"
-                    IMAGE_VERSION=latest
-                fi
-                install_amilys_embyserver
-            else
-                ERROR "全家桶 Emby 目前只支持 amd64 和 arm64 架构，你的架构是：$CPU_ARCH"
-                exit 1
-            fi
         fi
 
     else
@@ -3552,39 +3534,9 @@ function install_emby_xiaoya_all_emby() {
 
         while true; do
             case ${CHOOSE_EMBY} in
-            "amilys_embyserver")
-                if [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
-                    WARN "amilys/embyserver_arm64v8 镜像无法指定版本号，默认拉取 latest 镜像！"
-                    IMAGE_VERSION=latest
-                    break
-                else
-                    INFO "请选择 Emby 镜像版本 [ 1: 4.10.2.0 | 2；latest（${amilys_embyserver_latest_version}） ]（默认 1）"
-                    read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
-                    [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="1"
-                    case ${CHOOSE_IMAGE_VERSION} in
-                    1)
-                        IMAGE_VERSION=4.10.2.0
-                        if [ "${IMAGE_VERSION}" == "${amilys_embyserver_beta_version}" ]; then
-                            IMAGE_VERSION=beta
-                        fi
-                        break
-                        ;;
-                    2)
-                        # IMAGE_VERSION=latest
-                        # break
-                        WARN "小雅 Emby 全家桶目前不支持 latest 镜像！"
-                        INFO "按任意键重新配置"
-                        read -rs -n 1 -p ""
-                        ;;
-                    *)
-                        ERROR "输入无效，请重新选择"
-                        ;;
-                    esac
-                fi
-                ;;
             "lovechen_embyserver")
-                WARN "lovechen/embyserver 镜像无法指定版本号，默认拉取 4.7.14.0 镜像！"
-                IMAGE_VERSION=4.7.14.0
+                WARN "lovechen/embyserver 镜像无法指定版本号，默认拉取 4.10.2.0 镜像！"
+                IMAGE_VERSION=4.10.2.0
                 break
                 ;;
             "iceyheart_embycrk")
@@ -3625,7 +3577,7 @@ function install_emby_xiaoya_all_emby() {
             esac
         done
 
-        emby_fix_strmassistant "${MEDIA_DIR}/config"
+        #emby_fix_strmassistant "${MEDIA_DIR}/config"
         emby_install_coverart "${MEDIA_DIR}/config"
 
         case ${CHOOSE_EMBY} in
@@ -3634,9 +3586,6 @@ function install_emby_xiaoya_all_emby() {
             ;;
         lovechen_embyserver)
             install_lovechen_embyserver
-            ;;
-        amilys_embyserver)
-            install_amilys_embyserver
             ;;
         iceyheart_embycrk)
             install_iceyheart_embyserver
@@ -3698,51 +3647,7 @@ function oneclick_upgrade_emby() {
         check_emby_version_status=false
     fi
     while true; do
-        if [ "${old_image_name}" == "amilys/embyserver" ] || [ "${old_image_name}" == "amilys/embyserver_arm64v8" ]; then
-            if [ "${DOCKER_ARCH}" == "linux/arm64/v8" ]; then
-                WARN "amilys/embyserver_arm64v8 镜像无法指定版本号，默认重新拉取 latest 镜像更新容器！"
-                IMAGE_VERSION=latest
-                break
-            else
-                INFO "请选择 Emby 镜像版本 [ 1；4.10.2.0 | 2；latest（${amilys_embyserver_latest_version}）| 3；beta（${amilys_embyserver_beta_version}）]（默认 1）"
-                read -erp "CHOOSE_IMAGE_VERSION:" CHOOSE_IMAGE_VERSION
-                [[ -z "${CHOOSE_IMAGE_VERSION}" ]] && CHOOSE_IMAGE_VERSION="1"
-                case ${CHOOSE_IMAGE_VERSION} in
-                1)
-                    IMAGE_VERSION=4.10.2.0
-                    if [ "${IMAGE_VERSION}" == "${amilys_embyserver_beta_version}" ]; then
-                        IMAGE_VERSION=beta
-                        choose_emby_version="${amilys_embyserver_beta_version}"
-                    else
-                        choose_emby_version="${IMAGE_VERSION}"
-                    fi
-                    ;;
-                2)
-                    # IMAGE_VERSION=latest
-                    # choose_emby_version="${amilys_embyserver_latest_version}"
-                    WARN "小雅 Emby 全家桶目前不支持 latest 镜像！"
-                    INFO "按任意键继续配置"
-                    read -rs -n 1 -p ""
-                    ;;
-                3)
-                    IMAGE_VERSION=beta
-                    choose_emby_version="${amilys_embyserver_beta_version}"
-                    ;;
-                *)
-                    ERROR "输入无效，请重新选择"
-                    ;;
-                esac
-                if [ "${check_emby_version_status}" == true ] && [ -n "${choose_emby_version}" ]; then
-                    if version_lt "${choose_emby_version}" "${emby_version}"; then
-                        ERROR "您选择升级的 Emby 版本低于当前安装 Emby 版本，Emby 版本无法降级，请重新选择"
-                    else
-                        break
-                    fi
-                elif [ "${check_emby_version_status}" == false ] && [ -n "${choose_emby_version}" ]; then
-                    break
-                fi
-            fi
-        elif [ "${old_image_name}" == "lovechen/embyserver" ]; then
+        if [ "${old_image_name}" == "lovechen/embyserver" ]; then
             WARN "lovechen/embyserver 镜像无法更新！"
             exit 0
         elif [ "${old_image_name}" == "emby/embyserver" ] || [ "${old_image_name}" == "emby/embyserver_arm64v8" ]; then
@@ -3794,7 +3699,7 @@ function oneclick_upgrade_emby() {
         fi
     fi
     if [ -n "${emby_config_dir}" ]; then
-        emby_fix_strmassistant "${emby_config_dir}"
+        #emby_fix_strmassistant "${emby_config_dir}"
         emby_install_coverart "${emby_config_dir}"
     fi
     run_image="$(echo "${old_image}" | cut -d':' -f1):${IMAGE_VERSION}"
