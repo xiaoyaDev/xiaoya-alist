@@ -97,8 +97,7 @@ function main_set_image() {
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     echo -e "${Blue}Emby镜像${Font}\n"
     echo -e "1、emby/embyserver"
-    echo -e "2、amilys/embyserver"
-    echo -e "3、iceyheart/embycrk"
+    echo -e "2、iceyheart/embycrk"
     echo -e "0、返回上级"
     echo -e "——————————————————————————————————————————————————————————————————————————————————"
     read -erp "请输入数字 [0-3]:" num
@@ -109,11 +108,6 @@ function main_set_image() {
         main_return
         ;;
     2)
-        sedsh "s/image=.*/image=amilys/" "${config_dir}/emby_config.txt"
-        clear
-        main_return
-        ;;
-    3)
         sedsh "s/image=.*/image=iceyheart/" "${config_dir}/emby_config.txt"
         clear
         main_return
