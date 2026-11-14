@@ -3494,7 +3494,7 @@ function install_emby_xiaoya_all_emby() {
         # shellcheck disable=SC2154
         if [ "${image}" == "emby" ]; then
             install_emby_embyserver
-        else [ "${image}" == "iceyheart" ]
+        elif [ "${image}" == "iceyheart" ]; then
             install_iceyheart_embyserver
         fi
 
