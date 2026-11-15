@@ -2261,8 +2261,8 @@ function __unzip_metadata() {
             else
                 extra_parameters="--workdir=/media/xiaoya"
             fi
-            if ! pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}"; then
-                if ! pull_run_glue 7z x -aoa -mmt=16 -bb3 "/media/temp/${1}"; then
+            if ! pull_run_glue 7z x -aoa -mmt=4 "/media/temp/${1}"; then
+                if ! pull_run_glue 7z x -aoa -mmt=4 -bb3 "/media/temp/${1}"; then
                     __unzip_metadata_debug "${1}"
                 fi
             fi
@@ -2478,8 +2478,8 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
             fi
         else
             extra_parameters="--workdir=/media/xiaoya"
-            if ! pull_run_glue 7z x -aoa -mmt=16 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
-                if ! pull_run_glue 7z x -aoa -mmt=16 -bb3 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
+            if ! pull_run_glue 7z x -aoa -mmt=4 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
+                if ! pull_run_glue 7z x -aoa -mmt=4 -bb3 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
                     __unzip_metadata_debug "${1}"
                 fi
             fi
