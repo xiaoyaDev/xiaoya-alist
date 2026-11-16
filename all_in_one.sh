@@ -2250,8 +2250,8 @@ function __unzip_metadata() {
                 cd "${MEDIA_DIR}/xiaoya" || return 1
             fi
             INFO "当前解压工作目录：$(pwd)"
-            if ! 7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}"; then
-                if ! 7z x -aoa -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}"; then
+            if ! 7z x -aoa -y -mmt=16 "${MEDIA_DIR}/temp/${1}"; then
+                if ! 7z x -aoa -y -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}"; then
                     __unzip_metadata_debug "${1}"
                 fi
             fi
@@ -2261,8 +2261,8 @@ function __unzip_metadata() {
             else
                 extra_parameters="--workdir=/media/xiaoya"
             fi
-            if ! pull_run_glue 7z x -aoa -mmt=4 "/media/temp/${1}"; then
-                if ! pull_run_glue 7z x -aoa -mmt=4 -bb3 "/media/temp/${1}"; then
+            if ! pull_run_glue 7z x -aoa -y -mmt=4 "/media/temp/${1}"; then
+                if ! pull_run_glue 7z x -aoa -y -mmt=4 -bb3 "/media/temp/${1}"; then
                     __unzip_metadata_debug "${1}"
                 fi
             fi
@@ -2471,15 +2471,15 @@ function unzip_appoint_xiaoya_emby_jellyfin() {
             fi
             cd "${MEDIA_DIR}/xiaoya" || return 1
             INFO "当前解压工作目录：$(pwd)"
-            if ! 7z x -aoa -mmt=16 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
-                if ! 7z x -aoa -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
+            if ! 7z x -aoa -y -mmt=16 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
+                if ! 7z x -aoa -y -mmt=16 -bb3 "${MEDIA_DIR}/temp/${1}" "${2}/*" -o"${MEDIA_DIR}/xiaoya"; then
                     __unzip_metadata_debug "${1}"
                 fi
             fi
         else
             extra_parameters="--workdir=/media/xiaoya"
-            if ! pull_run_glue 7z x -aoa -mmt=4 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
-                if ! pull_run_glue 7z x -aoa -mmt=4 -bb3 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
+            if ! pull_run_glue 7z x -aoa -y -mmt=4 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
+                if ! pull_run_glue 7z x -aoa -y -mmt=4 -bb3 "/media/temp/${1}" "${2}/*" -o/media/xiaoya; then
                     __unzip_metadata_debug "${1}"
                 fi
             fi
