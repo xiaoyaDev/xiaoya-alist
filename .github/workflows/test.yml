@@ -58,6 +58,10 @@ jobs:
           pip install -r aliyuntvtoken_connector/requirements.txt
           pip install -r glue_python/requirements.txt
 
+      - name: Test StrmAssistant installation
+        run: |
+          python -m unittest discover -s glue_python/strmassistanthelper/tests -v
+
       - name: Analysing the code with pylint
         run: |
           pylint --rcfile=$(pwd)/.pylintrc --disable=R,C0301 $(git ls-files '*.py')
